@@ -1,0 +1,4 @@
+整合models，更好使用sequelize
+全部只用async/await
+typescript迁移
+hardcode的配置迁移出去
