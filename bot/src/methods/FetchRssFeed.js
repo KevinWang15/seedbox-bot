@@ -15,7 +15,7 @@ async function FetchRssFeed(rssFeed) {
     let title = torrents[i].find('./title').text;
     let url = torrents[i].find('./enclosure').attrib.url;
     let pubDate = torrents[i].find('./pubDate').text;
-    results.push({ title, url, pubDate });
+    results.push({ title, url, pubDate, rss_feed_id: rssFeed.id });
   }
   return results;
 }

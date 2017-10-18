@@ -2,7 +2,7 @@ import { userTask as userTaskConfig } from '../config';
 import { BoxConfig } from "../models/BoxConfig";
 import { AutoDelConfig } from "../models/AutoDelConfig";
 import { RssFeed } from "../models/RssFeed";
-import { RssFeedTorrent } from "../models/RssFeedTorrent";
+import { RssFeedTorrent, status as RssFeedTorrentStatus } from "../models/RssFeedTorrent";
 import { FetchRssFeed } from "../methods/FetchRssFeed";
 import Sequelize from 'sequelize';
 
@@ -27,8 +27,20 @@ class UserTask {
       let userConfig = await this.getUserConfig();
 
       // 从远处fetch rss feed
-      let feedData = await Promise.all(userConfig.rssFeeds.map(FetchRssFeed));
-
+      let existingUrls = userConfig.rssFeedTorrents.map(_ => _.url);
+      let feedData = (await Promise.all(userConfig.rssFeeds.map(FetchRssFeed)))[0]; //TODO: why??
+      console.log(feedData);
+      let newFeedData = feedData.filter(_ => existingUrls.indexOf(_.url) < 0);
+      newFeedData.forEach(newFeedDataItem => {
+        // console.log(newFeedDataItem);
+        RssFeedTorrent.create({
+          rss_feed_id: newFeedDataItem.rss_feed_id,
+          status: RssFeedTorrentStatus.PENDING_DOWNLOAD,
+          url: newFeedDataItem.url,
+          title: newFeedDataItem.title,
+          pub_date: Date.parse(newFeedDataItem.pubDate), //FIXME: parse失败？
+        });
+      });
     } catch (exception) {
       this.die(exception);
     }
