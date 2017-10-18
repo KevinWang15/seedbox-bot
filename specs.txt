@@ -22,3 +22,8 @@ safe_add过程：
 
 重启之后：
 1. 删除所有状态为pending_download或者pending_add的rss任务
+
+健壮性：
+一定要保证任务执行失败的时候，抛出exception的时候，主进程不会死！
+任务失败的时候要记录日志
+主进程要用forever守护
