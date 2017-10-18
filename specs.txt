@@ -1,0 +1,24 @@
+所有人的http请求之间（包括向rss和向qb的）间隔1秒，并放入一个concurrency<10的http request队列；统一函数Promise来完成这件事情，需要可以设置retry=3，需要可以设置是否使用php的proxy。
+
+任务间隔设置为2分钟
+pubDate超过1天的rss自动无视掉
+mysql中存所有rss任务，自动清理掉超过一天的rss任务
+
+每次执行：
+1. 从mysql中读取当天所有rss任务的状态与用户的设置信息
+2. 从远处fetch rss feed
+3. 对比mysql，查看多出来的结果（依据：种子下载url）
+4. 添加种子信息到mysql中，状态为pending_download
+5. 放入队列下载种子
+6. 解析种子，并更新mysql信息，状态设置为pending_add
+7. 执行safe_add过程，完成后把状态设置为added
+
+safe_add过程：
+本过程，每个用户都有一个队列，且concurrency=1（重要！相当于加锁）
+1. 获取qb所有任务的列表，并计算任务大小之和
+2. 如果任务大小大于额定值，则用算法对任务进行排序（记得无视掉keep_tag中的）
+3. 用http队列删除种子以释放空间
+4. 添加新种子
+
+重启之后：
+1. 删除所有状态为pending_download或者pending_add的rss任务
