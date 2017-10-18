@@ -2,3 +2,4 @@
 全部只用async/await
 typescript迁移
 hardcode的配置迁移出去
+检测各PT站对rss的兼容性

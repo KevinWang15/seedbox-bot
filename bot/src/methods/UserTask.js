@@ -3,6 +3,7 @@ import { BoxConfig } from "../models/BoxConfig";
 import { AutoDelConfig } from "../models/AutoDelConfig";
 import { RssFeed } from "../models/RssFeed";
 import { RssFeedTorrent } from "../models/RssFeedTorrent";
+import { FetchRssFeed } from "../methods/FetchRssFeed";
 import Sequelize from 'sequelize';
 
 const Op = Sequelize.Op;
@@ -25,8 +26,11 @@ class UserTask {
       console.log("running user task", this.user_id);
       let userConfig = await this.getUserConfig();
 
+      // 从远处fetch rss feed
+      let feedData = await Promise.all(userConfig.rssFeeds.map(FetchRssFeed));
+
     } catch (exception) {
-      die(exception);
+      this.die(exception);
     }
   }
 

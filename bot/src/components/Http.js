@@ -3,13 +3,25 @@
  **/
 import { http as httpConfig } from "../config";
 import request from "request";
+import Queue from 'promise-queue';
 
 let maxConcurrency = httpConfig.maxConcurrency || 8;
+let retryCount = httpConfig.retryCount || 3;
 let queue = new Queue(maxConcurrency);
 
-function httpRequest() {
-  queue.add(() => {
-    return request();
+function httpRequest({ url, method, auth, params }) {
+  return queue.add(() => {
+    return new Promise((queue_res) => {
+      let req = request({
+        url,
+        method,
+        ...params
+      }, (error, response, body) => {
+        queue_res(body);
+      });
+      if (auth) req.auth(auth.username, auth.password, true);
+      return req;
+    });
   });
 }
 
