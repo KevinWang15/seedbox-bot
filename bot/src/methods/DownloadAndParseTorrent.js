@@ -1,18 +1,28 @@
 import fs from "fs";
 import uuid from "uuid/v1";
+import parseTorrent from "parse-torrent";
+
 import { httpRequest } from "../components/Http";
-async function DownloadAndParseTorrent(url) {
+function DownloadAndParseTorrent(url) {
   if (!fs.existsSync('./torrents')) {
     fs.mkdirSync('./torrents');
   }
   const torrentPath = `./torrents/${uuid()}.torrent`;
-  const body = await httpRequest({
-    url,
-    encoding: null,
+
+  return new Promise(res => {
+    httpRequest({
+      url,
+      encoding: null,
+    }).then(body => {
+      let wstream = fs.createWriteStream(torrentPath);
+      wstream.write(body);
+      wstream.end();
+      wstream.on('finish', () => {
+        let length = parseTorrent(fs.readFileSync(torrentPath)).length;
+        res({ length, path: torrentPath });
+      });
+    });
   });
-  let wstream = fs.createWriteStream(torrentPath);
-  wstream.write(body);
-  wstream.end();
 }
 
 export { DownloadAndParseTorrent };
