@@ -9,13 +9,13 @@ let maxConcurrency = httpConfig.maxConcurrency || 8;
 let retryCount = httpConfig.retryCount || 3;
 let queue = new Queue(maxConcurrency);
 
-function httpRequest({ url, method, auth, params }) {
+function httpRequest(arg) {
+  const { auth } = arg;
   return queue.add(() => {
     return new Promise((queue_res) => {
       let req = request({
-        url,
-        method,
-        ...params
+        followAllRedirects: true,
+        ...arg
       }, (error, response, body) => {
         queue_res(body);
       });
