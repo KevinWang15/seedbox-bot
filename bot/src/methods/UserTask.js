@@ -29,20 +29,36 @@ class UserTask {
 
       // 从远处fetch rss feed
       let existingUrls = userConfig.rssFeedTorrents.map(_ => _.url);
-      let feedData = (await Promise.all(userConfig.rssFeeds.map(FetchRssFeed)))[0]; //TODO: why??
-      let newFeedData = feedData.filter(_ => existingUrls.indexOf(_.url) < 0);
-      for (let i = 0; i < newFeedData.length; i++) {
-        let newFeedDataItem = newFeedData[i];
-        console.log("new Feed", newFeedDataItem);
+      let allRssFeeds = (await Promise.all(userConfig.rssFeeds.map(FetchRssFeed)));
+      for (let k = 0; k < allRssFeeds.length; k++) {
+        // 每一个rss源设置一个循环
+        let currentRssFeed = allRssFeeds[k];
+        let rssFeedTorrents = currentRssFeed.torrents.filter(_ => existingUrls.indexOf(_.url) < 0);
+        for (let i = 0; i < rssFeedTorrents.length; i++) {
+          let rssFeedTorrentItem = rssFeedTorrents[i];
+          let rssFeedTorrent = await RssFeedTorrent.create({
+            rss_feed_id: rssFeedTorrentItem.rss_feed_id,
+            status: RssFeedTorrentStatus.PENDING_DOWNLOAD,
+            url: rssFeedTorrentItem.url,
+            title: rssFeedTorrentItem.title,
+            pub_date: Date.parse(rssFeedTorrentItem.pubDate), //FIXME: parse失败？
+          });
+          let torrentData = (await DownloadAndParseTorrent(rssFeedTorrentItem.url));
 
-        RssFeedTorrent.create({
-          rss_feed_id: newFeedDataItem.rss_feed_id,
-          status: RssFeedTorrentStatus.PENDING_DOWNLOAD,
-          url: newFeedDataItem.url,
-          title: newFeedDataItem.title,
-          pub_date: Date.parse(newFeedDataItem.pubDate), //FIXME: parse失败？
-        });
-        let torrentData = (await DownloadAndParseTorrent(newFeedDataItem.url));
+          if (currentRssFeed.max_size_mb * 1024 * 1024 > torrentData.length) {
+            // 种子文件合适，正在添加
+            await rssFeedTorrent.update({
+              status: RssFeedTorrentStatus.PENDING_ADD,
+              file_size_kb: torrentData.length / 1024,
+            });
+          } else {
+            // 种子文件太大
+            await rssFeedTorrent.update({
+              status: RssFeedTorrentStatus.FILTERED_OUT,
+              file_size_kb: torrentData.length / 1024,
+            });
+          }
+        }
       }
     } catch (exception) {
       this.die(exception);

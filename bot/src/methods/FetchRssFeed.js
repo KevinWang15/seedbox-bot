@@ -17,7 +17,10 @@ async function FetchRssFeed(rssFeed) {
     let pubDate = torrents[i].find('./pubDate').text;
     results.push({ title, url, pubDate, rss_feed_id: rssFeed.id });
   }
-  return results;
+  return {
+    ...rssFeed.dataValues,
+    torrents: results,
+  };
 }
 
 export { FetchRssFeed };
