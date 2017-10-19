@@ -3,3 +3,4 @@
 typescript迁移
 hardcode的配置迁移出去
 检测各PT站对rss的兼容性
+除了QB之外更多客户端的支持
