@@ -13,14 +13,20 @@ const Op = Sequelize.Op;
 class UserTask {
   user_id;
   interval_id;
-
+  
   constructor(user_id) {
     this.user_id = user_id;
+    this.run = this.run.bind(this);
   }
 
   start() {
     this.interval_id = setInterval(this.run, (userTaskConfig.interval || 120) * 1000);
     this.run();
+  }
+
+  die(exception) {
+    //TODO: log exception, restart task
+    console.warn("User Task terminated with error", exception);
   }
 
   async run() {
@@ -78,10 +84,6 @@ class UserTask {
     }
   }
 
-  die(exception) {
-    //TODO: log exception, restart task
-    console.warn("User Task terminated with error", exception);
-  }
 
   async getUserConfig() {
     let boxConfig = await BoxConfig.find({
