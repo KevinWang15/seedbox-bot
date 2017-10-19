@@ -1,12 +1,12 @@
 import { httpRequest } from "../components/Http";
 import et from "elementtree";
-const subElement = et.SubElement;
 
 async function FetchRssFeed(rssFeed) {
-  let rss = await httpRequest({
+  let rss = (await httpRequest({
     url: rssFeed.url,
     method: "GET",
-  });
+  })).body;
+
   //FIXME: 当rss请求不成功时
   let rssRoot = et.parse(rss);
   let torrents = rssRoot.findall('./channel/item');

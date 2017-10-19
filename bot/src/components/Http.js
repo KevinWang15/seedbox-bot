@@ -17,7 +17,7 @@ function httpRequest(arg) {
         followAllRedirects: true,
         ...arg
       }, (error, response, body) => {
-        queue_res(body);
+        queue_res({ error, response, body });
       });
       if (auth) req.auth(auth.username, auth.password, true);
       return req;

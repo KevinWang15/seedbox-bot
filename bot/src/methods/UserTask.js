@@ -6,9 +6,10 @@ import { RssFeedTorrent, status as RssFeedTorrentStatus } from "../models/RssFee
 import { FetchRssFeed } from "../methods/FetchRssFeed";
 import { DownloadAndParseTorrent } from "../methods/DownloadAndParseTorrent";
 import Sequelize from 'sequelize';
+import { AddTorrentToQb } from "./AddTorrentToQb";
 
 const Op = Sequelize.Op;
-
+//TODO: UserTask 加锁
 class UserTask {
   user_id;
   interval_id;
@@ -51,6 +52,18 @@ class UserTask {
               status: RssFeedTorrentStatus.PENDING_ADD,
               file_size_kb: torrentData.length / 1024,
             });
+            let addResult = await AddTorrentToQb(userConfig.boxConfig, rssFeedTorrentItem.url);
+            if (addResult) {
+              rssFeedTorrent.update({
+                status: RssFeedTorrentStatus.ADDED,
+                file_size_kb: torrentData.length / 1024,
+              });
+            } else {
+              rssFeedTorrent.update({
+                status: RssFeedTorrentStatus.ADD_FAILED,
+                file_size_kb: torrentData.length / 1024,
+              });
+            }
           } else {
             // 种子文件太大
             await rssFeedTorrent.update({

@@ -13,7 +13,8 @@ function DownloadAndParseTorrent(url) {
     httpRequest({
       url,
       encoding: null,
-    }).then(body => {
+    }).then(r => {
+      const body = r.body;
       let wstream = fs.createWriteStream(torrentPath);
       wstream.write(body);
       wstream.end();
