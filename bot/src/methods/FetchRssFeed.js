@@ -7,7 +7,6 @@ async function FetchRssFeed(rssFeed) {
     method: "GET",
   })).body;
 
-  //FIXME: 当rss请求不成功时
   let rssRoot = et.parse(rss);
   let torrents = rssRoot.findall('./channel/item');
   let results = [];

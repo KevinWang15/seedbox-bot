@@ -37,7 +37,6 @@ class UserTask {
   async run() {
     try {
       let userConfig = await this.getUserConfig();
-      throw "asdsad";
       // 从远处fetch rss feed
       let existingUrls = userConfig.rssFeedTorrents.map(_ => _.url);
       let allRssFeeds = (await Promise.all(userConfig.rssFeeds.map(FetchRssFeed)));
@@ -54,7 +53,7 @@ class UserTask {
                 status: RssFeedTorrentStatus.PENDING_DOWNLOAD,
                 url: rssFeedTorrentItem.url,
                 title: rssFeedTorrentItem.title,
-                pub_date: Date.parse(rssFeedTorrentItem.pubDate), //FIXME: parse失败？
+                pub_date: Date.parse(rssFeedTorrentItem.pubDate),
               });
               rssFeedTorrentItem.id = rssFeedTorrent.id; // 异常处理的时候reference使用
               let torrentData = (await DownloadAndParseTorrent(rssFeedTorrentItem.url));
@@ -93,7 +92,7 @@ class UserTask {
         }
       }
     } catch (exception) {
-      this.die(exception, "run", this.user_id);
+      this.die(exception.toString() + "\n\n\n" + exception.stack, "run", this.user_id);
     }
   }
 
