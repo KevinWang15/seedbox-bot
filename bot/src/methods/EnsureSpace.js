@@ -1,9 +1,9 @@
 import { httpRequest } from "../components/Http";
 import { AutoDelConfig } from "../models/AutoDelConfig";
-import request from "request";
+import { system as systemConfig } from "../config";
 import urlJoin from "url-join";
+import { qbCookies } from './AddTorrentToQb';
 
-const qbCookies = {};
 
 //TODO: 如果不可能释放足够的空间，则返回false
 async function EnsureSpace(boxConfig, spaceToFreeUpGB) {
@@ -27,7 +27,7 @@ async function EnsureSpace(boxConfig, spaceToFreeUpGB) {
     totalFilesSize = items.map(_ => _.size).reduce((a, b) => (a + b), 0) / 1024 / 1024 / 1024;
     if (totalFilesSize + spaceToFreeUpGB > maxAllowedUsage) {
       let spaceToFreeUp = totalFilesSize + spaceToFreeUpGB - maxAllowedUsage;
-      return await freeUpSpace(boxConfig, items, spaceToFreeUp);
+      return await freeUpSpace(boxConfig, autoDelConfig, items, spaceToFreeUp);
     } else {
       return true;
     }
@@ -37,8 +37,58 @@ async function EnsureSpace(boxConfig, spaceToFreeUpGB) {
   }
 }
 
-async function freeUpSpace(boxConfig, filesList, spaceToFreeUp) {
+// 需要返回是否成功
+async function freeUpSpace(boxConfig, autoDelConfig, filesList, spaceToFreeUp) {
+  console.log("spaceToFreeUp", spaceToFreeUp);
 
+  let torrentsToDelete = [], spaceFreedUp = 0; // 单位均为GB
+
+  function deleteTorrent(item) {
+    spaceFreedUp += item.size / 1024 / 1024 / 1024;
+    torrentsToDelete.push(item);
+  }
+
+  function isTorrentExempt(item) {
+    if (item.dlspeed)
+      return true;
+
+    if ((item.added_on + systemConfig.newTorrentsTTL) > (+new Date()) / 1000)
+      return true;
+
+    if (autoDelConfig.exempt_label && item.category === autoDelConfig.exempt_label)
+      return true;
+
+    return false;
+  }
+
+  //1. 排除种子：排除正在下载的种子
+  filesList = filesList.filter(_ => !isTorrentExempt(_));
+
+  //2. 根据upspeed和时间排序，删除速度最慢又最旧的种子
+  filesList.sort((a, b) => {
+    if (a.upspeed !== b.upspeed) {
+      return a.upspeed - b.upspeed;
+    } else {
+      return a.added_on - b.added_on;
+    }
+  });
+
+  //3. 从头开始尝试删除
+  while (spaceFreedUp < spaceToFreeUp && filesList.length) {
+    await deleteTorrent(filesList.shift());
+  }
+
+  //4. 发送删除请求
+  let result = await httpRequest({
+    jar: qbCookies[boxConfig.url],
+    url: urlJoin(boxConfig.url, '/command/deletePerm'),
+    form: { hashes: torrentsToDelete.map(_ => _.hash).join('|') },
+    auth: { username: boxConfig.username, password: boxConfig.password },
+    method: "POST",
+  });
+
+  //5. 判断是否删除成功
+  return !result.error && spaceFreedUp >= spaceToFreeUp;
 }
 
 export { EnsureSpace };

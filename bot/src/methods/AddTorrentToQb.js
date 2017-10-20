@@ -4,7 +4,7 @@ import urlJoin from "url-join";
 import { EnsureSpace } from "./EnsureSpace";
 
 //TODO: loginQb 加锁
-//TODO: safe_add 流程
+//TODO: safe_add 流程，也需要加锁
 const qbCookies = {};
 async function LoginQb(boxConfig) {
   let cookieJar = request.jar();
