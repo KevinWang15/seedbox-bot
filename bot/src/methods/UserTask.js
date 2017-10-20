@@ -88,11 +88,11 @@ class UserTask {
                 });
               }
             } catch (feedTorrentError) {
-              this.logException(feedTorrentError, "feedTorrentError", rssFeedTorrents[i].id);
+              this.logException(feedTorrentError.toString() + "\n\n\n" + feedTorrentError.stack, "feedTorrentError", rssFeedTorrents[i].id);
             }
           }
         } catch (rssFeedError) {
-          this.logException(rssFeedError, "rssFeedError", allRssFeeds[k].id);
+          this.logException(rssFeedError.toString() + "\n\n\n" + rssFeedError.stack, "rssFeedError", allRssFeeds[k].id);
         }
       }
     } catch (exception) {
