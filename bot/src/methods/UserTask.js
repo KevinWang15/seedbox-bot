@@ -1,5 +1,6 @@
 import { userTask as userTaskConfig } from '../config';
 import { BoxConfig } from "../models/BoxConfig";
+import { Exception } from "../models/Exception";
 import { AutoDelConfig } from "../models/AutoDelConfig";
 import { RssFeed } from "../models/RssFeed";
 import { RssFeedTorrent, status as RssFeedTorrentStatus } from "../models/RssFeedTorrent";
@@ -24,15 +25,19 @@ class UserTask {
     this.run();
   }
 
-  die(exception, source, refId) {
-    //TODO: log exception, restart task
-    console.log("DIED", exception, source, refId);
+  die(exception, source, ref_id) {
+    Exception.create({
+      ref_id,
+      source,
+      exception,
+      user_id: this.user_id,
+    });
   }
 
   async run() {
     try {
       let userConfig = await this.getUserConfig();
-
+      throw "asdsad";
       // 从远处fetch rss feed
       let existingUrls = userConfig.rssFeedTorrents.map(_ => _.url);
       let allRssFeeds = (await Promise.all(userConfig.rssFeeds.map(FetchRssFeed)));
