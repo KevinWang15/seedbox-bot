@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2017-10-17 11:48:12
+Date: 2017-10-20 10:30:49
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -19,7 +19,7 @@ SET FOREIGN_KEY_CHECKS=0;
 -- Table structure for auto_del_configs
 -- ----------------------------
 DROP TABLE IF EXISTS `auto_del_configs`;
-CREATE TABLE `auto_del_config` (
+CREATE TABLE `auto_del_configs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) DEFAULT NULL,
   `exempt_label` varchar(255) DEFAULT NULL,
@@ -27,13 +27,13 @@ CREATE TABLE `auto_del_config` (
   `createdAt` datetime(6) DEFAULT NULL,
   `updatedAt` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for box_configs
 -- ----------------------------
 DROP TABLE IF EXISTS `box_configs`;
-CREATE TABLE `box_config` (
+CREATE TABLE `box_configs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) DEFAULT NULL,
   `url` longtext,
@@ -46,7 +46,22 @@ CREATE TABLE `box_config` (
   `createdAt` datetime(6) DEFAULT NULL,
   `updatedAt` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Table structure for exceptions
+-- ----------------------------
+DROP TABLE IF EXISTS `exceptions`;
+CREATE TABLE `exceptions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) DEFAULT NULL,
+  `source` varchar(255) DEFAULT NULL,
+  `ref_id` int(11) DEFAULT NULL,
+  `exception` longtext,
+  `createdAt` datetime(6) DEFAULT NULL,
+  `updatedAt` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for logs
@@ -77,7 +92,7 @@ CREATE TABLE `rss_feeds` (
   `createdAt` datetime(6) DEFAULT NULL,
   `updatedAt` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for rss_feed_torrents
@@ -91,8 +106,11 @@ CREATE TABLE `rss_feed_torrents` (
   `file_size_kb` int(11) DEFAULT NULL,
   `createdAt` datetime(6) DEFAULT NULL,
   `updatedAt` datetime DEFAULT NULL,
+  `url` longtext,
+  `title` longtext,
+  `pub_date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=204 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for users
@@ -103,5 +121,6 @@ CREATE TABLE `users` (
   `token` varchar(255) DEFAULT NULL,
   `createdAt` datetime(6) DEFAULT NULL,
   `updatedAt` datetime DEFAULT NULL,
+  `enabled` int(2) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=205 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
