@@ -7,7 +7,12 @@ import { cookieJars } from '../mem/CookieJars';
 async function EnsureSpace(boxConfig, spaceToFreeUpGB) {
   let maxAllowedUsage, totalFilesSize; // 单位均为GB
 
-  let autoDelConfig = await AutoDelConfig.find({ user_id: boxConfig.user_id });
+  let autoDelConfig = await AutoDelConfig.find({
+    where: {
+      user_id: boxConfig.user_id,
+    },
+  });
+
   if (!autoDelConfig)
     return true;
 
