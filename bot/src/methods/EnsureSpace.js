@@ -2,10 +2,8 @@ import { httpRequest } from "../components/Http";
 import { AutoDelConfig } from "../models/AutoDelConfig";
 import { system as systemConfig } from "../config";
 import urlJoin from "url-join";
-import { qbCookies } from './AddTorrentToQb';
+import { cookieJars } from '../mem/CookieJars';
 
-
-//TODO: 如果不可能释放足够的空间，则返回false
 async function EnsureSpace(boxConfig, spaceToFreeUpGB) {
   let maxAllowedUsage, totalFilesSize; // 单位均为GB
 
@@ -16,7 +14,7 @@ async function EnsureSpace(boxConfig, spaceToFreeUpGB) {
   maxAllowedUsage = autoDelConfig.max_disk_usage_size_gb;
 
   let result = await httpRequest({
-    jar: qbCookies[boxConfig.url],
+    jar: cookieJars [boxConfig.url],
     url: urlJoin(boxConfig.url, '/query/torrents'),
     form: {},
     auth: { username: boxConfig.username, password: boxConfig.password },
@@ -37,10 +35,7 @@ async function EnsureSpace(boxConfig, spaceToFreeUpGB) {
   }
 }
 
-// 需要返回是否成功
 async function freeUpSpace(boxConfig, autoDelConfig, filesList, spaceToFreeUp) {
-  console.log("spaceToFreeUp", spaceToFreeUp);
-
   let torrentsToDelete = [], spaceFreedUp = 0; // 单位均为GB
 
   function deleteTorrent(item) {
@@ -80,7 +75,7 @@ async function freeUpSpace(boxConfig, autoDelConfig, filesList, spaceToFreeUp) {
 
   //4. 发送删除请求
   let result = await httpRequest({
-    jar: qbCookies[boxConfig.url],
+    jar: cookieJars [boxConfig.url],
     url: urlJoin(boxConfig.url, '/command/deletePerm'),
     form: { hashes: torrentsToDelete.map(_ => _.hash).join('|') },
     auth: { username: boxConfig.username, password: boxConfig.password },

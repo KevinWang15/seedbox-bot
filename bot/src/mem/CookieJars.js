@@ -1,0 +1,3 @@
+const cookieJars = {};
+
+export { cookieJars };
