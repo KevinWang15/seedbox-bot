@@ -10,10 +10,10 @@ import Sequelize from 'sequelize';
 import { AddTorrentToQb } from "./AddTorrentToQb";
 
 const Op = Sequelize.Op;
-//TODO: UserTask 加锁
 class UserTask {
   user_id;
   interval_id;
+  run_lock;
 
   constructor(user_id) {
     this.user_id = user_id;
@@ -35,6 +35,10 @@ class UserTask {
   }
 
   async run() {
+    if (this.run_lock)
+      return;
+    this.run_lock = true;
+
     try {
       let userConfig = await this.getUserConfig();
       // 从远处fetch rss feed
@@ -94,6 +98,7 @@ class UserTask {
     } catch (exception) {
       this.die(exception.toString() + "\n\n\n" + exception.stack, "run", this.user_id);
     }
+    this.run_lock = false;
   }
 
 
