@@ -1,6 +1,7 @@
 import { httpRequest } from "../components/Http";
 import request from "request";
 import urlJoin from "url-join";
+import { EnsureSpace } from "./EnsureSpace";
 
 //TODO: loginQb 加锁
 //TODO: safe_add 流程
@@ -22,16 +23,21 @@ async function AddTorrentToQb(boxConfig, url) {
     await LoginQb(boxConfig);
   }
 
-  let result = await httpRequest({
-    jar: qbCookies[boxConfig.url],
-    url: urlJoin(boxConfig.url, '/command/download'),
-    form: { urls: url },
-    auth: { username: boxConfig.username, password: boxConfig.password },
-    method: "POST",
-  });
+  let hasSpaceAvailable = await EnsureSpace(boxConfig);
 
-  return !result.error;
+  if (hasSpaceAvailable) {
+    let result = await httpRequest({
+      jar: qbCookies[boxConfig.url],
+      url: urlJoin(boxConfig.url, '/command/download'),
+      form: { urls: url },
+      auth: { username: boxConfig.username, password: boxConfig.password },
+      method: "POST",
+    });
+    return !result.error;
+  } else {
+    return false;
+  }
 }
 
 
-export { AddTorrentToQb };
+export { AddTorrentToQb, qbCookies };
