@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon -r babel-register -r babel-polyfill src/index.js"
+    "start": "nodemon -r babel-register -r babel-polyfill src/index.js",
+    "compile": "babel --out-dir=out src"
   },
   "dependencies": {
     "elementtree": "^0.1.7",
