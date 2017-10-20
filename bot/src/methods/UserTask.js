@@ -24,14 +24,13 @@ class UserTask {
     this.run();
   }
 
-  die(exception) {
+  die(exception, source, refId) {
     //TODO: log exception, restart task
-    console.warn("User Task terminated with error", exception);
+    console.log("DIED", exception, source, refId);
   }
 
   async run() {
     try {
-      console.log("running user task", this.user_id);
       let userConfig = await this.getUserConfig();
 
       // 从远处fetch rss feed
@@ -52,6 +51,7 @@ class UserTask {
                 title: rssFeedTorrentItem.title,
                 pub_date: Date.parse(rssFeedTorrentItem.pubDate), //FIXME: parse失败？
               });
+              rssFeedTorrentItem.id = rssFeedTorrent.id; // 异常处理的时候reference使用
               let torrentData = (await DownloadAndParseTorrent(rssFeedTorrentItem.url));
 
               if (currentRssFeed.max_size_mb * 1024 * 1024 > torrentData.length) {
@@ -80,15 +80,15 @@ class UserTask {
                 });
               }
             } catch (feedTorrentError) {
-              console.log("feedTorrentError", feedTorrentError);
+              this.die(feedTorrentError, "feedTorrentError", rssFeedTorrents[i].id);
             }
           }
         } catch (rssFeedError) {
-          console.warn("rssFeedError", rssFeedError);
+          this.die(rssFeedError, "rssFeedError", allRssFeeds[k].id);
         }
       }
     } catch (exception) {
-      this.die(exception);
+      this.die(exception, "run", this.user_id);
     }
   }
 
