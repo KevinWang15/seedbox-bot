@@ -25,7 +25,7 @@ class UserTask {
     this.run();
   }
 
-  die(exception, source, ref_id) {
+  logException(exception, source, ref_id) {
     Exception.create({
       ref_id,
       source,
@@ -88,15 +88,15 @@ class UserTask {
                 });
               }
             } catch (feedTorrentError) {
-              this.die(feedTorrentError, "feedTorrentError", rssFeedTorrents[i].id);
+              this.logException(feedTorrentError, "feedTorrentError", rssFeedTorrents[i].id);
             }
           }
         } catch (rssFeedError) {
-          this.die(rssFeedError, "rssFeedError", allRssFeeds[k].id);
+          this.logException(rssFeedError, "rssFeedError", allRssFeeds[k].id);
         }
       }
     } catch (exception) {
-      this.die(exception.toString() + "\n\n\n" + exception.stack, "run", this.user_id);
+      this.logException(exception.toString() + "\n\n\n" + exception.stack, "run", this.user_id);
     }
     this.run_lock = false;
   }
