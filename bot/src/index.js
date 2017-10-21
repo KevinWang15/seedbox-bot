@@ -1,7 +1,7 @@
 import "babel-polyfill";
 import { ScanAndAddNewUsers } from "./methods/ScanAndAddNewUsers";
 import { system as systemConfig } from './config';
-import { DownloadAndParseTorrent } from "./methods/DownloadAndParseTorrent";
+import { Exception } from "./models/Exception";
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
@@ -9,5 +9,13 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 ScanAndAddNewUsers();
 setInterval(ScanAndAddNewUsers, (systemConfig.newUserScanInterval || 60) * 1000);
 
-// console.log("testing");
-// DownloadAndParseTorrent("https://hdsky.me/download.php?id=57798&passkey=5132e17a655a357e7f4c2ab7c36ec0b8").then(console.log);
+
+process.on('unhandledRejection', (reason, p) => {
+  console.log('Unhandled Rejection at: Promise', p, 'reason:', reason);
+  Exception.create({
+    ref_id: 0,
+    source: "unhandledRejection",
+    exception: 'Unhandled Rejection at: Promise' + p.toString() + 'reason:' + reason.toString() + ', stack:' + reason.stack,
+    user_id: 0,
+  });
+});
