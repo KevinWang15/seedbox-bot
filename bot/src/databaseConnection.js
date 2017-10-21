@@ -5,6 +5,7 @@ const sequelize = new Sequelize(mysql.database, mysql.username, mysql.password,
   {
     host: mysql.host,
     dialect: 'mysql',
+    logging: false,
   });
 
 export { sequelize };
