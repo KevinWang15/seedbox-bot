@@ -3,8 +3,9 @@ import { AutoDelConfig } from "../models/AutoDelConfig";
 import { system as systemConfig } from "../config";
 import urlJoin from "url-join";
 import { cookieJars } from '../mem/CookieJars';
+import { LoginQb } from "./LoginQb";
 
-async function EnsureSpace(boxConfig, spaceToFreeUpGB) {
+async function FreeUpSpace(boxConfig, spaceToFreeUpGB) {
   let maxAllowedUsage, totalFilesSize; // 单位均为GB
 
   let autoDelConfig = await AutoDelConfig.find({
@@ -16,10 +17,14 @@ async function EnsureSpace(boxConfig, spaceToFreeUpGB) {
   if (!autoDelConfig)
     return true;
 
+  if (!cookieJars[boxConfig.url]) {
+    await LoginQb(boxConfig);
+  }
+  
   maxAllowedUsage = autoDelConfig.max_disk_usage_size_gb;
 
   let result = await httpRequest({
-    jar: cookieJars [boxConfig.url],
+    jar: cookieJars[boxConfig.url],
     url: urlJoin(boxConfig.url, '/query/torrents'),
     form: {},
     auth: { username: boxConfig.username, password: boxConfig.password },
@@ -91,4 +96,4 @@ async function freeUpSpace(boxConfig, autoDelConfig, filesList, spaceToFreeUp) {
   return !result.error && spaceFreedUp >= spaceToFreeUp;
 }
 
-export { EnsureSpace };
+export { FreeUpSpace };
