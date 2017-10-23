@@ -28,7 +28,7 @@ async function CheckIfHasSpace(boxConfig, spaceToEnsureGB) {
     jar: cookieJars[boxConfig.url],
     url: urlJoin(boxConfig.url, '/query/torrents'),
     form: {},
-    auth: { username: boxConfig.username, password: boxConfig.password },
+    auth: { username: boxConfig.basic_auth_username, password: boxConfig.basic_auth_password },
     method: "POST",
   });
   if (!result.error) {
@@ -89,7 +89,7 @@ async function FreeUpSpace(boxConfig, autoDelConfig, filesList, spaceToFreeUp) {
     jar: cookieJars [boxConfig.url],
     url: urlJoin(boxConfig.url, '/command/deletePerm'),
     form: { hashes: torrentsToDelete.map(_ => _.hash).join('|') },
-    auth: { username: boxConfig.username, password: boxConfig.password },
+    auth: { username: boxConfig.basic_auth_username, password: boxConfig.basic_auth_password },
     method: "POST",
   });
 

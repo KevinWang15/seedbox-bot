@@ -21,7 +21,7 @@ async function AddTorrentToQb(boxConfig, rssFeedTorrent, torrentData) {
       jar: cookieJars[boxConfig.url],
       url: urlJoin(boxConfig.url, '/command/download'),
       form: { urls: rssFeedTorrent.url },
-      auth: { username: boxConfig.username, password: boxConfig.password },
+      auth: { username: boxConfig.basic_auth_username, password: boxConfig.basic_auth_password },
       method: "POST",
     });
 
