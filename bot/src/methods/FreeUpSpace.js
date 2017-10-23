@@ -4,8 +4,9 @@ import { system as systemConfig } from "../config";
 import urlJoin from "url-join";
 import { cookieJars } from '../mem/CookieJars';
 import { LoginQb } from "./LoginQb";
+import sleep from 'sleep-promise';
 
-async function FreeUpSpace(boxConfig, spaceToFreeUpGB) {
+async function CheckIfHasSpace(boxConfig, spaceToEnsureGB) {
   let maxAllowedUsage, totalFilesSize; // 单位均为GB
 
   let autoDelConfig = await AutoDelConfig.find({
@@ -15,7 +16,7 @@ async function FreeUpSpace(boxConfig, spaceToFreeUpGB) {
   });
 
   if (!autoDelConfig)
-    return true;
+    return { hasSpace: true, spaceToFreeUp: 0, autoDelConfig, filesList: null };
 
   if (!cookieJars[boxConfig.url]) {
     await LoginQb(boxConfig);
@@ -31,21 +32,21 @@ async function FreeUpSpace(boxConfig, spaceToFreeUpGB) {
     method: "POST",
   });
   if (!result.error) {
-    let items = JSON.parse(result.body);
-    totalFilesSize = items.map(_ => _.size).reduce((a, b) => (a + b), 0) / 1024 / 1024 / 1024;
-    if (totalFilesSize + spaceToFreeUpGB > maxAllowedUsage) {
-      let spaceToFreeUp = totalFilesSize + spaceToFreeUpGB - maxAllowedUsage;
-      return await freeUpSpace(boxConfig, autoDelConfig, items, spaceToFreeUp);
+    let filesList = JSON.parse(result.body);
+    totalFilesSize = filesList.map(_ => _.size).reduce((a, b) => (a + b), 0) / 1024 / 1024 / 1024;
+    if (totalFilesSize + spaceToEnsureGB > maxAllowedUsage) {
+      let spaceToFreeUp = totalFilesSize + spaceToEnsureGB - maxAllowedUsage;
+      return { hasSpace: false, spaceToFreeUp, autoDelConfig, filesList };
     } else {
-      return true;
+      return { hasSpace: true, spaceToFreeUp: 0, autoDelConfig, filesList };
     }
   } else {
     console.error("/query/torrents failed, box id " + boxConfig.id);
-    return false;
+    return { hasSpace: false, spaceToFreeUp: 0, autoDelConfig, filesList: null };
   }
 }
 
-async function freeUpSpace(boxConfig, autoDelConfig, filesList, spaceToFreeUp) {
+async function FreeUpSpace(boxConfig, autoDelConfig, filesList, spaceToFreeUp) {
   let torrentsToDelete = [], spaceFreedUp = 0; // 单位均为GB
 
   function deleteTorrent(item) {
@@ -92,8 +93,11 @@ async function freeUpSpace(boxConfig, autoDelConfig, filesList, spaceToFreeUp) {
     method: "POST",
   });
 
+  // QB并不返回删除是否成功，因此sleep等待5秒
+  await sleep(5000);
+
   //5. 判断是否删除成功
   return !result.error && spaceFreedUp >= spaceToFreeUp;
 }
 
-export { FreeUpSpace };
+export { CheckIfHasSpace, FreeUpSpace };
