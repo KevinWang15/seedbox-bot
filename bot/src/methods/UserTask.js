@@ -26,6 +26,7 @@ class UserTask {
   }
 
   logException(exception, source, ref_id) {
+    console.warn("#! Exception", exception, source, ref_id);
     Exception.create({
       ref_id,
       source,
