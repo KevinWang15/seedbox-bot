@@ -14,7 +14,7 @@ async function AddTorrentToQb(boxConfig, rssFeedTorrent, torrentData, isSecondTr
   if (!cookieJars[boxConfig.url]) {
     await LoginQb(boxConfig);
   }
-  let spaceData = await CheckIfHasSpace(boxConfig);
+  let spaceData = await CheckIfHasSpace(boxConfig, torrentData.length / 1024 / 1024 / 1024);
   // console.log("> Space data:", spaceData);
   if (spaceData.hasSpace) {
     let result = await httpRequest({
@@ -50,6 +50,7 @@ async function AddTorrentToQb(boxConfig, rssFeedTorrent, torrentData, isSecondTr
       console.log("> Not enough space, calling FreeUpSpace");
       await FreeUpSpace(boxConfig, spaceData.autoDelConfig, spaceData.filesList, spaceData.spaceToFreeUp);
       console.log("> FreeUpSpace finished, giving it a second try");
+      AddTorrentToQb(boxConfig, rssFeedTorrent, torrentData, true);
     }
   }
 }
