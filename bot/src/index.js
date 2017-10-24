@@ -2,6 +2,8 @@ import "babel-polyfill";
 import { ScanAndAddNewUsers } from "./methods/ScanAndAddNewUsers";
 import { system as systemConfig } from './config';
 import { Exception } from "./models/Exception";
+import { BoxConfig } from "./models/BoxConfig";
+import { CheckIfHasSpace } from "./methods/FreeUpSpace";
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
@@ -9,6 +11,23 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 ScanAndAddNewUsers();
 setInterval(ScanAndAddNewUsers, (systemConfig.newUserScanInterval || 60) * 1000);
 
+// async function test() {
+//   let box = await BoxConfig.find({
+//     where: {
+//       id: 1,
+//     },
+//   });
+//
+//   for (let i = 0; i < 5; i++) {
+//     console.log("CheckingIfHasSpace");
+//     let result = await CheckIfHasSpace(box, 300).then(_ => {
+//       console.log('hasSpace', _.hasSpace, 'spaceToFreeUp', _.spaceToFreeUp);
+//     });
+//
+//     console.log(result);
+//   }
+// }
+// test();
 
 process.on('unhandledRejection', (reason, p) => {
   console.log('Unhandled Rejection at: Promise', p, 'reason:', reason);

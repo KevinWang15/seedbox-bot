@@ -9,13 +9,13 @@ import { status as RssFeedTorrentStatus } from "../models/RssFeedTorrent";
 //TODO: safe_add 流程，也需要加锁
 
 
-async function AddTorrentToQb(boxConfig, rssFeedTorrent, torrentData) {
+async function AddTorrentToQb(boxConfig, rssFeedTorrent, torrentData, isSecondTry = false) {
+  console.log("AddTorrentToQb");
   if (!cookieJars[boxConfig.url]) {
     await LoginQb(boxConfig);
   }
-
   let spaceData = await CheckIfHasSpace(boxConfig);
-
+  // console.log("> Space data:", spaceData);
   if (spaceData.hasSpace) {
     let result = await httpRequest({
       jar: cookieJars[boxConfig.url],
@@ -26,24 +26,31 @@ async function AddTorrentToQb(boxConfig, rssFeedTorrent, torrentData) {
     });
 
     if (!result.error) {
+      console.log("> Successful: " + rssFeedTorrent.url);
       rssFeedTorrent.update({
         status: RssFeedTorrentStatus.ADDED,
         file_size_kb: torrentData.length / 1024,
       });
     } else {
+      console.log("> Failed without reason: " + rssFeedTorrent.url);
       rssFeedTorrent.update({
         status: RssFeedTorrentStatus.ADD_FAILED,
         file_size_kb: torrentData.length / 1024,
       });
     }
   } else {
-    await FreeUpSpace(boxConfig, spaceData.autoDelConfig, spaceData.filesList, spaceData.spaceToFreeUp);
-    // Set to add_failed and TODO: retry in next iteration
-    rssFeedTorrent.update({
-      status: RssFeedTorrentStatus.ADD_FAILED,
-      file_size_kb: torrentData.length / 1024,
-    });
-    return false;
+    console.log("> Failed: " + rssFeedTorrent.url);
+    if (isSecondTry) {
+      rssFeedTorrent.update({
+        status: RssFeedTorrentStatus.ADD_FAILED,
+        file_size_kb: torrentData.length / 1024,
+      });
+      return false;
+    } else {
+      console.log("> Not enough space, calling FreeUpSpace");
+      await FreeUpSpace(boxConfig, spaceData.autoDelConfig, spaceData.filesList, spaceData.spaceToFreeUp);
+      console.log("> FreeUpSpace finished, giving it a second try");
+    }
   }
 }
 

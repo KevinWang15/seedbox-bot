@@ -7,6 +7,8 @@ import { LoginQb } from "./LoginQb";
 import sleep from 'sleep-promise';
 
 async function CheckIfHasSpace(boxConfig, spaceToEnsureGB) {
+  console.log("CheckIfHasSpace");
+
   let maxAllowedUsage, totalFilesSize; // 单位均为GB
 
   let autoDelConfig = await AutoDelConfig.find({
