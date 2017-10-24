@@ -9,7 +9,7 @@ function DownloadAndParseTorrent(url) {
   }
   const torrentPath = `./torrents/${uuid()}.torrent`;
 
-  return new Promise(res => {
+  return new Promise((res, rej) => {
     httpRequest({
       url,
       encoding: null,
@@ -19,11 +19,14 @@ function DownloadAndParseTorrent(url) {
       wstream.write(body);
       wstream.end();
       wstream.on('finish', () => {
-        let length = parseTorrent(fs.readFileSync(torrentPath)).length;
-        res({ length, path: torrentPath });
+        try {
+          let length = parseTorrent(fs.readFileSync(torrentPath)).length;
+          res({ length, path: torrentPath });
+        } catch (exception) {
+          rej(exception);
+        }
       });
     });
   });
 }
-
 export { DownloadAndParseTorrent };
