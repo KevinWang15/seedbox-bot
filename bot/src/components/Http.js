@@ -25,12 +25,14 @@ function httpRequest(arg) {
       let req = proxiedRequest({
         followAllRedirects: true,
         ...arg,
-        auth: null,
+        auth: (auth && auth.username && auth.password) ? {
+          'user': auth.username,
+          'pass': auth.password,
+          'sendImmediately': true,
+        } : null,
       }, (error, response, body) => {
         queue_res({ error, response, body });
       });
-      if (auth && auth.username && auth.password)
-        req.auth(auth.username, auth.password, true);
       return req;
     });
   });
