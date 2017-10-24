@@ -9,6 +9,14 @@ const server = {
   port: 10120,
 };
 
+const proxy = {
+  enabled: false,
+  host: "127.0.0.1",
+  port: 1080,
+  username: "",
+  password: "",
+};
+
 const http = {
   maxConcurrency: 8,
   retryCount: 3,
@@ -29,4 +37,5 @@ export {
   mysql,
   http,
   system,
+  proxy,
 };
