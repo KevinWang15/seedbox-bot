@@ -8,9 +8,12 @@ import urlJoin from "url-join";
 async function LoginQb(boxConfig) {
   let cookieJar = request.jar();
 
-  if (!boxConfig.basic_auth_username || !boxConfig.basic_auth_password)
+  if (!boxConfig.username || !boxConfig.password) {
+    cookieJars[boxConfig.url] = cookieJar;
     return true;
+  }
 
+  console.log("Posting LoginQb Request");
   let result = await httpRequest({
     jar: cookieJar,
     url: urlJoin(boxConfig.url, '/login'),
@@ -18,6 +21,7 @@ async function LoginQb(boxConfig) {
     auth: { username: boxConfig.basic_auth_username, password: boxConfig.basic_auth_password },
     method: "POST",
   });
+  console.log("LoginQb Request Result:", result.errors, result.body, result.response.statusCode);
 
   if (result.errors || result.response.statusCode !== 200) {
     return false;
