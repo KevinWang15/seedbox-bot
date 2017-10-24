@@ -67,6 +67,7 @@ class UserTask {
                 await rssFeedTorrent.update({
                   status: RssFeedTorrentStatus.PENDING_ADD,
                   file_size_kb: torrentData.length / 1024,
+                  torrent_path: torrentData.path,
                 });
                 // AddTorrentToQb需要串行执行，重要！
                 await AddTorrentToQb(userConfig.boxConfig, rssFeedTorrent, torrentData);
