@@ -11,10 +11,22 @@ const server = {
 
 const http = {
   maxConcurrency: 8,
+  retryCount: 3,
+};
+
+const userTask = {
+  interval: 120,
+};
+
+const system = {
+  newUserScanInterval: 60,
+  newTorrentsTTL: 180,
 };
 
 export {
+  userTask,
   server,
   mysql,
   http,
+  system,
 };
