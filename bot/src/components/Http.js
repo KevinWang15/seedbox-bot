@@ -24,11 +24,13 @@ function httpRequest(arg) {
     return new Promise((queue_res) => {
       let req = proxiedRequest({
         followAllRedirects: true,
-        ...arg
+        ...arg,
+        auth: null,
       }, (error, response, body) => {
         queue_res({ error, response, body });
       });
-      if (auth) req.auth(auth.username, auth.password, true);
+      if (auth && auth.username && auth.password)
+        req.auth(auth.username, auth.password, true);
       return req;
     });
   });
