@@ -3,6 +3,8 @@ import { UserTaskCollection } from "../components/UserTaskManager";
 import { User } from "../models/User";
 import { UserTask } from "./UserTask";
 import { RssFeedTorrent, status as RssFeedTorrentStatus } from "../models/RssFeedTorrent";
+import Sequelize from 'sequelize';
+const Op = Sequelize.Op;
 
 async function ScanAndAddNewUsers() {
   let allUsers;
@@ -17,7 +19,13 @@ async function ScanAndAddNewUsers() {
     let userTask = new UserTask(user.id);
     let pendingAddTorrents = await RssFeedTorrent.findAll({
       where: {
-        status: RssFeedTorrentStatus.PENDING_ADD,
+        [Op.or]: [
+          {
+            status: RssFeedTorrentStatus.PENDING_DOWNLOAD,
+          }, {
+            status: RssFeedTorrentStatus.PENDING_ADD,
+          },
+        ],
       },
     });
     for (let i = 0; i < pendingAddTorrents.length; i++) {
