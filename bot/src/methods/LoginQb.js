@@ -21,7 +21,6 @@ async function LoginQb(boxConfig) {
     auth: { username: boxConfig.basic_auth_username, password: boxConfig.basic_auth_password },
     method: "POST",
   });
-  console.log(result);
   console.log("LoginQb Request Result:", result.errors, result.body, result.response ? result.response.statusCode : null);
 
   if (result.errors || result.response.statusCode !== 200) {

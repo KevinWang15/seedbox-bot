@@ -36,6 +36,7 @@ async function CheckIfHasSpace(boxConfig, spaceToEnsureGB) {
   if (!result.error) {
     let filesList = JSON.parse(result.body);
     totalFilesSize = filesList.map(_ => _.size).reduce((a, b) => (a + b), 0) / 1024 / 1024 / 1024;
+    console.log("totalFilesSize", totalFilesSize, "spaceToEnsureGB", spaceToEnsureGB, "maxAllowedUsage", maxAllowedUsage);
     if (totalFilesSize + spaceToEnsureGB > maxAllowedUsage) {
       let spaceToFreeUp = totalFilesSize + spaceToEnsureGB - maxAllowedUsage;
       return { hasSpace: false, spaceToFreeUp, autoDelConfig, filesList };
