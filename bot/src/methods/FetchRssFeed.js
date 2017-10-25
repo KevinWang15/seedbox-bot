@@ -1,25 +1,50 @@
 import { httpRequest } from "../components/Http";
-import et from "elementtree";
+import FeedParser from 'feedparser';
 
 async function FetchRssFeed(rssFeed) {
-  let rss = (await httpRequest({
-    url: rssFeed.url,
-    method: "GET",
-  })).body;
+  return new Promise(async (resolve, reject) => {
+    let feedparser = new FeedParser({});
+    let rss = (await httpRequest({
+        url: rssFeed.url,
+        method: "GET",
+      })
+    ).body;
 
-  let rssRoot = et.parse(rss);
-  let torrents = rssRoot.findall('./channel/item');
-  let results = [];
-  for (let i = 0; i < torrents.length; i++) {
-    let title = torrents[i].find('./title').text;
-    let url = torrents[i].find('./enclosure').attrib.url;
-    let pubDate = torrents[i].find('./pubDate').text;
-    results.push({ title, url, pubDate, rss_feed_id: rssFeed.id });
-  }
-  return {
-    ...rssFeed.dataValues,
-    torrents: results,
-  };
+    feedparser.on('error', function (error) {
+      reject(error);
+    });
+
+    feedparser.on('finish', function () {
+      try {
+        let stream = this;
+        let rssItem;
+        let torrents = [];
+        while (rssItem = stream.read()) {
+          let torrentData = {};
+          if (rssItem.enclosures) {
+            torrentData["url"] = rssItem.enclosures[0].url;
+          } else if (rssItem.link) {
+            torrentData["url"] = rssItem.link;
+          }
+          torrentData["title"] = rssItem.title;
+          torrentData["pubDate"] = rssItem.pubDate;
+          torrentData["rss_feed_id"] = rssFeed.id;
+          torrents.push(torrentData);
+        }
+
+        resolve({
+          ...rssFeed.dataValues,
+          torrents,
+        });
+      } catch (error) {
+        reject(error);
+      }
+    });
+
+    feedparser.write(rss, () => {
+      feedparser.end();
+    });
+  });
 }
 
 export { FetchRssFeed };

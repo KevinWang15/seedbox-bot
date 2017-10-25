@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "elementtree": "^0.1.7",
+    "feedparser": "^2.2.2",
     "mysql2": "^1.4.2",
     "parse-torrent": "^5.8.3",
     "promise-queue": "^2.2.3",
