@@ -57,14 +57,18 @@ exit
 ```
 运行
 ```
-service mysql reload
+service mysql restart
 ```
 ### 运行
 **切换到 qb-bot 根目录之后，** 运行
 ```
 chmod -R 777 bot
-npm install
 npm install -g forever babel-cli
+npm install
+```
+**切换到 qb-bot/bot 目录之后，** 运行
+```
+npm install
 npm run compile
 cd out
 ```
@@ -78,3 +82,12 @@ cd out
 
 ### 配置
 使用mysql管理软件（推荐navicat），连接数据库
+
+需要分别配置```users```, ```box_configs```, ```auto_del_configs```, ```rss_feeds```项目
+
+```
+INSERT INTO `box_configs` (`user_id`, `url`, `username`, `password`) VALUES ('1', 'http://111.111.111.111:8080/', 'admin', 'adminadmin')
+INSERT INTO `auto_del_configs` (`user_id`, `max_disk_usage_size_gb`) VALUES ('1', '1500')
+INSERT INTO `rss_feeds` (`user_id`, `name`, `url`, `max_size_mb`) VALUES ('1', 'AAA', 'https://aaa.com/torrentrss.php?https=1&rows=30..', '30000')
+INSERT INTO `users` (`id`, `token`, `enabled`) VALUES ('1', '123', '1')
+```
