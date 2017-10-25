@@ -24,6 +24,9 @@ function httpRequest(arg) {
     return new Promise((queue_res) => {
       let req = proxiedRequest({
         followAllRedirects: true,
+        headers: {
+          'User-Agent': 'curl',
+        },
         ...arg,
         auth: (auth && auth.username && auth.password) ? {
           'user': auth.username,
