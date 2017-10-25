@@ -21,7 +21,7 @@ async function FetchRssFeed(rssFeed) {
         let torrents = [];
         while (rssItem = stream.read()) {
           let torrentData = {};
-          if (rssItem.enclosures) {
+          if (rssItem.enclosures && rssItem.enclosures[0]) {
             torrentData["url"] = rssItem.enclosures[0].url;
           } else if (rssItem.link) {
             torrentData["url"] = rssItem.link;
