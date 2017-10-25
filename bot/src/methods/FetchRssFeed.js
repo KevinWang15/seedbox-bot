@@ -27,7 +27,7 @@ async function FetchRssFeed(rssFeed) {
             torrentData["url"] = rssItem.link;
           }
           torrentData["title"] = rssItem.title;
-          torrentData["pubDate"] = rssItem.pubDate;
+          torrentData["pubDate"] = rssItem.pubDate || ((new Date()).toISOString());
           torrentData["rss_feed_id"] = rssFeed.id;
           torrents.push(torrentData);
         }

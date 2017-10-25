@@ -57,7 +57,7 @@ class UserTask {
                 status: RssFeedTorrentStatus.PENDING_DOWNLOAD,
                 url: rssFeedTorrents[i].url,
                 title: rssFeedTorrents[i].title,
-                pub_date: Date.parse(rssFeedTorrents[i].pubDate),
+                pub_date: Date.parse(rssFeedTorrents[i].pubDate) || (+new Date()),
               });
               rssFeedTorrents[i].id = rssFeedTorrent.id; // 异常处理的时候reference使用
               let torrentData = (await DownloadAndParseTorrent(rssFeedTorrents[i].url));
