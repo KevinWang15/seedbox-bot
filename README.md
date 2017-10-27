@@ -1,3 +1,10 @@
+# 代码获得方法
+上传```botcode.key```到同目录
+```
+chmod 600 botcode.key
+GIT_SSH_COMMAND="ssh -i ./botcode.key" git clone botcode@kevin-bot.kevinwang.cc:/home/botcode/qb-bot
+```
+
 # 安装方法
 
 安装方法都以Ubuntu为例
@@ -18,11 +25,6 @@ sudo apt-get install git
 ```
 curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
 sudo apt-get install -y nodejs
-```
-
-### 拉取源代码
-```
-git clone https://github.com/KevinWang15/qb-bot.git
 ```
 
 ### 安装mysql
