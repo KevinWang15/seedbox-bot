@@ -94,6 +94,7 @@
             "check-separator",
             "check-type",
             "check-typecast"
-        ]
+        ],
+        "no-unused-variable": false
     }
 }

@@ -1,19 +1,28 @@
 import * as React from 'react';
 import './App.css';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import {AppBar, IconButton} from "material-ui";
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import {NavigationClose} from "material-ui/svg-icons";
 
-const logo = require('./logo.svg');
+const muiTheme = getMuiTheme({
+    fontFamily: ' "lucida grande", "lucida sans unicode", lucida, helvetica, "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif',
+    appBar: {
+           height: 50,
+    },
+});
 
 class App extends React.Component {
   render() {
     return (
       <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
-        </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.tsx</code> and save to reload.
-        </p>
+          <MuiThemeProvider muiTheme={muiTheme}>
+              <AppBar
+                  title="PT Box Manager"
+                  iconElementLeft={<div/>}
+                  iconElementRight={<div/>}
+              />
+          </MuiThemeProvider>
       </div>
     );
   }
