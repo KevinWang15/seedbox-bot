@@ -16,4 +16,8 @@ src/config.js
 www/
 plugins/
 torrents/
-out/
+out/*
+!out/.gitkeep
+out/torrents/*
+!out/torrents
+!out/torrents/.gitkeep
