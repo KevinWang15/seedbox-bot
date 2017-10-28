@@ -1,5 +1,3 @@
-import urlJoin from "url-join";
-import { httpRequest } from "../components/Http";
 import { FreeUpSpace } from "./FreeUpSpace";
 import { CheckIfHasSpace } from "./CheckIfHasSpace";
 import { status as RssFeedTorrentStatus } from "../models/RssFeedTorrent";
@@ -30,7 +28,7 @@ async function AddTorrent(client, rssFeedTorrent, torrentData, isSecondTry = fal
     return true;
   } else {
     console.log("> Failed: " + rssFeedTorrent.url);
-    if (isSecondTry) {
+    if (isSecondTry || !spaceData.spaceToFreeUp /* fetch torrents list failed */) {
       rssFeedTorrent.update({
         status: RssFeedTorrentStatus.ADD_FAILED,
         file_size_kb: torrentData.length / 1024,

@@ -41,7 +41,7 @@ class UserTask {
     if (this.run_lock)
       return;
     this.run_lock = true;
-
+    console.log("New user task..");
     try {
       let userConfig = await this.getUserConfig();
 

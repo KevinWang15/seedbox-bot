@@ -42,10 +42,7 @@ class qBittorrentClient {
 
   // [{ size, upspeed, added_on, dlspeed, category }]
   async getTorrentsList() {
-    if (!this.cookieJar) {
-      await this.login();
-    }
-    let result = await httpRequest({
+    let result = await this.requestWithRetryOn403({
       jar: this.cookieJar,
       url: urlJoin(this.boxConfig.url, '/query/torrents'),
       form: {},
@@ -55,17 +52,14 @@ class qBittorrentClient {
       },
       method: "POST",
     });
-    if (result.error) {
+    if (result.error || result.response.statusCode !== 200) {
       throw result.error;
     }
     return JSON.parse(result.body);
   }
 
   async addTorrent(url) {
-    if (!this.cookieJar) {
-      await this.login();
-    }
-    return await httpRequest({
+    return await this.requestWithRetryOn403({
       jar: this.cookieJar,
       url: urlJoin(this.boxConfig.url, '/command/download'),
       form: { urls: url },
@@ -79,11 +73,7 @@ class qBittorrentClient {
 
   // torrentsToDelete: [{hash}]
   async deleteTorrents(torrentsToDelete) {
-    console.log('torrentsToDelete', torrentsToDelete);
-    if (!this.cookieJar) {
-      await this.login();
-    }
-    let result = await httpRequest({
+    let result = await this.requestWithRetryOn403({
       jar: this.cookieJar,
       url: urlJoin(this.boxConfig.url, '/command/deletePerm'),
       form: { hashes: torrentsToDelete.map(_ => _.hash).join('|') },
@@ -96,6 +86,26 @@ class qBittorrentClient {
     // QB并不返回删除是否成功，因此sleep等待5秒
     await sleep(5000);
     return result;
+  }
+
+  async requestWithRetryOn403(params) {
+    if (!this.cookieJar) {
+      await this.login();
+    }
+    let result = await httpRequest({ ...params, jar: this.cookieJar });
+    if (result.response.statusCode === 403 || result.response.statusCode === 401) {
+      //需要重新登入
+      console.log("got 403, retry..");
+      await this.login();
+      let result = await httpRequest({ ...params, jar: this.cookieJar });
+      if (result.response.statusCode === 403 || result.response.statusCode === 401) {
+        throw new Error("Still 403 after retry");
+      } else {
+        return result;
+      }
+    } else {
+      return result;
+    }
   }
 }
 
