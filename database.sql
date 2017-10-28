@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2017-10-25 08:43:49
+Date: 2017-10-28 15:26:29
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -47,6 +47,7 @@ CREATE TABLE `box_configs` (
   `updatedAt` datetime DEFAULT NULL,
   `basic_auth_username` longtext,
   `basic_auth_password` longtext,
+  `client_type` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
 
