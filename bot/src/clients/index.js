@@ -1,4 +1,5 @@
 import qBittorrentClient from "./qBittorrent";
+import TransmissionClient from "./transmission";
 const ClientTypes = {
   qBittorrent: 0,
   Transmission: 1,
@@ -10,15 +11,15 @@ function createClient(boxConfig) {
     case ClientTypes.qBittorrent:
       return new qBittorrentClient(boxConfig);
       break;
-    default:
-      return new qBittorrentClient(boxConfig);
+    case ClientTypes.Transmission:
+      return new TransmissionClient(boxConfig);
       break;
-    // case ClientTypes.Transmission:
-    //   return new Transmission(boxConfig);
-    //   break;
     // case ClientTypes.ruTorrent:
     //   return new ruTorrent(boxConfig);
     //   break;
+    default:
+      return new qBittorrentClient(boxConfig);
+      break;
   }
 }
 
