@@ -46,7 +46,16 @@ class UserTask {
       for (let k = 0; k < userBoxes.length; k++) {
         let boxConfig = userBoxes[k];
         try {
-          if (!this.clients[boxConfig.id] || this.clients[boxConfig.id].boxConfig.url !== boxConfig.url) {
+          if (!this.clients[boxConfig.id]
+            || this.clients[boxConfig.id].boxConfig.url !== boxConfig.url
+            || this.clients[boxConfig.id].boxConfig.username !== boxConfig.username
+            || this.clients[boxConfig.id].boxConfig.password !== boxConfig.password
+            || this.clients[boxConfig.id].boxConfig.basic_auth_username !== boxConfig.basic_auth_username
+            || this.clients[boxConfig.id].boxConfig.basic_auth_password !== boxConfig.basic_auth_password
+            || this.clients[boxConfig.id].boxConfig.client_type !== boxConfig.client_type
+            || this.clients[boxConfig.id].boxConfig.max_disk_usage_size_gb !== boxConfig.max_disk_usage_size_gb
+            || this.clients[boxConfig.id].boxConfig.autodel_exempt_label !== boxConfig.autodel_exempt_label
+          ) {
             console.log("Creating new client..");
             this.clients[boxConfig.id] = createClient(boxConfig);
           }
