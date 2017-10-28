@@ -7,7 +7,7 @@ import {isLoggedIn} from "./services/UserService";
 import LoginPage from "./pages/LoginPage";
 
 const muiTheme = getMuiTheme({
-    fontFamily: ' "lucida grande", "lucida sans unicode", lucida, helvetica, "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif',
+    fontFamily: '"lucida grande", "lucida sans unicode", lucida, helvetica, "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif',
     appBar: {
            height: 50,
     },

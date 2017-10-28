@@ -2,3 +2,11 @@ body {
   margin: 0;
   padding: 0;
 }
+
+.set-font-family {
+  font-family: "lucida grande", "lucida sans unicode", lucida, helvetica, "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif !important;
+}
+
+.primary-color {
+  color: rgb(0, 188, 212);
+}
