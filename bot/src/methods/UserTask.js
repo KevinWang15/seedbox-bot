@@ -1,7 +1,6 @@
 import { userTask as userTaskConfig } from '../config';
 import { BoxConfig } from "../models/BoxConfig";
 import { Exception } from "../models/Exception";
-import { AutoDelConfig } from "../models/AutoDelConfig";
 import { RssFeed } from "../models/RssFeed";
 import { RssFeedTorrent, status as RssFeedTorrentStatus } from "../models/RssFeedTorrent";
 import { FetchRssFeed } from "../methods/FetchRssFeed";
@@ -106,11 +105,6 @@ class UserTask {
         user_id: this.user_id,
       },
     });
-    let autoDelConfig = await AutoDelConfig.find({
-      where: {
-        user_id: this.user_id,
-      },
-    });
     let rssFeeds = await RssFeed.findAll({
       where: {
         user_id: this.user_id,
@@ -123,7 +117,7 @@ class UserTask {
         },
       },
     });
-    return { boxConfig, autoDelConfig, rssFeeds, rssFeedTorrents };
+    return { boxConfig, rssFeeds, rssFeedTorrents };
   }
 }
 

@@ -2,7 +2,7 @@ import { system as systemConfig } from "../config";
 
 //TODO: 移动到单独文件里
 
-async function FreeUpSpace(client, autoDelConfig, filesList, spaceToFreeUp) {
+async function FreeUpSpace(client, filesList, spaceToFreeUp) {
   let torrentsToDelete = [], spaceFreedUp = 0; // 单位均为GB
 
   function setTorrentToDelete(item) {
@@ -17,7 +17,7 @@ async function FreeUpSpace(client, autoDelConfig, filesList, spaceToFreeUp) {
     if ((item.added_on + systemConfig.newTorrentsTTL) > (+new Date()) / 1000)
       return true;
 
-    if (autoDelConfig.exempt_label && item.category === autoDelConfig.exempt_label)
+    if (client.boxConfig.autodel_exempt_label && item.category === client.boxConfig.autodel_exempt_label)
       return true;
 
     return false;

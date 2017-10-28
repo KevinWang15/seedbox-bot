@@ -9,11 +9,9 @@ const BoxConfig = sequelize.define('box_config', {
   password: Sequelize.STRING,
   basic_auth_username: Sequelize.STRING,
   basic_auth_password: Sequelize.STRING,
-  rss_enabled: Sequelize.INTEGER,
-  rss_interval: Sequelize.INTEGER,
-  auto_del_enabled: Sequelize.INTEGER,
-  auto_del_interval: Sequelize.INTEGER,
   client_type: Sequelize.INTEGER, /* ClientTypes */
+  max_disk_usage_size_gb: Sequelize.INTEGER,
+  autodel_exempt_label: Sequelize.STRING,
 });
 
 BoxConfig.belongsTo(User, { foreignKey: 'user_id' });

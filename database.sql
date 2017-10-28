@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2017-10-28 15:26:29
+Date: 2017-10-28 18:02:49
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -39,15 +39,13 @@ CREATE TABLE `box_configs` (
   `url` longtext,
   `username` varchar(255) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
-  `rss_enabled` int(2) DEFAULT NULL,
-  `rss_interval` int(32) DEFAULT NULL,
-  `auto_del_enabled` int(2) DEFAULT NULL,
-  `auto_del_interval` int(32) DEFAULT NULL,
   `createdAt` datetime(6) DEFAULT NULL,
   `updatedAt` datetime DEFAULT NULL,
   `basic_auth_username` longtext,
   `basic_auth_password` longtext,
   `client_type` int(11) DEFAULT NULL,
+  `max_disk_usage_size_gb` int(11) DEFAULT NULL,
+  `autodel_exempt_label` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
 

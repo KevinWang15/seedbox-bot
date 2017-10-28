@@ -36,7 +36,7 @@ async function AddTorrent(client, rssFeedTorrent, torrentData, isSecondTry = fal
       return false;
     } else {
       console.log("> Not enough space, calling FreeUpSpace");
-      let freeUpSpaceResult = await FreeUpSpace(client, spaceData.autoDelConfig, spaceData.filesList, spaceData.spaceToFreeUp);
+      let freeUpSpaceResult = await FreeUpSpace(client, spaceData.filesList, spaceData.spaceToFreeUp);
       if (freeUpSpaceResult) {
         console.log("> FreeUpSpace finished, giving it a second try");
         return await AddTorrent(client, rssFeedTorrent, torrentData, true);
