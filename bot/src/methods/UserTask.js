@@ -43,8 +43,9 @@ class UserTask {
     console.log("New user task..");
     try {
       let userBoxes = await this.getUserBoxes();
+      let parallelTasks = [];
       for (let k = 0; k < userBoxes.length; k++) {
-        (async (k) => {
+        parallelTasks.push((async (k) => {
           let boxConfig = userBoxes[k];
           try {
             if (!this.clients[boxConfig.id]
@@ -107,9 +108,9 @@ class UserTask {
           } catch (boxError) {
             this.logException(boxError.toString() + "\n\n\n" + boxError.stack, "boxError", boxConfig.id);
           }
-        })(k);
+        })(k));
       }
-
+      await Promise.all(parallelTasks);
     } catch (exception) {
       this.logException(exception.toString() + "\n\n\n" + exception.stack, "run", this.user_id);
     }

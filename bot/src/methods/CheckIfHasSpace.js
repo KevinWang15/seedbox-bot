@@ -19,7 +19,7 @@ async function CheckIfHasSpace(client, spaceToEnsureGB) {
       return { hasSpace: true, spaceToFreeUp: 0, filesList };
     }
   } catch (exception) {
-    console.error("/query/torrents failed, box id " + client.boxConfig.id);
+    console.error("/query/torrents failed, box id " + client.boxConfig.id, exception);
     return { hasSpace: false, spaceToFreeUp: 0, filesList: null };
   }
 }
