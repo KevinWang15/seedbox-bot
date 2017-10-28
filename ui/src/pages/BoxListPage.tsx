@@ -55,8 +55,10 @@ class BoxListPage extends React.Component<{}, state> {
                     </TableHeader>
                     <TableBody displayRowCheckbox={false}>
                         {!!this.state.list && this.state.list.map(item => (
-                            <TableRow>
-                                <TableRowColumn>{item.url || "(未设置)"}</TableRowColumn>
+                            <TableRow key={item.id}>
+                                <TableRowColumn>
+                                    {!!item.url ? <a target="_blank" href={item.url}>{item.url}</a> : "(未设置)"}
+                                </TableRowColumn>
                                 <TableRowColumn>{getClientTypeName(item.client_type)}</TableRowColumn>
                                 <TableRowColumn>
                                     <div>
