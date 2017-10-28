@@ -1,8 +1,35 @@
 import * as React from 'react';
 import "./LoginPage.scss";
 import {Paper, RaisedButton, TextField} from "material-ui";
+import {api} from "../services/ApiService";
 
-class LoginPage extends React.Component {
+interface state {
+    username: string,
+    password: string,
+}
+
+interface props {
+
+}
+
+class LoginPage extends React.Component<props, state> {
+    constructor() {
+        super();
+        this.login = this.login.bind(this);
+        this.state = {
+            username: "",
+            password: ""
+        };
+    }
+
+    login() {
+        console.log("LOGIN");
+        api("auth/login", {
+            username: this.state.username,
+            password: this.state.password
+        });
+    }
+
     render() {
         return (<div className="login-page">
             <div className="content">
@@ -19,13 +46,19 @@ class LoginPage extends React.Component {
                         className="full-width"
                         defaultValue=""
                         floatingLabelText="用户名"
+                        value={this.state.username}
+                        onChange={(_, value) => this.setState({username: value})}
                     />
                     <TextField
                         className="full-width"
                         defaultValue=""
                         floatingLabelText="密码"
+                        value={this.state.password}
+                        onChange={(_, value) => this.setState({password: value})}
                     />
-                    <RaisedButton label="登入" className="login-btn" primary={true} fullWidth />
+                    <RaisedButton disabled={!this.state.username || !this.state.password} label="登入"
+                                  className="login-btn" primary={true} fullWidth
+                                  onClick={this.login}/>
                 </Paper>
             </div>
         </div>);
