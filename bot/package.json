@@ -8,6 +8,7 @@
     "compile": "babel --out-dir=out src"
   },
   "dependencies": {
+    "body-parser": "^1.18.2",
     "elementtree": "^0.1.7",
     "feedparser": "^2.2.2",
     "mysql2": "^1.4.2",

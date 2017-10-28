@@ -2,6 +2,7 @@ import * as React from 'react';
 import "./LoginPage.scss";
 import {Paper, RaisedButton, TextField} from "material-ui";
 import {api} from "../services/ApiService";
+import {login} from "../services/UserService";
 
 interface state {
     username: string,
@@ -23,11 +24,7 @@ class LoginPage extends React.Component<props, state> {
     }
 
     login() {
-        console.log("LOGIN");
-        api("auth/login", {
-            username: this.state.username,
-            password: this.state.password
-        });
+        login(this.state.username, this.state.password);
     }
 
     render() {
@@ -53,6 +50,7 @@ class LoginPage extends React.Component<props, state> {
                         className="full-width"
                         defaultValue=""
                         floatingLabelText="密码"
+                        type="password"
                         value={this.state.password}
                         onChange={(_, value) => this.setState({password: value})}
                     />

@@ -9,22 +9,32 @@ import LoginPage from "./pages/LoginPage";
 const muiTheme = getMuiTheme({
     fontFamily: '"lucida grande", "lucida sans unicode", lucida, helvetica, "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif',
     appBar: {
-           height: 50,
+        height: 50,
     },
 });
 
+//TODO: use redux
+let appRoot = {ref: null};
+
 class App extends React.Component {
-  render() {
-    return (
-      <div className="App">
-          <MuiThemeProvider muiTheme={muiTheme}>
-              {
-                  isLoggedIn() ? <MainPage/> : <LoginPage/>
-              }
-          </MuiThemeProvider>
-      </div>
-    );
-  }
+
+    constructor() {
+        super();
+        appRoot.ref = this;
+    }
+
+    render() {
+        return (
+            <div className="App">
+                <MuiThemeProvider muiTheme={muiTheme}>
+                    {
+                        isLoggedIn() ? <MainPage/> : <LoginPage/>
+                    }
+                </MuiThemeProvider>
+            </div>
+        );
+    }
 }
 
 export default App;
+export {appRoot};

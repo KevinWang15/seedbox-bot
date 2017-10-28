@@ -4,16 +4,15 @@ import axios from "axios";
 import swal from 'sweetalert2/dist/sweetalert2.all.min.js';
 
 function api(endpoint, params, {showError = true} = {}) {
-    console.log(showError);
-    axios.post(urlJoin(serverConfig.url, endpoint), params)
-        .then(function (response) {
-            console.log(response);
+    return axios.post(urlJoin(serverConfig.url, endpoint), params)
+        .then(_ => {
+            return _.data;
         })
         .catch(function (error) {
             if (showError && error.response.data.errMsg) {
-                console.dir(error);
                 swal('出错了', error.response.data.errMsg, 'error');
             }
+            throw error;
         });
 }
 
