@@ -3,6 +3,8 @@ import './App.css';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MainPage from "./pages/MainPage";
+import {isLoggedIn} from "./services/UserService";
+import LoginPage from "./pages/LoginPage";
 
 const muiTheme = getMuiTheme({
     fontFamily: ' "lucida grande", "lucida sans unicode", lucida, helvetica, "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif',
@@ -16,7 +18,9 @@ class App extends React.Component {
     return (
       <div className="App">
           <MuiThemeProvider muiTheme={muiTheme}>
-              <MainPage/>
+              {
+                  isLoggedIn() ? <MainPage/> : <LoginPage/>
+              }
           </MuiThemeProvider>
       </div>
     );
