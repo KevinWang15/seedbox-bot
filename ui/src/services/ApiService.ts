@@ -1,10 +1,16 @@
 import {server as serverConfig} from "../config.js";
+import {user} from "../mem/user";
 import urlJoin from "url-join";
 import axios from "axios";
 import swal from 'sweetalert2/dist/sweetalert2.all.min.js';
 
 function api(endpoint, params, {showError = true} = {}) {
-    return axios.post(urlJoin(serverConfig.url, endpoint), params)
+    return axios.post(urlJoin(serverConfig.url, endpoint), params,
+        {
+            headers: {
+                token: user.token
+            }
+        })
         .then(_ => {
             return _.data;
         })

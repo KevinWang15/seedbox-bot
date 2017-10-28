@@ -1,5 +1,5 @@
 const user = {
-    token: null
+    token: localStorage['token']
 };
 
 export {user};
