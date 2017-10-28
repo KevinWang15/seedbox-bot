@@ -14,7 +14,7 @@ class UserTask {
   user_id;
   interval_id;
   run_lock;
-  client;
+  clients = [];
 
   constructor(user_id) {
     this.user_id = user_id;
@@ -42,56 +42,63 @@ class UserTask {
     this.run_lock = true;
     console.log("New user task..");
     try {
-      let userConfig = await this.getUserConfig();
-
-      if (!this.client || this.client.boxConfig.url !== userConfig.boxConfig.url) {
-        console.log("Creating new client..");
-        this.client = createClient(userConfig.boxConfig);
-      }
-
-      // 从远处fetch rss feed
-      let existingUrls = userConfig.rssFeedTorrents.map(_ => _.url);
-      let allRssFeeds = (await Promise.all(userConfig.rssFeeds.map(FetchRssFeed)));
-      for (let k = 0; k < allRssFeeds.length; k++) {
+      let userBoxes = await this.getUserBoxes();
+      for (let k = 0; k < userBoxes.length; k++) {
+        let boxConfig = userBoxes[k];
         try {
-          // 每一个rss源设置一个循环
-          let currentRssFeed = allRssFeeds[k];
-          let rssFeedTorrents = currentRssFeed.torrents.filter(_ => existingUrls.indexOf(_.url) < 0);
-          for (let i = 0; i < rssFeedTorrents.length; i++) {
-            try {
-              let rssFeedTorrent = await RssFeedTorrent.create({
-                rss_feed_id: rssFeedTorrents[i].rss_feed_id,
-                status: RssFeedTorrentStatus.PENDING_DOWNLOAD,
-                url: rssFeedTorrents[i].url,
-                title: rssFeedTorrents[i].title,
-                pub_date: Date.parse(rssFeedTorrents[i].pubDate) || (+new Date()),
-              });
-              rssFeedTorrents[i].id = rssFeedTorrent.id; // 异常处理的时候reference使用
-              let torrentData = (await DownloadAndParseTorrent(rssFeedTorrents[i].url));
+          if (!this.clients[boxConfig.id] || this.clients[boxConfig.id].boxConfig.url !== boxConfig.url) {
+            console.log("Creating new client..");
+            this.clients[boxConfig.id] = createClient(boxConfig);
+          }
 
-              if (currentRssFeed.max_size_mb * 1024 * 1024 > torrentData.length) {
-                // 种子文件合适，正在添加
-                await rssFeedTorrent.update({
-                  status: RssFeedTorrentStatus.PENDING_ADD,
-                  file_size_kb: torrentData.length / 1024,
-                  torrent_path: torrentData.path,
-                });
-                await AddTorrent(this.client, rssFeedTorrent, torrentData);
-              } else {
-                // 种子文件太大
-                await rssFeedTorrent.update({
-                  status: RssFeedTorrentStatus.FILTERED_OUT,
-                  file_size_kb: torrentData.length / 1024,
-                });
+          // 从远处fetch rss feed
+          let allRssFeeds = (await Promise.all(boxConfig.rssFeeds.map(FetchRssFeed)));
+          for (let j = 0; j < allRssFeeds.length; j++) {
+            try {
+              // 每一个rss源设置一个循环
+              let existingUrls = boxConfig.rssFeeds[j].rssFeedTorrents.map(_ => _.url);
+              let currentRssFeed = allRssFeeds[j];
+              let rssFeedTorrents = currentRssFeed.torrents.filter(_ => existingUrls.indexOf(_.url) < 0);
+              for (let i = 0; i < rssFeedTorrents.length; i++) {
+                try {
+                  let rssFeedTorrent = await RssFeedTorrent.create({
+                    rss_feed_id: rssFeedTorrents[i].rss_feed_id,
+                    status: RssFeedTorrentStatus.PENDING_DOWNLOAD,
+                    url: rssFeedTorrents[i].url,
+                    title: rssFeedTorrents[i].title,
+                    pub_date: Date.parse(rssFeedTorrents[i].pubDate) || (+new Date()),
+                  });
+                  rssFeedTorrents[i].id = rssFeedTorrent.id; // 异常处理的时候reference使用
+                  let torrentData = (await DownloadAndParseTorrent(rssFeedTorrents[i].url));
+
+                  if (currentRssFeed.max_size_mb * 1024 * 1024 > torrentData.length) {
+                    // 种子文件合适，正在添加
+                    await rssFeedTorrent.update({
+                      status: RssFeedTorrentStatus.PENDING_ADD,
+                      file_size_kb: torrentData.length / 1024,
+                      torrent_path: torrentData.path,
+                    });
+                    await AddTorrent(this.clients[boxConfig.id], rssFeedTorrent, torrentData);
+                  } else {
+                    // 种子文件太大
+                    await rssFeedTorrent.update({
+                      status: RssFeedTorrentStatus.FILTERED_OUT,
+                      file_size_kb: torrentData.length / 1024,
+                    });
+                  }
+                } catch (feedTorrentError) {
+                  this.logException(feedTorrentError.toString() + "\n\n\n" + feedTorrentError.stack, "feedTorrentError", rssFeedTorrents[i].id);
+                }
               }
-            } catch (feedTorrentError) {
-              this.logException(feedTorrentError.toString() + "\n\n\n" + feedTorrentError.stack, "feedTorrentError", rssFeedTorrents[i].id);
+            } catch (rssFeedError) {
+              this.logException(rssFeedError.toString() + "\n\n\n" + rssFeedError.stack, "rssFeedError", allRssFeeds[j].id);
             }
           }
-        } catch (rssFeedError) {
-          this.logException(rssFeedError.toString() + "\n\n\n" + rssFeedError.stack, "rssFeedError", allRssFeeds[k].id);
+        } catch (boxError) {
+          this.logException(boxError.toString() + "\n\n\n" + boxError.stack, "boxError", boxConfig.id);
         }
       }
+
     } catch (exception) {
       this.logException(exception.toString() + "\n\n\n" + exception.stack, "run", this.user_id);
     }
@@ -99,15 +106,17 @@ class UserTask {
   }
 
 
-  async getUserConfig() {
-    let boxConfig = await BoxConfig.find({
+  async getUserBoxes() {
+    let boxConfigs = await BoxConfig.findAll({
       where: {
         user_id: this.user_id,
       },
     });
     let rssFeeds = await RssFeed.findAll({
       where: {
-        user_id: this.user_id,
+        box_id: {
+          [Op.in]: boxConfigs.map(_ => _.id),
+        },
       },
     });
     let rssFeedTorrents = await RssFeedTorrent.findAll({
@@ -117,7 +126,13 @@ class UserTask {
         },
       },
     });
-    return { boxConfig, rssFeeds, rssFeedTorrents };
+    boxConfigs.forEach(boxConfig => {
+      boxConfig.rssFeeds = rssFeeds.filter(_ => _.box_id === boxConfig.id);
+    });
+    rssFeeds.forEach(rssFeed => {
+      rssFeed.rssFeedTorrents = rssFeedTorrents.filter(_ => _.rss_feed_id === rssFeed.id);
+    });
+    return boxConfigs;
   }
 }
 
