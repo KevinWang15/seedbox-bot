@@ -1,3 +1,0 @@
-const cookieJars = {};
-
-export { cookieJars };

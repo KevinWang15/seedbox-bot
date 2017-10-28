@@ -7,13 +7,15 @@ import { RssFeedTorrent, status as RssFeedTorrentStatus } from "../models/RssFee
 import { FetchRssFeed } from "../methods/FetchRssFeed";
 import { DownloadAndParseTorrent } from "../methods/DownloadAndParseTorrent";
 import Sequelize from 'sequelize';
-import { AddTorrentToQb } from "./AddTorrentToQb";
+import { AddTorrent } from "./AddTorrent";
+import { createClient } from "../clients/index";
 
 const Op = Sequelize.Op;
 class UserTask {
   user_id;
   interval_id;
   run_lock;
+  client;
 
   constructor(user_id) {
     this.user_id = user_id;
@@ -42,6 +44,12 @@ class UserTask {
 
     try {
       let userConfig = await this.getUserConfig();
+
+      if (!this.client || this.client.boxConfig.url !== userConfig.boxConfig.url) {
+        console.log("Creating new client..");
+        this.client = createClient(userConfig.boxConfig);
+      }
+
       // 从远处fetch rss feed
       let existingUrls = userConfig.rssFeedTorrents.map(_ => _.url);
       let allRssFeeds = (await Promise.all(userConfig.rssFeeds.map(FetchRssFeed)));
@@ -69,8 +77,7 @@ class UserTask {
                   file_size_kb: torrentData.length / 1024,
                   torrent_path: torrentData.path,
                 });
-                // AddTorrentToQb需要串行执行，重要！
-                await AddTorrentToQb(userConfig.boxConfig, rssFeedTorrent, torrentData);
+                await AddTorrent(this.client, rssFeedTorrent, torrentData);
               } else {
                 // 种子文件太大
                 await rssFeedTorrent.update({

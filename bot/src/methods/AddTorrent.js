@@ -1,30 +1,19 @@
 import urlJoin from "url-join";
 import { httpRequest } from "../components/Http";
-import { CheckIfHasSpace, FreeUpSpace } from "./FreeUpSpace";
-import { cookieJars } from "../mem/CookieJars";
-import { LoginQb } from "./LoginQb";
+import { FreeUpSpace } from "./FreeUpSpace";
+import { CheckIfHasSpace } from "./CheckIfHasSpace";
 import { status as RssFeedTorrentStatus } from "../models/RssFeedTorrent";
 
 //TODO: loginQb 加锁
 //TODO: safe_add 流程，也需要加锁
 
 
-async function AddTorrentToQb(boxConfig, rssFeedTorrent, torrentData, isSecondTry = false) {
-  console.log("AddTorrentToQb");
-  if (!cookieJars[boxConfig.url]) {
-    await LoginQb(boxConfig);
-  }
-  let spaceData = await CheckIfHasSpace(boxConfig, torrentData.length / 1024 / 1024 / 1024);
+async function AddTorrent(client, rssFeedTorrent, torrentData, isSecondTry = false) {
+  console.log("AddTorrent");
+  let spaceData = await CheckIfHasSpace(client, torrentData.length / 1024 / 1024 / 1024);
   // console.log("> Space data:", spaceData);
   if (spaceData.hasSpace) {
-    let result = await httpRequest({
-      jar: cookieJars[boxConfig.url],
-      url: urlJoin(boxConfig.url, '/command/download'),
-      form: { urls: rssFeedTorrent.url },
-      auth: { username: boxConfig.basic_auth_username, password: boxConfig.basic_auth_password },
-      method: "POST",
-    });
-
+    let result = await client.addTorrent(rssFeedTorrent.url);
     if (!result.error) {
       console.log("> Successful: " + rssFeedTorrent.url);
       rssFeedTorrent.update({
@@ -38,6 +27,7 @@ async function AddTorrentToQb(boxConfig, rssFeedTorrent, torrentData, isSecondTr
         file_size_kb: torrentData.length / 1024,
       });
     }
+    return true;
   } else {
     console.log("> Failed: " + rssFeedTorrent.url);
     if (isSecondTry) {
@@ -48,12 +38,12 @@ async function AddTorrentToQb(boxConfig, rssFeedTorrent, torrentData, isSecondTr
       return false;
     } else {
       console.log("> Not enough space, calling FreeUpSpace");
-      await FreeUpSpace(boxConfig, spaceData.autoDelConfig, spaceData.filesList, spaceData.spaceToFreeUp);
+      await FreeUpSpace(client, spaceData.autoDelConfig, spaceData.filesList, spaceData.spaceToFreeUp);
       console.log("> FreeUpSpace finished, giving it a second try");
-      AddTorrentToQb(boxConfig, rssFeedTorrent, torrentData, true);
+      return await AddTorrent(client, rssFeedTorrent, torrentData, true);
     }
   }
 }
 
 
-export { AddTorrentToQb };
+export { AddTorrent };
