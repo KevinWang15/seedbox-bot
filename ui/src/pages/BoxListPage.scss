@@ -1,0 +1,9 @@
+.box-list-page {
+  text-align: left;
+  .delete-button {
+    min-width: 0 !important;
+    width: 44px !important;
+    position: relative;
+    top: -0.5px;
+  }
+}

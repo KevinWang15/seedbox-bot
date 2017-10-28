@@ -9,7 +9,7 @@ function AuthMiddleware(req, res, next) {
     req.user = users[0];
     if (!req.user) {
       res.send(401, {
-        errMsg: "Invalid token",
+        errMsg: "无效的登入信息",
       });
     } else {
       next();

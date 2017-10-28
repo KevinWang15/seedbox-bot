@@ -22,4 +22,8 @@ function api(endpoint, params, {showError = true} = {}) {
         });
 }
 
-export {api};
+function getBoxList() {
+    return api('user/box-list', {});
+}
+
+export {api, getBoxList};

@@ -1,8 +1,19 @@
 import * as React from 'react';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import {AppBar, IconButton, IconMenu, MenuItem, Divider} from "material-ui";
+import BoxListPage from "./BoxListPage";
 
-class MainPage extends React.Component {
+interface state {
+    currentPage: any
+}
+
+class MainPage extends React.Component<{}, state> {
+    constructor() {
+        super();
+        this.state = {
+            currentPage: <BoxListPage/>
+        }
+    }
     render() {
         return (<div>
             <AppBar
@@ -27,6 +38,7 @@ class MainPage extends React.Component {
                     <MenuItem primaryText="登出"/>
                 </IconMenu>}
             />
+            {this.state.currentPage}
         </div>);
     }
 }
