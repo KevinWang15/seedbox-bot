@@ -36,9 +36,18 @@ async function AddTorrent(client, rssFeedTorrent, torrentData, isSecondTry = fal
       return false;
     } else {
       console.log("> Not enough space, calling FreeUpSpace");
-      await FreeUpSpace(client, spaceData.autoDelConfig, spaceData.filesList, spaceData.spaceToFreeUp);
-      console.log("> FreeUpSpace finished, giving it a second try");
-      return await AddTorrent(client, rssFeedTorrent, torrentData, true);
+      let freeUpSpaceResult = await FreeUpSpace(client, spaceData.autoDelConfig, spaceData.filesList, spaceData.spaceToFreeUp);
+      if (freeUpSpaceResult) {
+        console.log("> FreeUpSpace finished, giving it a second try");
+        return await AddTorrent(client, rssFeedTorrent, torrentData, true);
+      } else {
+        console.log("> FreeUpSpace failed");
+        rssFeedTorrent.update({
+          status: RssFeedTorrentStatus.ADD_FAILED,
+          file_size_kb: torrentData.length / 1024,
+        });
+        return false;
+      }
     }
   }
 }
