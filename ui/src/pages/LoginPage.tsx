@@ -1,5 +1,5 @@
 import * as React from 'react';
-import "LoginPage.less";
+import "./LoginPage.scss";
 
 class LoginPage extends React.Component {
     render() {
