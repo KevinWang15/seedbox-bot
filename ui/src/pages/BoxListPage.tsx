@@ -20,9 +20,10 @@ import clone from 'clone';
 import "./BoxListPage.scss";
 
 interface rssConfig {
+    id: number;
     name: string;
     url: string;
-    max_size_mb: number;
+    max_size_mb?: number;
 }
 
 interface boxConfig {
@@ -60,6 +61,10 @@ class BoxListPage extends React.Component<{}, state> {
                 list: _.list
             });
         });
+    }
+
+    saveEdit() {
+        console.log(this.state.currentEditing);
     }
 
     cancelEdit() {
@@ -309,58 +314,118 @@ class BoxListPage extends React.Component<{}, state> {
 
                 <Paper className="sub-field">
                     <h1>RSS 配置</h1>
-                    {/*<Table>*/}
-                        {/*<TableHeader displaySelectAll={false} adjustForCheckbox={false}>*/}
-                            {/*<TableRow>*/}
-                                {/*<TableHeaderColumn>名称</TableHeaderColumn>*/}
-                                {/*<TableHeaderColumn>网址</TableHeaderColumn>*/}
-                                {/*<TableHeaderColumn>最大大小</TableHeaderColumn>*/}
-                                {/*<TableHeaderColumn>操作</TableHeaderColumn>*/}
-                            {/*</TableRow>*/}
-                        {/*</TableHeader>*/}
-                        {/*<TableBody displayRowCheckbox={false}>*/}
-                            {/*{!!this.state.list && this.state.list.map(item => (*/}
-                                {/*<TableRow key={item.id}>*/}
-                                    {/*<TableRowColumn>*/}
-                                        {/*{!!item.url ? <a target="_blank"*/}
-                                                         {/*href={item.url}>{item.url}</a> : "(未设置)"}*/}
-                                    {/*</TableRowColumn>*/}
-                                    {/*<TableRowColumn>*/}
-                                        {/*<img className="client-icon"*/}
-                                             {/*src={getClientTypeIcon(item.client_type)}/>*/}
-                                        {/*{getClientTypeName(item.client_type)}*/}
-                                    {/*</TableRowColumn>*/}
-                                    {/*<TableRowColumn>*/}
-                                        {/*{!!item.max_disk_usage_size_gb ?*/}
-                                            {/*<span>{item.max_disk_usage_size_gb} GB</span>*/}
-                                            {/*: <span>无限</span>*/}
-                                        {/*}*/}
+                    <Table className="rss-table">
+                        <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+                            <TableRow>
+                                <TableHeaderColumn>名称</TableHeaderColumn>
+                                <TableHeaderColumn style={{width: "50%"}}>RSS网址</TableHeaderColumn>
+                                <TableHeaderColumn>最大大小 (MB)</TableHeaderColumn>
+                                <TableHeaderColumn>操作</TableHeaderColumn>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody displayRowCheckbox={false}>
+                            {!!this.state.currentEditing.rss_feeds && this.state.currentEditing.rss_feeds.map((item, index) => (
+                                <TableRow key={index}>
+                                    <TableRowColumn>
+                                        <TextField
+                                            fullWidth
+                                            hintText="请输入名称"
+                                            value={item.name}
+                                            onChange={(_, value) => {
+                                                let rss_feeds = [...this.state.currentEditing.rss_feeds];
+                                                rss_feeds[index] = {
+                                                    ...rss_feeds[index],
+                                                    name: value
+                                                };
+                                                this.setState({
+                                                    currentEditing: {
+                                                        ...this.state.currentEditing,
+                                                        rss_feeds
+                                                    }
+                                                })
+                                            }}
+                                        />
+                                    </TableRowColumn>
+                                    <TableRowColumn style={{width: "50%"}}>
+                                        <TextField
+                                            fullWidth
+                                            hintText="请输入网址"
+                                            value={item.url}
+                                            onChange={(_, value) => {
+                                                let rss_feeds = [...this.state.currentEditing.rss_feeds];
+                                                rss_feeds[index] = {
+                                                    ...rss_feeds[index],
+                                                    url: value
+                                                };
+                                                this.setState({
+                                                    currentEditing: {
+                                                        ...this.state.currentEditing,
+                                                        rss_feeds
+                                                    }
+                                                })
+                                            }}
+                                        />
+                                    </TableRowColumn>
+                                    <TableRowColumn>
+                                        <TextField
+                                            fullWidth
+                                            hintText="单位MB, 留空为不限"
+                                            value={item.max_size_mb || ""}
+                                            onChange={(_, value) => {
+                                                let rss_feeds = [...this.state.currentEditing.rss_feeds];
+                                                rss_feeds[index] = {
+                                                    ...rss_feeds[index],
+                                                    max_size_mb: +value || 0
+                                                };
+                                                this.setState({
+                                                    currentEditing: {
+                                                        ...this.state.currentEditing,
+                                                        rss_feeds
+                                                    }
+                                                })
+                                            }}
+                                        />
+                                    </TableRowColumn>
+                                    <TableRowColumn>
+                                        <div>
+                                            <RaisedButton secondary
+                                                          className="delete-button"
+                                                          icon={<IconActionDelete/>}
+                                                          style={buttonStyle}
+                                                          onClick={() => {
+                                                              let rss_feeds = [...this.state.currentEditing.rss_feeds];
+                                                              rss_feeds.splice(index, 1);
+                                                              this.setState({
+                                                                  currentEditing: {
+                                                                      ...this.state.currentEditing,
+                                                                      rss_feeds
+                                                                  }
+                                                              })
+                                                          }}
+                                            >
+                                            </RaisedButton>
+                                        </div>
+                                    </TableRowColumn>
+                                </TableRow>
+                            ))}
 
-                                    {/*</TableRowColumn>*/}
-                                    {/*<TableRowColumn>*/}
-                                        {/*<div>*/}
-                                            {/*<RaisedButton primary label="编辑配置"*/}
-                                                          {/*onClick={() => this.setState({currentEditing: clone(item)})}*/}
-                                                          {/*style={buttonStyle}/>*/}
-                                            {/*<RaisedButton secondary*/}
-                                                          {/*className="delete-button"*/}
-                                                          {/*icon={<IconActionDelete/>}*/}
-                                                          {/*style={buttonStyle}*/}
-                                                          {/*onClick={() => this.deleteBox(item)}*/}
-                                            {/*>*/}
-                                            {/*</RaisedButton>*/}
-                                        {/*</div>*/}
-                                    {/*</TableRowColumn>*/}
-                                {/*</TableRow>*/}
-                            {/*))}*/}
+                        </TableBody>
+                    </Table>
 
-                        {/*</TableBody>*/}
-                    {/*</Table>*/}
+
+                    <RaisedButton primary icon={<IconContentAdd/>} style={{
+                        marginTop: 14
+                    }} onClick={() => {
+                        let rss_feeds = [...this.state.currentEditing.rss_feeds];
+                        rss_feeds.push({id: 0, name: "", url: "", max_size_mb: null});
+                        this.setState({currentEditing: {...this.state.currentEditing, rss_feeds}});
+                    }}
+                    />
                 </Paper>
                 <div style={{margin: 10}}>
                     <RaisedButton primary label="保存" style={{
                         marginRight: 10
-                    }} onClick={() => this.createBox()}
+                    }} onClick={() => this.saveEdit()}
                     />
                     <RaisedButton label="取消" style={{}} onClick={() => this.cancelEdit()}
                     />

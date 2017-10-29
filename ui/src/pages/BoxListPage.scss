@@ -29,5 +29,10 @@
       opacity: .5;
       font-weight: lighter;
     }
+    .rss-table {
+      tr {
+        border-bottom: 0 !important;
+      }
+    }
   }
 }

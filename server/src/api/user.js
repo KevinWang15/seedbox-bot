@@ -34,6 +34,7 @@ router.post('/box-list', async function (req, res) {
         username: boxConfig.username,
         password: boxConfig.password,
         rss_feeds: rssFeeds.map(_ => ({
+          id: _.id,
           name: _.name,
           url: _.url,
           max_size_mb: _.max_size_mb,
