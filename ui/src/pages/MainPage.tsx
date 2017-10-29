@@ -2,6 +2,7 @@ import * as React from 'react';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import {AppBar, IconButton, IconMenu, MenuItem, Divider} from "material-ui";
 import BoxListPage from "./BoxListPage";
+import {logout} from "../services/UserService";
 
 interface state {
     currentPage: any
@@ -12,8 +13,9 @@ class MainPage extends React.Component<{}, state> {
         super();
         this.state = {
             currentPage: <BoxListPage/>
-        }
+        };
     }
+
     render() {
         return (<div>
             <AppBar
@@ -35,7 +37,7 @@ class MainPage extends React.Component<{}, state> {
                     <Divider />
                     <MenuItem primaryText="添加或删除盒子"/>
                     <Divider />
-                    <MenuItem primaryText="登出"/>
+                    <MenuItem onClick={logout} primaryText="登出"/>
                 </IconMenu>}
             />
             {this.state.currentPage}

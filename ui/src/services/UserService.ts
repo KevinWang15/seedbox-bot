@@ -7,7 +7,7 @@ if (localStorage['token']) {
     info().catch(_ => {
         swal({title: '登入信息失效，请重新登入', type: 'error'});
         user.token = null;
-        localStorage['token'] = null;
+        delete localStorage['token'];
         appRoot.ref.forceUpdate();
     });
 }
@@ -28,8 +28,16 @@ async function login(username, password) {
     });
 }
 
+async function logout() {
+    user.token = null;
+    delete localStorage['token'];
+    swal({title: '登出成功', type: 'success'});
+    appRoot.ref.forceUpdate();
+
+}
+
 async function info() {
     return api("user/info", {}, {showError: false});
 }
 
-export {login, isLoggedIn};
+export {login, isLoggedIn, logout};
