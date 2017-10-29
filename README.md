@@ -1,13 +1,15 @@
-# 代码获得方法
+安装方法都以Ubuntu为例，一步一步来，不要跳步骤或者更换顺序。
+
+# 代码获得
 上传```botcode.key```到同目录
 ```
 chmod 600 botcode.key
 GIT_SSH_COMMAND="ssh -i ./botcode.key" git clone botcode@kevin-bot.kevinwang.cc:/home/botcode/qb-bot
 ```
 
-# 安装方法
 
-安装方法都以Ubuntu为例
+# BOT安装
+
 
 ## bot 脚本安装方法
 
@@ -82,14 +84,51 @@ cd out
 先运行 ```node index.js```，如果没有错误，按Ctrl+C
 运行```forever start index.js```以开始bot进程
 
-### 配置
+# 后端安装
+
+## 服务器配置
+**切换到 qb-bot/server 目录之后，** 
+
+复制```src/config.example.js```到```src/config.js```并编辑其内容。
+
+一定需要编辑的是```mysql```中的```password```，设置成数据库的密码
+
+运行
+```
+npm install
+npm run compile
+cd out
+node index.js
+```
+看看有没有错，没错的话Ctrl+C后运行
+```
+forever start index.js
+```
+
+## 用户配置
 使用mysql管理软件（推荐navicat），连接数据库
 
-需要分别配置```users```, ```box_configs```, ```auto_del_configs```, ```rss_feeds```项目
+向```users```表加入用户，其中```password```是bcrypt后的结果。 https://bcrypt-generator.com/
 
+
+# 前端安装
+**切换到 qb-bot/ui 目录之后，** 
+
+复制```src/config.example.js```到```src/config.js```并编辑其内容。
+
+一定需要编辑的是```url```，指向后端地址（默认是IP地址加上```:10120```）
+
+运行
 ```
-INSERT INTO `box_configs` (`user_id`, `url`, `username`, `password`) VALUES ('1', 'http://111.111.111.111:8080/', 'admin', 'adminadmin')
-INSERT INTO `auto_del_configs` (`user_id`, `max_disk_usage_size_gb`) VALUES ('1', '1500')
-INSERT INTO `rss_feeds` (`user_id`, `name`, `url`, `max_size_mb`) VALUES ('1', 'AAA', 'https://aaa.com/torrentrss.php?https=1&rows=30..', '30000')
-INSERT INTO `users` (`id`, `token`, `enabled`) VALUES ('1', '123', '1')
+npm install
+npm run build
+cd build
+npm install http-server -g
+./node_modules/http-server/bin/http-server -p 8080 -d false
 ```
+这时候，前端会运行在IP地址加上```:8080```，用之前设置好的用户可以登入。
+看看有没有错，没错的话Ctrl+C后运行。
+```
+forever start ./node_modules/http-server/bin/http-server -p 8080 -d false
+```
+部署完毕。
