@@ -8,6 +8,8 @@ import { DownloadAndParseTorrent } from "../methods/DownloadAndParseTorrent";
 import Sequelize from 'sequelize';
 import { AddTorrent } from "./AddTorrent";
 import { createClient } from "../clients/index";
+import { CheckIfHasSpace } from "./CheckIfHasSpace";
+import { FreeUpSpace } from "./FreeUpSpace";
 
 const Op = Sequelize.Op;
 class UserTask {
@@ -60,6 +62,14 @@ class UserTask {
             ) {
               console.log("Creating new client..");
               this.clients[boxConfig.id] = createClient(boxConfig);
+            }
+
+            if (!boxConfig.rssFeeds.length) {
+              console.log("No rss feeds.. just free up space");
+              let spaceData = await CheckIfHasSpace(this.clients[boxConfig.id], 0);
+              if (!spaceData.hasSpace) {
+                await FreeUpSpace(this.clients[boxConfig.id], spaceData.filesList, spaceData.spaceToFreeUp);
+              }
             }
 
             // 从远处fetch rss feed
