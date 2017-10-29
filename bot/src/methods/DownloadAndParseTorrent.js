@@ -26,7 +26,7 @@ function DownloadAndParseTorrent(url) {
           rej(exception);
         }
       });
-    });
+    }).catch(rej);
   });
 }
 export { DownloadAndParseTorrent };
