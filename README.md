@@ -1,6 +1,9 @@
 安装方法都以Ubuntu为例，一步一步来，不要跳步骤或者更换顺序。
 
 # 代码获得
+```
+sudo apt-get install git
+```
 上传```botcode.key```到同目录
 ```
 chmod 600 botcode.key
@@ -10,7 +13,6 @@ GIT_SSH_COMMAND="ssh -i ./botcode.key" git clone botcode@kevin-bot.kevinwang.cc:
 
 # BOT安装
 
-
 ## bot 脚本安装方法
 
 ### apt-get update
@@ -18,10 +20,6 @@ GIT_SSH_COMMAND="ssh -i ./botcode.key" git clone botcode@kevin-bot.kevinwang.cc:
 sudo apt-get update
 ```
 
-### git
-```
-sudo apt-get install git
-```
 
 ### Node.js
 ```
@@ -73,13 +71,16 @@ npm install
 **切换到 qb-bot/bot 目录之后，** 运行
 ```
 npm install
-npm run compile
-cd out
 ```
 
 复制```config.example.js```到```config.js```并编辑其内容。
 
 一定需要编辑的是```mysql```中的```password```，设置成数据库的密码
+
+```
+npm run compile
+cd out
+```
 
 先运行 ```node index.js```，如果没有错误，按Ctrl+C
 运行```forever start index.js```以开始bot进程
