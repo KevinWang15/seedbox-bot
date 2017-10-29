@@ -9,4 +9,25 @@
     width: 44px !important;
     position: relative;
   }
+
+  .div-edit {
+    margin: -10px;
+  }
+
+  .sub-field {
+    margin: 10px;
+    padding: 20px;
+    h1, h2 {
+      margin: 10px 0;
+    }
+    h1 {
+      font-size:16px;
+      font-weight: normal;
+    }
+    h2 {
+      font-size: 12px;
+      opacity: .5;
+      font-weight: lighter;
+    }
+  }
 }
