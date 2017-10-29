@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2017-10-28 18:02:49
+Date: 2017-10-29 14:18:05
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -84,7 +84,7 @@ CREATE TABLE `logs` (
 DROP TABLE IF EXISTS `rss_feeds`;
 CREATE TABLE `rss_feeds` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) DEFAULT NULL,
+  `box_id` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   `url` longtext,
   `filter` longtext,
@@ -123,5 +123,7 @@ CREATE TABLE `users` (
   `createdAt` datetime(6) DEFAULT NULL,
   `updatedAt` datetime DEFAULT NULL,
   `enabled` int(2) DEFAULT NULL,
+  `username` varchar(255) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
