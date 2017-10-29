@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {getBoxList} from "../services/ApiService";
+import {deleteBox, getBoxList} from "../services/ApiService";
 import {ClientType, getClientTypeIcon, getClientTypeName} from "../typings/ClientType";
 import {
     Table,
@@ -12,6 +12,7 @@ import {
 import {FlatButton, FloatingActionButton, Paper, RaisedButton} from "material-ui";
 import IconContentAdd from 'material-ui/svg-icons/content/add';
 import IconActionDelete from 'material-ui/svg-icons/action/delete';
+import swal from 'sweetalert2/dist/sweetalert2.all.min.js';
 import "./BoxListPage.scss";
 
 interface boxConfig {
@@ -33,10 +34,36 @@ class BoxListPage extends React.Component<{}, state> {
     }
 
     componentDidMount() {
+        this.updateData();
+    }
+
+    private updateData() {
         getBoxList().then(_ => {
             this.setState({
                 list: _.list
             });
+        });
+    }
+
+    deleteItem(item) {
+        swal({
+            title: '确定吗?',
+            text: "确定要删除 " + (item.url || "") + " ?",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: 'rgb(255, 64, 129)',
+            confirmButtonText: '删除',
+            cancelButtonText: '取消',
+        }).then(() => {
+            deleteBox(item.id).then(() => {
+                this.updateData();
+                swal({
+                    title: '删除成功',
+                    type: 'success'
+                })
+            }).catch(() => {
+            });
+        }).catch(() => {
         });
     }
 
@@ -78,7 +105,9 @@ class BoxListPage extends React.Component<{}, state> {
                                         <RaisedButton secondary
                                                       className="delete-button"
                                                       icon={<IconActionDelete/>}
-                                                      style={buttonStyle}>
+                                                      style={buttonStyle}
+                                                      onClick={() => this.deleteItem(item)}
+                                        >
                                         </RaisedButton>
                                     </div>
                                 </TableRowColumn>

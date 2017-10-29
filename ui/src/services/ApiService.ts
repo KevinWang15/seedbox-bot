@@ -26,4 +26,8 @@ function getBoxList() {
     return api('user/box-list', {});
 }
 
-export {api, getBoxList};
+function deleteBox(id) {
+    return api('user/delete-box', {id});
+}
+
+export {api, getBoxList, deleteBox};
