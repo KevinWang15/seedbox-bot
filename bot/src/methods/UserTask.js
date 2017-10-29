@@ -140,7 +140,7 @@ class UserTask {
           [Op.in]: boxConfigs.map(_ => _.id),
         },
       },
-    });
+    }).filter(_ => !!_.url);
     let rssFeedTorrents = await RssFeedTorrent.findAll({
       where: {
         rss_feed_id: {
