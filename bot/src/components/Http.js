@@ -23,6 +23,7 @@ function httpRequest(arg) {
   return queue.add(() => {
     return new Promise((queue_res) => {
       let req = proxiedRequest({
+        timeout: 30000,
         followAllRedirects: true,
         headers: {
           'User-Agent': 'curl',
