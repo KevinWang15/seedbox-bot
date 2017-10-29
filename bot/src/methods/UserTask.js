@@ -92,7 +92,7 @@ class UserTask {
                     rssFeedTorrents[i].id = rssFeedTorrent.id; // 异常处理的时候reference使用
                     let torrentData = (await DownloadAndParseTorrent(rssFeedTorrents[i].url));
 
-                    if (currentRssFeed.max_size_mb * 1024 * 1024 > torrentData.length) {
+                    if (!currentRssFeed.max_size_mb || (currentRssFeed.max_size_mb * 1024 * 1024 > torrentData.length)) {
                       // 种子文件合适，正在添加
                       await rssFeedTorrent.update({
                         status: RssFeedTorrentStatus.PENDING_ADD,
