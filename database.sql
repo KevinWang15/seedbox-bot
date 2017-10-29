@@ -122,7 +122,6 @@ CREATE TABLE `users` (
   `token` varchar(255) DEFAULT NULL,
   `createdAt` datetime(6) DEFAULT NULL,
   `updatedAt` datetime DEFAULT NULL,
-  `enabled` int(2) DEFAULT NULL,
   `username` varchar(255) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)

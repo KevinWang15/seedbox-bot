@@ -9,11 +9,7 @@ const Op = Sequelize.Op;
 async function ScanAndAddNewUsers() {
   let allUsers;
   let existingUserIds = UserTaskCollection.map(_ => _.user_id);
-  allUsers = await User.findAll({
-    where: {
-      enabled: 1,
-    },
-  });
+  allUsers = await User.findAll();
   allUsers.forEach(async user => {
     if (existingUserIds.indexOf(user.id) >= 0) return;
     let userTask = new UserTask(user.id);
