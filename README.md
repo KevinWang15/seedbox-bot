@@ -55,7 +55,7 @@ FLUSH PRIVILEGES;
 CREATE DATABASE qbbot CHARACTER SET utf8 COLLATE utf8_general_ci;
 use qbbot;
 source database.sql;
-exit
+exit;
 ```
 运行
 ```
@@ -109,7 +109,9 @@ forever start index.js
 ## 用户配置
 使用mysql管理软件（推荐navicat），连接数据库
 
-向```users```表加入用户，其中```password```是bcrypt后的结果。 https://bcrypt-generator.com/
+向```users```表加入用户，其中```password```是bcrypt 10轮后的结果。
+
+https://www.dailycred.com/article/bcrypt-calculator  轮数选择10！
 
 
 # 前端安装
@@ -125,11 +127,11 @@ npm install
 npm run build
 cd build
 npm install http-server -g
-./node_modules/http-server/bin/http-server -p 8080 -d false
+http-server
 ```
 这时候，前端会运行在IP地址加上```:8080```，用之前设置好的用户可以登入。
 看看有没有错，没错的话Ctrl+C后运行。
 ```
-forever start ./node_modules/http-server/bin/http-server -p 8080 -d false
+forever start -c http-server .
 ```
 部署完毕。
