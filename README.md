@@ -73,7 +73,7 @@ npm install
 npm install
 ```
 
-复制```config.example.js```到```config.js```并编辑其内容。
+复制```src/config.example.js```到```src/config.js```并编辑其内容。
 
 一定需要编辑的是```mysql```中的```password```，设置成数据库的密码
 
