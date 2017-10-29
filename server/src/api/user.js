@@ -44,6 +44,77 @@ router.post('/box-list', async function (req, res) {
   });
 });
 
+router.post('/edit-box', async function (req, res) {
+  let boxConfig = await BoxConfig.find({
+    where: {
+      id: req.body.id,
+    },
+  });
+
+  if (!boxConfig || boxConfig.user_id !== req.user.id) {
+    res.send(400, {
+      errMsg: "错误的ID",
+    });
+    return;
+  }
+
+  let newData = {};
+  ['url', 'client_type', 'max_disk_usage_size_gb', 'basic_auth_username', 'basic_auth_password', 'username', 'password'].forEach(_ => {
+    newData[_] = req.body[_];
+  });
+  await boxConfig.update(newData);
+
+  let oldRssFeeds = await RssFeed.findAll({
+    where: {
+      box_id: boxConfig.id,
+    },
+  });
+  let newRssFeeds = req.body.rss_feeds;
+  let newRssFeedIds = newRssFeeds.map(_ => _.id);
+  let oldRssFeedIds = oldRssFeeds.map(_ => _.id);
+
+  let rssFeedsToAdd = newRssFeeds.filter(_ => !_.id);
+  let rssFeedsToDelete = oldRssFeeds.filter(_ => newRssFeedIds.indexOf(_.id) < 0);
+  let rssFeedsToUpdate = newRssFeeds.filter(_ => oldRssFeedIds.indexOf(_.id) >= 0);
+
+  // console.log("rssFeedsToAdd", rssFeedsToAdd, "rssFeedsToDelete", rssFeedsToDelete, "rssFeedsToUpdate", rssFeedsToUpdate);
+
+  rssFeedsToAdd.forEach(async (_) => {
+    await RssFeed.create({
+      box_id: boxConfig.id,
+      name: _.name,
+      url: _.url,
+      max_size_mb: _.max_size_mb,
+    });
+  });
+
+  rssFeedsToDelete.forEach(async (_) => {
+    let originalFeed = await RssFeed.find({ where: { id: _.id } });
+    if (originalFeed && originalFeed.box_id === boxConfig.id) {
+      await originalFeed.destroy();
+    }
+  });
+
+  rssFeedsToUpdate.forEach(async (_) => {
+    let originalFeed = await RssFeed.find({ where: { id: _.id } });
+    if (originalFeed && originalFeed.box_id === boxConfig.id) {
+      console.log("exec update", {
+        id: _.id,
+        name: _.name,
+        url: _.url,
+        max_size_mb: _.max_size_mb,
+      });
+      await originalFeed.update({
+        id: _.id,
+        name: _.name,
+        url: _.url,
+        max_size_mb: _.max_size_mb,
+      });
+    }
+  });
+
+  res.send({});
+});
 
 router.post('/delete-box', async function (req, res) {
 

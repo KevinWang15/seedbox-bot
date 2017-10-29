@@ -34,4 +34,9 @@ function createBox() {
     return api('user/create-box', {});
 }
 
-export {api, getBoxList, deleteBox, createBox};
+function editBox(data) {
+    console.log(data);
+    return api('user/edit-box', data);
+}
+
+export {api, getBoxList, deleteBox, createBox, editBox};

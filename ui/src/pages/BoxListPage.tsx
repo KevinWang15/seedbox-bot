@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {deleteBox, getBoxList, createBox} from "../services/ApiService";
+import {deleteBox, getBoxList, createBox, editBox} from "../services/ApiService";
 import {ClientType, getClientTypeIcon, getClientTypeName} from "../typings/ClientType";
 import {
     Table,
@@ -64,7 +64,11 @@ class BoxListPage extends React.Component<{}, state> {
     }
 
     saveEdit() {
-        console.log(this.state.currentEditing);
+        editBox(this.state.currentEditing).then(_ => {
+            this.setState({
+                list: _.list
+            });
+        });
     }
 
     cancelEdit() {
