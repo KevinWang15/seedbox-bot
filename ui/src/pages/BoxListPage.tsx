@@ -17,6 +17,7 @@ import "./BoxListPage.scss";
 interface boxConfig {
     id: number;
     url: string;
+    max_disk_usage_size_gb: number;
     client_type: ClientType;
 }
 
@@ -50,6 +51,7 @@ class BoxListPage extends React.Component<{}, state> {
                         <TableRow>
                             <TableHeaderColumn>网址</TableHeaderColumn>
                             <TableHeaderColumn>类型</TableHeaderColumn>
+                            <TableHeaderColumn>磁盘配额</TableHeaderColumn>
                             <TableHeaderColumn>操作</TableHeaderColumn>
                         </TableRow>
                     </TableHeader>
@@ -62,6 +64,13 @@ class BoxListPage extends React.Component<{}, state> {
                                 <TableRowColumn>
                                     <img className="client-icon" src={getClientTypeIcon(item.client_type)}/>
                                     {getClientTypeName(item.client_type)}
+                                </TableRowColumn>
+                                <TableRowColumn>
+                                    {!!item.max_disk_usage_size_gb ?
+                                        <span>{item.max_disk_usage_size_gb} GB</span>
+                                        : <span>无限</span>
+                                    }
+
                                 </TableRowColumn>
                                 <TableRowColumn>
                                     <div>

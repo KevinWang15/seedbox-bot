@@ -2,7 +2,10 @@ body {
   margin: 0;
   padding: 0;
   background: #F6F6F6;
+}
 
+a {
+  color: rgb(0, 188, 212);
 }
 
 .set-font-family {

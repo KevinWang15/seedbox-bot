@@ -22,6 +22,7 @@ router.post('/box-list', async function (req, res) {
       id: _.id,
       url: _.url,
       client_type: _.client_type,
+      max_disk_usage_size_gb: _.max_disk_usage_size_gb,
     })),
   });
 });
