@@ -68,4 +68,14 @@ router.post('/delete-box', async function (req, res) {
   res.send({});
 });
 
+
+router.post('/create-box', async function (req, res) {
+
+  let boxConfig = await BoxConfig.create({
+    user_id: req.user.id,
+  });
+
+  res.send({ id: boxConfig.id });
+});
+
 module.exports = router;

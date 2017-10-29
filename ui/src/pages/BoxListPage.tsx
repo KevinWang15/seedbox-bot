@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {deleteBox, getBoxList} from "../services/ApiService";
+import {deleteBox, getBoxList, createBox} from "../services/ApiService";
 import {ClientType, getClientTypeIcon, getClientTypeName} from "../typings/ClientType";
 import {
     Table,
@@ -45,7 +45,13 @@ class BoxListPage extends React.Component<{}, state> {
         });
     }
 
-    deleteItem(item) {
+    createBox() {
+        createBox().then(_ => {
+            console.log(_);
+        });
+    }
+
+    deleteBox(item) {
         swal({
             title: '确定吗?',
             text: "确定要删除 " + (item.url || "") + " ?",
@@ -106,7 +112,7 @@ class BoxListPage extends React.Component<{}, state> {
                                                       className="delete-button"
                                                       icon={<IconActionDelete/>}
                                                       style={buttonStyle}
-                                                      onClick={() => this.deleteItem(item)}
+                                                      onClick={() => this.deleteBox(item)}
                                         >
                                         </RaisedButton>
                                     </div>
@@ -119,7 +125,8 @@ class BoxListPage extends React.Component<{}, state> {
             </Paper>
             <RaisedButton primary icon={<IconContentAdd/>} style={{
                 marginTop: 14
-            }}/>
+            }} onClick={() => this.createBox()}
+            />
 
         </div>);
     }

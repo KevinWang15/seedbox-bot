@@ -30,4 +30,8 @@ function deleteBox(id) {
     return api('user/delete-box', {id});
 }
 
-export {api, getBoxList, deleteBox};
+function createBox() {
+    return api('user/create-box', {});
+}
+
+export {api, getBoxList, deleteBox, createBox};
