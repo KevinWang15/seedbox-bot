@@ -19,6 +19,12 @@ import swal from 'sweetalert2/dist/sweetalert2.all.min.js';
 import clone from 'clone';
 import "./BoxListPage.scss";
 
+interface rssConfig {
+    name: string;
+    url: string;
+    max_size_mb: number;
+}
+
 interface boxConfig {
     id: number;
     url: string;
@@ -28,6 +34,7 @@ interface boxConfig {
     basic_auth_password: string;
     username: string;
     password: string;
+    rss_feeds: rssConfig[];
 }
 
 interface state {
@@ -111,6 +118,7 @@ class BoxListPage extends React.Component<{}, state> {
                                 <TableHeaderColumn>网址</TableHeaderColumn>
                                 <TableHeaderColumn>类型</TableHeaderColumn>
                                 <TableHeaderColumn>磁盘配额</TableHeaderColumn>
+                                <TableHeaderColumn>RSS数量</TableHeaderColumn>
                                 <TableHeaderColumn>操作</TableHeaderColumn>
                             </TableRow>
                         </TableHeader>
@@ -131,7 +139,9 @@ class BoxListPage extends React.Component<{}, state> {
                                             <span>{item.max_disk_usage_size_gb} GB</span>
                                             : <span>无限</span>
                                         }
-
+                                    </TableRowColumn>
+                                    <TableRowColumn>
+                                        {item.rss_feeds.length}
                                     </TableRowColumn>
                                     <TableRowColumn>
                                         <div>

@@ -18,11 +18,27 @@ router.post('/box-list', async function (req, res) {
   });
 
   res.send({
-    list: boxConfigs.map(_ => ({
-      id: _.id,
-      url: _.url,
-      client_type: _.client_type,
-      max_disk_usage_size_gb: _.max_disk_usage_size_gb,
+    list: await Promise.all(boxConfigs.map(async (boxConfig) => {
+      let rssFeeds = await RssFeed.findAll({
+        where: {
+          box_id: boxConfig.id,
+        },
+      });
+      return {
+        id: boxConfig.id,
+        url: boxConfig.url,
+        client_type: boxConfig.client_type,
+        max_disk_usage_size_gb: boxConfig.max_disk_usage_size_gb,
+        basic_auth_username: boxConfig.basic_auth_username,
+        basic_auth_password: boxConfig.basic_auth_password,
+        username: boxConfig.username,
+        password: boxConfig.password,
+        rss_feeds: rssFeeds.map(_ => ({
+          name: _.name,
+          url: _.url,
+          max_size_mb: _.max_size_mb,
+        })),
+      }
     })),
   });
 });
