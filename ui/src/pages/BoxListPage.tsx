@@ -56,7 +56,7 @@ class BoxListPage extends React.Component<{}, state> {
     }
 
     private updateData() {
-        getBoxList().then(_ => {
+        return getBoxList().then(_ => {
             this.setState({
                 list: _.list
             });
@@ -65,8 +65,12 @@ class BoxListPage extends React.Component<{}, state> {
 
     saveEdit() {
         editBox(this.state.currentEditing).then(_ => {
-            this.setState({
-                list: _.list
+            swal({
+                title: '保存成功',
+                type: 'success'
+            });
+            this.updateData().then(() => {
+                this.setState({currentEditing: null});
             });
         });
     }
