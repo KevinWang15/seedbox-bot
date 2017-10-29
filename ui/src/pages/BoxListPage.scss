@@ -1,5 +1,9 @@
 .box-list-page {
   text-align: left;
+  .client-icon{
+    margin-right: 10px;
+    vertical-align: sub;
+  }
   .delete-button {
     min-width: 0 !important;
     width: 44px !important;

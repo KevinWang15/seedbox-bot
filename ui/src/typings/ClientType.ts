@@ -12,4 +12,12 @@ function getClientTypeName(clientType) {
     ][clientType];
 }
 
-export {ClientType, getClientTypeName};
+function getClientTypeIcon(clientType) {
+    return [
+        "/icons/qbittorrent.ico",
+        "/icons/transmission.ico",
+        "ruTorrent"
+    ][clientType];
+}
+
+export {ClientType, getClientTypeName, getClientTypeIcon};

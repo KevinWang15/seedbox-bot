@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {getBoxList} from "../services/ApiService";
-import {ClientType, getClientTypeName} from "../typings/ClientType";
+import {ClientType, getClientTypeIcon, getClientTypeName} from "../typings/ClientType";
 import {
     Table,
     TableBody,
@@ -46,7 +46,7 @@ class BoxListPage extends React.Component<{}, state> {
         return (<div style={{padding: 20}} className="box-list-page">
             <Paper zDepth={1}>
                 <Table>
-                    <TableHeader displaySelectAll={false}>
+                    <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                         <TableRow>
                             <TableHeaderColumn>网址</TableHeaderColumn>
                             <TableHeaderColumn>类型</TableHeaderColumn>
@@ -59,7 +59,10 @@ class BoxListPage extends React.Component<{}, state> {
                                 <TableRowColumn>
                                     {!!item.url ? <a target="_blank" href={item.url}>{item.url}</a> : "(未设置)"}
                                 </TableRowColumn>
-                                <TableRowColumn>{getClientTypeName(item.client_type)}</TableRowColumn>
+                                <TableRowColumn>
+                                    <img className="client-icon" src={getClientTypeIcon(item.client_type)}/>
+                                    {getClientTypeName(item.client_type)}
+                                </TableRowColumn>
                                 <TableRowColumn>
                                     <div>
                                         <RaisedButton primary label="编辑配置" style={buttonStyle}/>
