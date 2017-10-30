@@ -1,2 +1,4 @@
 .idea
 database.sqlite
+production-bundle
+node_modules
