@@ -17,6 +17,7 @@
     "request": "^2.83.0",
     "sequelize": "^4.14.0",
     "sleep-promise": "^2.0.0",
+    "sqlite3": "^3.1.13",
     "url-join": "^2.0.2",
     "uuid": "^3.1.0"
   },

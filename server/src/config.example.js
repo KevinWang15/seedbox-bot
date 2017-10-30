@@ -1,8 +1,9 @@
-const mysql = {
+const sqlite = {
   host: "127.0.0.1",
-  database: "qbbot",
+  database: "bot",
   username: "root",
   password: "",
+  path: '/absolute/path/to/database.sqlite',
 };
 
 const server = {
@@ -11,5 +12,5 @@ const server = {
 
 export {
   server,
-  mysql,
+  sqlite,
 };
