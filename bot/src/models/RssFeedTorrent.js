@@ -20,5 +20,4 @@ const RssFeedTorrent = sequelize.define('rss_feed_torrent', {
   pub_date:Sequelize.DATE
 });
 
-RssFeedTorrent.belongsTo(RssFeed, { foreignKey: 'rss_feed_id' });
 export { RssFeedTorrent, status };

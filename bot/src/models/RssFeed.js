@@ -11,6 +11,4 @@ const RssFeed = sequelize.define('rss_feed', {
   max_size_mb: Sequelize.INTEGER,
 });
 
-RssFeed.belongsTo(BoxConfig, { foreignKey: 'box_id' });
-
 export { RssFeed };

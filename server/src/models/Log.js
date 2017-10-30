@@ -8,5 +8,4 @@ const Log = sequelize.define('log', {
   content: Sequelize.STRING,
 });
 
-Log.belongsTo(User, { foreignKey: 'user_id' });
 export { Log };

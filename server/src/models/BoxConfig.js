@@ -14,5 +14,4 @@ const BoxConfig = sequelize.define('box_config', {
   autodel_exempt_label: Sequelize.STRING,
 });
 
-BoxConfig.belongsTo(User, { foreignKey: 'user_id' });
 export { BoxConfig };
