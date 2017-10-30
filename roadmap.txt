@@ -2,15 +2,15 @@
 typescript迁移
 hardcode的配置迁移出去
 检测各PT站对rss的兼容性
-
-* 重命名为 pt-bot
-* node debug sourcemap
-* 1天之外的rss，不理会+删除种子文件+删除种子数据库记录
-* refactor model
-* regexp filter
-* 最小文件大小
-* 用户日志的记录和显示
-* 清除种子文件
-* 测试concurrency
-* 直接在标题解析大小的功能
-* config拉到build之外
+重命名为 pt-bot
+node debug sourcemap
+1天之外的rss，不理会+删除种子文件+删除种子数据库记录
+refactor model
+regexp filter
+最小文件大小
+用户日志的记录和显示
+清除种子文件
+测试concurrency
+直接在标题解析大小的功能 (部分NexusPHP站适用，不用下载种子文件了)
+config拉到build之外
+http retryCount
