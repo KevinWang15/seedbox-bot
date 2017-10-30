@@ -5,7 +5,11 @@ import axios from "axios";
 import swal from 'sweetalert2/dist/sweetalert2.all.min.js';
 
 function api(endpoint, params, {showError = true} = {}) {
-    return axios.post(urlJoin(serverConfig.url, endpoint), params,
+    let url = urlJoin(serverConfig.url, endpoint);
+    if (process.env.NODE_ENV === 'production') {
+        url = endpoint;
+    }
+    return axios.post(url, params,
         {
             headers: {
                 token: user.token
@@ -15,7 +19,7 @@ function api(endpoint, params, {showError = true} = {}) {
             return _.data;
         })
         .catch(function (error) {
-            if (showError && error.response.data.errMsg) {
+            if (showError && error && error.response && error.response.data && error.response.data.errMsg) {
                 swal('出错了', error.response.data.errMsg, 'error');
             }
             throw error;

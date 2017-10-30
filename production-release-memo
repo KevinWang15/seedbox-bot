@@ -1,0 +1,4 @@
+1. 运行bot和server的compile，并复制bot和server的out到release
+2. 复制bot和server的package.json到release
+3. build ui
+4. 复制ui build到server的ui文件夹下
