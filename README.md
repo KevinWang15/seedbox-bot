@@ -1,3 +1,24 @@
+# 安装包方法安装
+
+## 安装包生成方法
+```
+npm run bundle
+```
+
+
+## 安装包使用方法
+```
+sudo apt-get update
+curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+sudo apt-get install -y nodejs
+mkdir seedbox-bot
+tar -xzvf production-bundle.tar.gz --directory seedbox-bot
+cd seedbox-bot
+./install.sh
+```
+
+# 传统安装方法
+
 安装方法都以Ubuntu为例，一步一步来，不要跳步骤或者更换顺序。
 
 # 代码获得
