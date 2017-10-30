@@ -19,7 +19,7 @@ class MainPage extends React.Component<{}, state> {
     render() {
         return (<div>
             <AppBar
-                title="PT Box Manager"
+                title="Seedbox Bot"
                 iconElementLeft={<div/>}
                 iconElementRight={<IconMenu
                     iconButtonElement={

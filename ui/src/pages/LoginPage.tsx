@@ -32,7 +32,7 @@ class LoginPage extends React.Component<props, state> {
             <div className="content">
                 <div className="title set-font-family">
                     <h1 className="primary-color">
-                        PT Box Manager
+                        Seedbox Bot
                     </h1>
                     <h2 >
                         用户登入
