@@ -64,14 +64,40 @@ class BoxListPage extends React.Component<{}, state> {
     }
 
     saveEdit() {
-        editBox(this.state.currentEditing).then(_ => {
-            swal({
-                title: '保存成功',
-                type: 'success'
+        new Promise((res, rej) => {
+            if (this.state.currentEditing.client_type + "" != this.state.currentEditing.client_type as any) {
+                swal({
+                    title: '必须选择客户端类型',
+                    type: 'error'
+                });
+                rej();
+                return;
+            }
+            if (!/^https?:\/\/[^\/]+\/?$/m.test(this.state.currentEditing.url)) {
+                swal({
+                    title: '客户端地址看起来无效',
+                    text: "请输入有效的URL，且一般情况下，客户端地址不能带路径（如 http://example.com:9091/transmission/web/ 是错误的，而 http://example.com:9091/ 才是正确的）。确定要继续吗？",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: '继续',
+                    cancelButtonText: '取消',
+                }).then(() => {
+                    res();
+                }).catch(rej);
+                return;
+            }
+            res();
+        }).then(() => {
+            editBox(this.state.currentEditing).then(_ => {
+                swal({
+                    title: '保存成功',
+                    type: 'success'
+                });
+                this.updateData().then(() => {
+                    this.setState({currentEditing: null});
+                });
             });
-            this.updateData().then(() => {
-                this.setState({currentEditing: null});
-            });
+        }).catch(() => {
         });
     }
 
