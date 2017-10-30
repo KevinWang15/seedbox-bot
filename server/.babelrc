@@ -5,5 +5,8 @@
   ],
   "plugins": [
     "transform-class-properties"
+  ],
+  "ignore": [
+    "src/ui"
   ]
 }

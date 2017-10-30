@@ -9,6 +9,7 @@ import "./models";
 
 sequelize.sync().then(() => {
   const app = express();
+  app.use(express.static('ui'));
   app.use(bodyParser.json());
   app.use(cors());
   api.forEach(apiEntry => {

@@ -17,3 +17,5 @@ www/
 plugins/
 out/
 database.sqlite
+!ui/.gitkeep
+ui
