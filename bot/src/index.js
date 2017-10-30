@@ -1,9 +1,10 @@
 import cluster from "cluster";
 import "babel-polyfill";
+import { sequelize } from "./databaseConnection";
+import "./models";
 import { ScanAndAddNewUsers } from "./methods/ScanAndAddNewUsers";
 import { system as systemConfig } from './config';
 import { Exception } from "./models/Exception";
-import { BoxConfig } from "./models/BoxConfig";
 import { CheckIfHasSpace } from "./methods/FreeUpSpace";
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
@@ -19,9 +20,11 @@ if (cluster.isMaster) {
 
 
 if (cluster.isWorker) {
-// 每一分钟扫描一下users表，看是否有新的用户加入
-  ScanAndAddNewUsers();
-  setInterval(ScanAndAddNewUsers, (systemConfig.newUserScanInterval || 60) * 1000);
+  sequelize.sync().then(() => {
+    // 每一分钟扫描一下users表，看是否有新的用户加入
+    ScanAndAddNewUsers();
+    setInterval(ScanAndAddNewUsers, (systemConfig.newUserScanInterval || 60) * 1000);
+  });
 }
 
 

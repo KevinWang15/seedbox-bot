@@ -16,3 +16,4 @@ src/config.js
 www/
 plugins/
 out/
+database.sqlite

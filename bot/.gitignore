@@ -21,3 +21,4 @@ out/*
 out/torrents/*
 !out/torrents
 !out/torrents/.gitkeep
+database.sqlite

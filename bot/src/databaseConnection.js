@@ -1,9 +1,8 @@
 import { sqlite } from "./config";
 import Sequelize from 'sequelize';
 
-const sequelize = new Sequelize(sqlite.database, sqlite.username, sqlite.password,
+const sequelize = new Sequelize(null, null, null,
   {
-    host: sqlite.host,
     dialect: 'sqlite',
     logging: false,
     storage: sqlite.path,
