@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon src/index.js --exec babel-node --presets es2015,stage-2",
+    "create-user": "nodemon src/scripts/create-user.js --exec babel-node --presets es2015,stage-2",
     "compile": "babel --out-dir=out src"
   },
   "keywords": [],
@@ -14,6 +15,7 @@
     "bcrypt-nodejs": "0.0.3",
     "cors": "^2.8.4",
     "express": "^4.16.2",
+    "inquirer": "^3.3.0",
     "mysql2": "^1.4.2",
     "sequelize": "^4.14.0",
     "sqlite3": "^3.1.13",
