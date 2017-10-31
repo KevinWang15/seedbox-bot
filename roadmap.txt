@@ -1,9 +1,7 @@
-整合models，更好使用sequelize
 typescript迁移
 检测各PT站对rss的兼容性
 node debug sourcemap
 1天之外的rss，不理会+删除种子文件+删除种子数据库记录
-refactor model
 regexp filter
 最小文件大小
 用户日志的记录和显示
@@ -11,3 +9,5 @@ regexp filter
 直接在标题解析大小的功能 (部分NexusPHP站适用，不用下载种子文件了)
 config拉到build之外
 http retryCount
+更多BT客户端的兼容 （ruTorrent、deluge、uTorrent等）
+整合models，更好使用sequelize，bot和server共用一套models
