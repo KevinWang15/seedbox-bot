@@ -12,9 +12,17 @@ sudo apt-get update
 curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
 sudo apt-get install -y nodejs
 mkdir seedbox-bot
-tar -xzvf production-bundle.tar.gz --directory seedbox-bot
+tar -xzvf production-bundle.tar.gz --directory seedbox-bot --overwrite
 cd seedbox-bot
 ./install.sh
+```
+
+## 更新方法
+```
+tar -xzvf production-bundle.tar.gz --directory seedbox-bot --overwrite
+cd seedbox-bot
+./install.sh
+“请输入用户名”的时候按Ctrl+C取消
 ```
 
 # 传统安装方法
