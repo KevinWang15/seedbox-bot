@@ -79,7 +79,17 @@ class UserTask {
                 // 每一个rss源设置一个循环
                 let existingUrls = boxConfig.rssFeeds[j].rssFeedTorrents.map(_ => _.url);
                 let currentRssFeed = allRssFeeds[j];
+                let currentRssFeedTorrentUrls = currentRssFeed.torrents.map(_ => _.url);
                 let rssFeedTorrents = currentRssFeed.torrents.filter(_ => existingUrls.indexOf(_.url) < 0);
+                let expiredUrls = existingUrls.filter(_ => currentRssFeedTorrentUrls.indexOf(_) < 0);
+                await RssFeedTorrent.destroy({
+                  where: {
+                    rss_feed_id: boxConfig.rssFeeds[j].id,
+                    url: {
+                      [Op.in]: expiredUrls,
+                    },
+                  },
+                });
                 for (let i = 0; i < rssFeedTorrents.length; i++) {
                   try {
                     let rssFeedTorrent = await RssFeedTorrent.create({

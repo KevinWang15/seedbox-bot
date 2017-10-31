@@ -1,7 +1,6 @@
 typescript迁移
 检测各PT站对rss的兼容性
 node debug sourcemap
-1天之外的rss，不理会+删除种子文件+删除种子数据库记录
 regexp filter
 最小文件大小
 用户日志的记录和显示
