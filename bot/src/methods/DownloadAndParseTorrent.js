@@ -24,6 +24,8 @@ function DownloadAndParseTorrent(url) {
           res({ length, path: torrentPath });
         } catch (exception) {
           rej(exception);
+        } finally {
+          fs.unlink(torrentPath);
         }
       });
     }).catch(rej);
