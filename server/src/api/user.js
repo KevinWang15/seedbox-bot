@@ -100,17 +100,12 @@ router.post('/edit-box', async function (req, res) {
   rssFeedsToUpdate.forEach(async (_) => {
     let originalFeed = await RssFeed.find({ where: { id: _.id } });
     if (originalFeed && originalFeed.box_id === boxConfig.id) {
-      console.log("exec update", {
-        id: _.id,
-        name: _.name,
-        url: _.url,
-        max_size_mb: _.max_size_mb,
-      });
       await originalFeed.update({
         id: _.id,
         name: _.name,
         url: _.url,
         max_size_mb: _.max_size_mb,
+        max_share_ratio: _.max_share_ratio,
       });
     }
   });

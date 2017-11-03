@@ -24,6 +24,7 @@ interface rssConfig {
     name: string;
     url: string;
     max_size_mb?: number;
+    max_share_ratio?: number;
 }
 
 interface boxConfig {
@@ -354,6 +355,7 @@ class BoxListPage extends React.Component<{}, state> {
                                 <TableHeaderColumn>名称</TableHeaderColumn>
                                 <TableHeaderColumn style={{width: "50%"}}>RSS网址</TableHeaderColumn>
                                 <TableHeaderColumn>最大大小 (MB)</TableHeaderColumn>
+                                <TableHeaderColumn>最大分享率</TableHeaderColumn>
                                 <TableHeaderColumn>操作</TableHeaderColumn>
                             </TableRow>
                         </TableHeader>
@@ -410,6 +412,26 @@ class BoxListPage extends React.Component<{}, state> {
                                                 rss_feeds[index] = {
                                                     ...rss_feeds[index],
                                                     max_size_mb: +value || 0
+                                                };
+                                                this.setState({
+                                                    currentEditing: {
+                                                        ...this.state.currentEditing,
+                                                        rss_feeds
+                                                    }
+                                                })
+                                            }}
+                                        />
+                                    </TableRowColumn>
+                                    <TableRowColumn>
+                                        <TextField
+                                            fullWidth
+                                            hintText="留空为不限"
+                                            value={item.max_share_ratio || ""}
+                                            onChange={(_, value) => {
+                                                let rss_feeds = [...this.state.currentEditing.rss_feeds];
+                                                rss_feeds[index] = {
+                                                    ...rss_feeds[index],
+                                                    max_share_ratio: +value || 0
                                                 };
                                                 this.setState({
                                                     currentEditing: {
