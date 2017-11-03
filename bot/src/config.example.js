@@ -28,11 +28,9 @@ const system = {
   newTorrentsTTL: 180,
 };
 
-export {
-  userTask,
-  server,
-  sqlite,
-  http,
-  system,
-  proxy,
-};
+exports.userTask = userTask;
+exports.server = server;
+exports.sqlite = sqlite;
+exports.http = http;
+exports.system = system;
+exports.proxy = proxy;

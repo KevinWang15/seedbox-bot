@@ -6,7 +6,5 @@ const server = {
   port: 10120,
 };
 
-export {
-  server,
-  sqlite,
-};
+exports.server = server;
+exports.sqlite = sqlite;

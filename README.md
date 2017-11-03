@@ -25,6 +25,12 @@ cd seedbox-bot
 “请输入用户名”的时候按Ctrl+C取消
 ```
 
+数据库migration：
+```
+npm install -g sequelize-cli
+cd server
+```
+
 # 传统安装方法
 
 安装方法都以Ubuntu为例，一步一步来，不要跳步骤或者更换顺序。
