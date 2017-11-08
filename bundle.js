@@ -3,7 +3,7 @@ const rimraf = require('rimraf');
 const _exec = require('child_process').execSync;
 
 const installSh = `#!/usr/bin/env bash
-npm install -g forever
+npm install -g forever sequelize-cli
 forever stop seedbox-bot-server
 forever stop seedbox-bot-bot
 cd bot
@@ -12,6 +12,7 @@ chmod -R 777 torrents
 npm install --production
 cd ../server
 npm install --production
+sequelize db:migrate
 node scripts/create-user.js
 cd ..
 forever --id "seedbox-bot-server" --workingDir server start server/index.js
