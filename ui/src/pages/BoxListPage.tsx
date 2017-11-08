@@ -422,26 +422,26 @@ class BoxListPage extends React.Component<{}, state> {
                                             }}
                                         />
                                     </TableRowColumn>
-                                    <TableRowColumn>
-                                        <TextField
-                                            fullWidth
-                                            hintText="留空为不限"
-                                            value={item.max_share_ratio || ""}
-                                            onChange={(_, value) => {
-                                                let rss_feeds = [...this.state.currentEditing.rss_feeds];
-                                                rss_feeds[index] = {
-                                                    ...rss_feeds[index],
-                                                    max_share_ratio: +value || 0
-                                                };
-                                                this.setState({
-                                                    currentEditing: {
-                                                        ...this.state.currentEditing,
-                                                        rss_feeds
-                                                    }
-                                                })
-                                            }}
-                                        />
-                                    </TableRowColumn>
+                                    {/*<TableRowColumn>*/}
+                                        {/*<TextField*/}
+                                            {/*fullWidth*/}
+                                            {/*hintText="留空为不限"*/}
+                                            {/*value={item.max_share_ratio || ""}*/}
+                                            {/*onChange={(_, value) => {*/}
+                                                {/*let rss_feeds = [...this.state.currentEditing.rss_feeds];*/}
+                                                {/*rss_feeds[index] = {*/}
+                                                    {/*...rss_feeds[index],*/}
+                                                    {/*max_share_ratio: +value || 0*/}
+                                                {/*};*/}
+                                                {/*this.setState({*/}
+                                                    {/*currentEditing: {*/}
+                                                        {/*...this.state.currentEditing,*/}
+                                                        {/*rss_feeds*/}
+                                                    {/*}*/}
+                                                {/*})*/}
+                                            {/*}}*/}
+                                        {/*/>*/}
+                                    {/*</TableRowColumn>*/}
                                     <TableRowColumn>
                                         <div>
                                             <RaisedButton secondary
