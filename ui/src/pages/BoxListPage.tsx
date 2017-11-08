@@ -355,7 +355,7 @@ class BoxListPage extends React.Component<{}, state> {
                             <TableRow>
                                 <TableHeaderColumn>名称</TableHeaderColumn>
                                 <TableHeaderColumn style={{width: "50%"}}>RSS网址</TableHeaderColumn>
-                                <TableHeaderColumn>最大大小 (MB)</TableHeaderColumn>
+                                <TableHeaderColumn>大小范围 (MB)</TableHeaderColumn>
                                 {/*<TableHeaderColumn>最大分享率</TableHeaderColumn>*/}
                                 <TableHeaderColumn>操作</TableHeaderColumn>
                             </TableRow>
@@ -404,24 +404,40 @@ class BoxListPage extends React.Component<{}, state> {
                                         />
                                     </TableRowColumn>
                                     <TableRowColumn>
-                                        <TextField
-                                            fullWidth
-                                            hintText="单位MB, 留空为不限"
-                                            value={item.max_size_mb || ""}
-                                            onChange={(_, value) => {
-                                                let rss_feeds = [...this.state.currentEditing.rss_feeds];
-                                                rss_feeds[index] = {
-                                                    ...rss_feeds[index],
-                                                    max_size_mb: +value || 0
-                                                };
-                                                this.setState({
-                                                    currentEditing: {
-                                                        ...this.state.currentEditing,
-                                                        rss_feeds
-                                                    }
-                                                })
-                                            }}
+                                        <TextField style={{width: 80, marginRight: 10}}
+                                                   value={item.min_size_mb}
+                                                   onChange={(_, value) => {
+                                                       let rss_feeds = [...this.state.currentEditing.rss_feeds];
+                                                       rss_feeds[index] = {
+                                                           ...rss_feeds[index],
+                                                           min_size_mb: +value || 0
+                                                       };
+                                                       this.setState({
+                                                           currentEditing: {
+                                                               ...this.state.currentEditing,
+                                                               rss_feeds
+                                                           }
+                                                       })
+                                                   }}
                                         />
+                                        至
+                                        <TextField style={{width: 80, marginLeft: 10, marginRight: 10}}
+                                                   value={item.max_size_mb || ""}
+                                                   onChange={(_, value) => {
+                                                       let rss_feeds = [...this.state.currentEditing.rss_feeds];
+                                                       rss_feeds[index] = {
+                                                           ...rss_feeds[index],
+                                                           max_size_mb: +value || 0
+                                                       };
+                                                       this.setState({
+                                                           currentEditing: {
+                                                               ...this.state.currentEditing,
+                                                               rss_feeds
+                                                           }
+                                                       })
+                                                   }}
+                                        />
+                                        MB
                                     </TableRowColumn>
                                     {/*<TableRowColumn>*/}
                                         {/*<TextField*/}
@@ -474,7 +490,13 @@ class BoxListPage extends React.Component<{}, state> {
                         marginTop: 14
                     }} onClick={() => {
                         let rss_feeds = [...this.state.currentEditing.rss_feeds];
-                        rss_feeds.push({id: 0, name: "", url: "", max_size_mb: null, min_size_mb: null});
+                        rss_feeds.push({
+                            id: 0,
+                            name: "",
+                            url: "",
+                            max_size_mb: null,
+                            min_size_mb: 0
+                        });
                         this.setState({currentEditing: {...this.state.currentEditing, rss_feeds}});
                     }}
                     />
