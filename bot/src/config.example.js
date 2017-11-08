@@ -20,7 +20,7 @@ const http = {
 };
 
 const userTask = {
-  interval: 120,
+  interval: 20,
 };
 
 const system = {
