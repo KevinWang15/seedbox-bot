@@ -107,7 +107,6 @@ class UserTask {
                       await rssFeedTorrent.update({
                         status: RssFeedTorrentStatus.PENDING_ADD,
                         file_size_kb: torrentData.length / 1024,
-                        torrent_path: torrentData.path,
                       });
                       await AddTorrent(this.clients[boxConfig.id], rssFeedTorrent, torrentData);
                     } else {

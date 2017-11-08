@@ -25,10 +25,7 @@ async function ScanAndAddNewUsers() {
       },
     });
     for (let i = 0; i < pendingAddTorrents.length; i++) {
-      const pendingAddTorrent = pendingAddTorrents[i];
-      if (pendingAddTorrent.torrent_path && fs.existsSync(pendingAddTorrent.torrent_path))
-        fs.unlinkSync(pendingAddTorrent.torrent_path);
-      await pendingAddTorrent.destroy();
+      await pendingAddTorrents[i].destroy();
     }
     UserTaskCollection.push(userTask);
     userTask.start();
