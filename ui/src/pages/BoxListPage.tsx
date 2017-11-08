@@ -24,6 +24,7 @@ interface rssConfig {
     name: string;
     url: string;
     max_size_mb?: number;
+    min_size_mb?: number;
     max_share_ratio?: number;
 }
 
@@ -473,7 +474,7 @@ class BoxListPage extends React.Component<{}, state> {
                         marginTop: 14
                     }} onClick={() => {
                         let rss_feeds = [...this.state.currentEditing.rss_feeds];
-                        rss_feeds.push({id: 0, name: "", url: "", max_size_mb: null});
+                        rss_feeds.push({id: 0, name: "", url: "", max_size_mb: null, min_size_mb: null});
                         this.setState({currentEditing: {...this.state.currentEditing, rss_feeds}});
                     }}
                     />
