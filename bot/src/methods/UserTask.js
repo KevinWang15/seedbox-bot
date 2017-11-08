@@ -100,7 +100,7 @@ class UserTask {
                       pub_date: Date.parse(rssFeedTorrents[i].pubDate) || (+new Date()),
                     });
                     rssFeedTorrents[i].id = rssFeedTorrent.id; // 异常处理的时候reference使用
-                    let torrentData = (await DownloadAndParseTorrent(rssFeedTorrents[i].url));
+                    let torrentData = (await DownloadAndParseTorrent(rssFeedTorrents[i]));
 
                     if (!currentRssFeed.max_size_mb || (currentRssFeed.max_size_mb * 1024 * 1024 > torrentData.length)) {
                       // 种子文件合适，正在添加

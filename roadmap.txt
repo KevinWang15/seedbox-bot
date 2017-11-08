@@ -7,7 +7,6 @@ regexp filter
 最小文件大小
 用户日志的记录和显示
 测试concurrency
-直接在标题解析大小的功能 (部分NexusPHP站适用，不用下载种子文件了)
 config拉到build之外
 http retryCount
 更多BT客户端的兼容 （ruTorrent、deluge、uTorrent等）

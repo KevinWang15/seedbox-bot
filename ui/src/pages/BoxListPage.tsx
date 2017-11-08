@@ -355,7 +355,7 @@ class BoxListPage extends React.Component<{}, state> {
                                 <TableHeaderColumn>名称</TableHeaderColumn>
                                 <TableHeaderColumn style={{width: "50%"}}>RSS网址</TableHeaderColumn>
                                 <TableHeaderColumn>最大大小 (MB)</TableHeaderColumn>
-                                <TableHeaderColumn>最大分享率</TableHeaderColumn>
+                                {/*<TableHeaderColumn>最大分享率</TableHeaderColumn>*/}
                                 <TableHeaderColumn>操作</TableHeaderColumn>
                             </TableRow>
                         </TableHeader>

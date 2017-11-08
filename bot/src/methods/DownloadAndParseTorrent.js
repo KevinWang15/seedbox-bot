@@ -3,7 +3,15 @@ import uuid from "uuid/v1";
 import parseTorrent from "parse-torrent";
 
 import { httpRequest } from "../components/Http";
-function DownloadAndParseTorrent(url) {
+import { parseSize } from "../utils/parseSize";
+function DownloadAndParseTorrent(torrent) {
+  let { url, title } = torrent;
+
+  // 尝试从标题中得到种子的大小
+  let match = /(\d+\.\d{1,2}\s?[GMK]B)/im.exec(title);
+  if (match)
+    return Promise.resolve({ length: parseSize(match[1]) * 1024 * 1024 });
+
   if (!fs.existsSync('./torrents')) {
     fs.mkdirSync('./torrents');
   }
@@ -21,7 +29,7 @@ function DownloadAndParseTorrent(url) {
       wstream.on('finish', () => {
         try {
           let length = parseTorrent(fs.readFileSync(torrentPath)).length;
-          res({ length, path: torrentPath });
+          res({ length });
         } catch (exception) {
           rej(exception);
         } finally {
