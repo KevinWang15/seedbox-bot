@@ -72,6 +72,11 @@ class UserTask {
               }
             }
 
+            if (boxConfig.max_share_ratio) {
+              let list = await this.clients[boxConfig.id].getTorrentsList();
+              await this.clients[boxConfig.id].deleteTorrents(list.filter(item => item.upall / item.size > boxConfig.max_share_ratio));
+            }
+
             // 从远处fetch rss feed
             let allRssFeeds = (await Promise.all(boxConfig.rssFeeds.map(FetchRssFeed)));
             for (let j = 0; j < allRssFeeds.length; j++) {

@@ -55,7 +55,10 @@ class qBittorrentClient {
     if (result.error || result.response.statusCode !== 200) {
       throw result.error;
     }
-    return JSON.parse(result.body);
+    return JSON.parse(result.body).map(_ => ({
+      ..._,
+      upall: _.size * _.progress * _.ratio,
+    }));
   }
 
   async addTorrent(url) {

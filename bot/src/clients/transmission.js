@@ -26,7 +26,7 @@ class TransmissionClient {
       url: urlJoin(this.boxConfig.url, '/transmission/rpc'),
       body: JSON.stringify({
         "method": "torrent-get",
-        "arguments": { "fields": ["id", "hashString", "totalSize", "addedDate", "rateDownload", "rateUpload"] },
+        "arguments": { "fields": ["id", "hashString", "totalSize", "addedDate", "rateDownload", "rateUpload", "uploadedEver"] },
         "tag": "",
       }),
       auth: {
@@ -45,6 +45,7 @@ class TransmissionClient {
         hashString: _.hashString,
         size: _.totalSize,
         upspeed: _.rateUpload,
+        upall: _.uploadedEver,
         dlspeed: _.rateDownload,
         added_on: _.addedDate,
         category: "",
