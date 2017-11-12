@@ -4,7 +4,7 @@
     margin-right: 10px;
     vertical-align: sub;
   }
-  .delete-button {
+  .delete-button, .edit-button {
     min-width: 0 !important;
     width: 44px !important;
     position: relative;
@@ -33,6 +33,42 @@
       tr {
         border-bottom: 0 !important;
       }
+    }
+  }
+
+  .rss-editing-modal {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    z-index: 100;
+    .modal-body {
+      h1 {
+        font-weight: normal;
+        font-size: 24px;
+        margin-bottom: 0;
+      }
+      .save-btn{
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+      }
+      .regex{
+        position: relative;
+        padding-right: 100px;
+        .test-btn{
+          position: absolute;
+          right: 0;
+          bottom: 8px;
+        }
+      }
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      padding: 20px;
     }
   }
 }

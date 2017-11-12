@@ -15,6 +15,7 @@ import {
 } from "material-ui";
 import IconContentAdd from 'material-ui/svg-icons/content/add';
 import IconActionDelete from 'material-ui/svg-icons/action/delete';
+import IconMore from 'material-ui/svg-icons/navigation/more-horiz';
 import swal from 'sweetalert2/dist/sweetalert2.all.min.js';
 import clone from 'clone';
 import "./BoxListPage.scss";
@@ -44,13 +45,15 @@ interface boxConfig {
 interface state {
     list: Array<boxConfig>;
     currentEditing: boxConfig;
+    rssEditing: rssConfig;
 }
 class BoxListPage extends React.Component<{}, state> {
     constructor() {
         super();
         this.state = {
             list: [],
-            currentEditing: null
+            currentEditing: null,
+            rssEditing: null
         }
     }
 
@@ -221,6 +224,52 @@ class BoxListPage extends React.Component<{}, state> {
 
             {!!this.state.currentEditing &&
             <div className="div-edit">
+                {this.state.rssEditing && <div className="rss-editing-modal">
+                    <Paper className="modal-body" style={{width: 800, height: 500}}>
+                        <h1>
+                            高级配置
+                        </h1>
+                        <div>
+                            <div className="regex">
+                                <TextField
+                                    className="text"
+                                    fullWidth={true}
+                                    floatingLabelText="标题正则表达式过滤器 (JavaScript标准)"
+                                    floatingLabelFixed={true}
+                                    hintText="请输入正则表达式，只有种子标题满足本正则表达式才会下载"
+                                    value={this.state.currentEditing.url || ""}
+                                    onChange={(_, value) => this.setState({
+                                        currentEditing: {
+                                            ...this.state.currentEditing,
+                                            url: value
+                                        }
+                                    })}
+                                />
+                                <RaisedButton primary
+                                              className="test-btn"
+                                              label="测试"
+                                              onClick={() => {
+                                                  this.setState({
+                                                      rssEditing: null
+                                                  })
+                                              }}
+                                >
+                                </RaisedButton>
+                            </div>
+
+                        </div>
+                        <RaisedButton primary
+                                      className="save-btn"
+                                      label="保存"
+                                      onClick={() => {
+                                          this.setState({
+                                              rssEditing: null
+                                          })
+                                      }}
+                        >
+                        </RaisedButton>
+                    </Paper>
+                </div>}
                 <Paper className="sub-field">
                     <h1>基本配置</h1>
 
@@ -388,7 +437,8 @@ class BoxListPage extends React.Component<{}, state> {
                             <TableRow>
                                 <TableHeaderColumn>名称</TableHeaderColumn>
                                 <TableHeaderColumn style={{width: "50%"}}>RSS网址</TableHeaderColumn>
-                                <TableHeaderColumn>大小范围 (MB)</TableHeaderColumn>
+                                <TableHeaderColumn style={{width: "25%"}}>大小范围
+                                    (MB)</TableHeaderColumn>
                                 {/*<TableHeaderColumn>最大分享率</TableHeaderColumn>*/}
                                 <TableHeaderColumn>操作</TableHeaderColumn>
                             </TableRow>
@@ -398,6 +448,7 @@ class BoxListPage extends React.Component<{}, state> {
                                 <TableRow key={index}>
                                     <TableRowColumn>
                                         <TextField
+                                            name="name"
                                             fullWidth
                                             hintText="请输入名称"
                                             value={item.name}
@@ -418,6 +469,7 @@ class BoxListPage extends React.Component<{}, state> {
                                     </TableRowColumn>
                                     <TableRowColumn style={{width: "50%"}}>
                                         <TextField
+                                            name="url"
                                             fullWidth
                                             hintText="请输入网址"
                                             value={item.url}
@@ -436,8 +488,9 @@ class BoxListPage extends React.Component<{}, state> {
                                             }}
                                         />
                                     </TableRowColumn>
-                                    <TableRowColumn>
+                                    <TableRowColumn style={{width: "25%"}}>
                                         <TextField style={{width: 80, marginRight: 10}}
+                                                   name="min_size_mb"
                                                    value={item.min_size_mb}
                                                    onChange={(_, value) => {
                                                        let rss_feeds = [...this.state.currentEditing.rss_feeds];
@@ -456,6 +509,7 @@ class BoxListPage extends React.Component<{}, state> {
                                         至
                                         <TextField
                                             style={{width: 80, marginLeft: 10, marginRight: 10}}
+                                            name="max_size_mb"
                                             value={item.max_size_mb || ""}
                                             onChange={(_, value) => {
                                                 let rss_feeds = [...this.state.currentEditing.rss_feeds];
@@ -475,6 +529,18 @@ class BoxListPage extends React.Component<{}, state> {
                                     </TableRowColumn>
                                     <TableRowColumn>
                                         <div>
+                                            <RaisedButton primary
+                                                          className="edit-button"
+                                                          icon={<IconMore/>}
+                                                          style={buttonStyle}
+                                                          onClick={() => {
+                                                              let item = this.state.currentEditing.rss_feeds[index];
+                                                              this.setState({
+                                                                  rssEditing: item
+                                                              })
+                                                          }}
+                                            >
+                                            </RaisedButton>
                                             <RaisedButton secondary
                                                           className="delete-button"
                                                           icon={<IconActionDelete/>}
