@@ -1,5 +1,11 @@
 import * as React from 'react';
-import {deleteBox, getBoxList, createBox, editBox} from "../services/ApiService";
+import {
+    deleteBox,
+    getBoxList,
+    createBox,
+    editBox,
+    getRssTorrentsList
+} from "../services/ApiService";
 import {ClientType, getClientTypeIcon, getClientTypeName} from "../typings/ClientType";
 import {
     Table,
@@ -46,7 +52,7 @@ interface boxConfig {
 interface state {
     list: Array<boxConfig>;
     currentEditing: boxConfig;
-    rssEditingId: number;
+    rssEditingIndex: number;
 }
 class BoxListPage extends React.Component<{}, state> {
     constructor() {
@@ -54,7 +60,7 @@ class BoxListPage extends React.Component<{}, state> {
         this.state = {
             list: [],
             currentEditing: null,
-            rssEditingId: -1
+            rssEditingIndex: -1
         }
     }
 
@@ -225,7 +231,7 @@ class BoxListPage extends React.Component<{}, state> {
 
             {!!this.state.currentEditing &&
             <div className="div-edit">
-                {this.state.rssEditingId >= 0 && <div className="rss-editing-modal">
+                {this.state.rssEditingIndex >= 0 && <div className="rss-editing-modal">
                     <Paper className="modal-body" style={{width: 800, height: 500}}>
                         <h1>
                             高级配置
@@ -238,11 +244,11 @@ class BoxListPage extends React.Component<{}, state> {
                                     floatingLabelText="标题正则表达式过滤器 (JavaScript标准)"
                                     floatingLabelFixed={true}
                                     hintText="请输入正则表达式，只有种子标题满足本正则表达式才会下载"
-                                    value={this.state.currentEditing.rss_feeds[this.state.rssEditingId].filter}
+                                    value={this.state.currentEditing.rss_feeds[this.state.rssEditingIndex].filter}
                                     onChange={(_, value) => {
                                         let rss_feeds = [...this.state.currentEditing.rss_feeds];
-                                        rss_feeds[this.state.rssEditingId] = {
-                                            ...rss_feeds[this.state.rssEditingId],
+                                        rss_feeds[this.state.rssEditingIndex] = {
+                                            ...rss_feeds[this.state.rssEditingIndex],
                                             filter: value
                                         };
                                         this.setState({
@@ -257,8 +263,33 @@ class BoxListPage extends React.Component<{}, state> {
                                               className="test-btn"
                                               label="测试"
                                               onClick={() => {
-                                                  this.setState({
-                                                  })
+                                                  let rssId = this.state.currentEditing.rss_feeds[this.state.rssEditingIndex].id;
+                                                  if (!rssId) {
+                                                      swal('出错了', '本RSS没有种子数据，请在程序成功添加若干种子后再使用测试功能', 'error');
+                                                      return;
+                                                  }
+                                                  getRssTorrentsList(rssId).then(_ => {
+                                                      let list = _.list;
+                                                      if (!list.length) {
+                                                          swal('出错了', '本RSS没有种子数据，请在程序成功添加若干种子后再使用测试功能', 'error');
+                                                          return;
+                                                      }
+                                                      let successful = [], failed = [];
+                                                      let regexp = new RegExp(this.state.currentEditing.rss_feeds[this.state.rssEditingIndex].filter, 'i');
+                                                      list.forEach(item => {
+                                                          if (item.title.match(regexp)) {
+                                                              successful.push(item);
+                                                          } else {
+                                                              failed.push(item);
+                                                          }
+                                                      });
+                                                      swal({
+                                                          title: '',
+                                                          html: '<div style="text-align: left;font-size: 12px;">' + successful.map(_ => `<div style="color:green">√ ${_.title}</div>`).join("") + failed.map(_ => `<div style="color:red">× ${_.title}</div>`).join("") + "</div>",
+                                                          type: '',
+                                                          width: "100%"
+                                                      });
+                                                  });
                                               }}
                                 >
                                 </RaisedButton>
@@ -267,10 +298,10 @@ class BoxListPage extends React.Component<{}, state> {
                         </div>
                         <RaisedButton primary
                                       className="save-btn"
-                                      label="保存"
+                                      label="关闭"
                                       onClick={() => {
                                           this.setState({
-                                              rssEditingId: -1
+                                              rssEditingIndex: -1
                                           })
                                       }}
                         >
@@ -542,7 +573,7 @@ class BoxListPage extends React.Component<{}, state> {
                                                           style={buttonStyle}
                                                           onClick={() => {
                                                               this.setState({
-                                                                  rssEditingId: index
+                                                                  rssEditingIndex: index
                                                               })
                                                           }}
                                             >

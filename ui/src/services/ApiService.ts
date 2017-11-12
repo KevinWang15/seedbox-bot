@@ -39,8 +39,11 @@ function createBox() {
 }
 
 function editBox(data) {
-    console.log(data);
     return api('user/edit-box', data);
 }
 
-export {api, getBoxList, deleteBox, createBox, editBox};
+function getRssTorrentsList(rssFeedId) {
+    return api('user/get-rss-torrents-list', {rss_feed_id: rssFeedId});
+}
+
+export {api, getBoxList, deleteBox, createBox, editBox, getRssTorrentsList};

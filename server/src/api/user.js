@@ -167,4 +167,37 @@ router.post('/create-box', async function (req, res) {
   res.send({ id: boxConfig.id });
 });
 
+router.post('/get-rss-torrents-list', async function (req, res) {
+
+  let rssFeed = await RssFeed.find({
+    where: { id: req.body.rss_feed_id },
+  });
+
+  if (!rssFeed) {
+    res.send(400, {
+      errMsg: "错误的ID",
+    });
+    return;
+  }
+
+  let boxConfig = await BoxConfig.find({
+    where: { id: rssFeed.box_id },
+  });
+
+  if (!boxConfig || boxConfig.user_id !== req.user.id) {
+    res.send(400, {
+      errMsg: "错误的ID",
+    });
+    return;
+  }
+
+  res.send({
+    list: await RssFeedTorrent.findAll({
+      where: {
+        rss_feed_id: req.body.rss_feed_id,
+      },
+    }),
+  });
+});
+
 module.exports = router;
