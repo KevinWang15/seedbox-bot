@@ -109,7 +109,8 @@ class UserTask {
 
                     if (
                       (!currentRssFeed.max_size_mb || (currentRssFeed.max_size_mb * 1024 * 1024 > torrentData.length)) &&
-                      (!currentRssFeed.min_size_mb || (currentRssFeed.min_size_mb * 1024 * 1024 < torrentData.length))
+                      (!currentRssFeed.min_size_mb || (currentRssFeed.min_size_mb * 1024 * 1024 < torrentData.length)) &&
+                      (!currentRssFeed.filter || rssFeedTorrents[i].title.match(new RegExp(currentRssFeed.filter, 'i')))
                     ) {
                       // 种子文件合适，正在添加
                       await rssFeedTorrent.update({
