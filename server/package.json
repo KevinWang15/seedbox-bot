@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon src/index.js --exec babel-node --presets es2015,stage-2",
     "create-user": "nodemon src/scripts/create-user.js --exec babel-node --presets es2015,stage-2",
-    "compile": "babel --out-dir=out src"
+    "compile": "babel --out-dir=out src && cp .sequelizerc out && babel --out-dir=out/config config && cp -r migrations out && sed -i 's/..\\/src\\/config/..\\/config/' out/config/sequelize-cli-config.js"
   },
   "keywords": [],
   "author": "",
