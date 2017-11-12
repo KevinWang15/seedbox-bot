@@ -2,7 +2,7 @@
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.addColumn('rss_feeds', 'min_size_mb', Sequelize.INTEGER);
+    queryInterface.addColumn('rss_feeds', 'min_size_mb', Sequelize.INTEGER);
   },
 
   down: (queryInterface, Sequelize) => {

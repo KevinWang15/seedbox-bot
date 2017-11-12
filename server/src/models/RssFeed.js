@@ -10,7 +10,6 @@ const RssFeed = sequelize.define('rss_feed', {
   label: Sequelize.STRING,
   max_size_mb: Sequelize.INTEGER,
   min_size_mb: Sequelize.INTEGER,
-  max_share_ratio: Sequelize.DECIMAL(10, 2),
 });
 
 export { RssFeed };

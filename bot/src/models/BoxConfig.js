@@ -12,6 +12,7 @@ const BoxConfig = sequelize.define('box_config', {
   client_type: Sequelize.INTEGER, /* ClientTypes */
   max_disk_usage_size_gb: Sequelize.INTEGER,
   autodel_exempt_label: Sequelize.STRING,
+  max_share_ratio: Sequelize.DECIMAL(10, 2),
 });
 
 export { BoxConfig };

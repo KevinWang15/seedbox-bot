@@ -33,13 +33,13 @@ router.post('/box-list', async function (req, res) {
         basic_auth_password: boxConfig.basic_auth_password,
         username: boxConfig.username,
         password: boxConfig.password,
+        max_share_ratio: boxConfig.max_share_ratio,
         rss_feeds: rssFeeds.map(_ => ({
           id: _.id,
           name: _.name,
           url: _.url,
           max_size_mb: _.max_size_mb,
           min_size_mb: _.min_size_mb,
-          max_share_ratio: _.max_share_ratio,
         })),
       }
     })),
@@ -61,7 +61,7 @@ router.post('/edit-box', async function (req, res) {
   }
 
   let newData = {};
-  ['url', 'client_type', 'max_disk_usage_size_gb', 'basic_auth_username', 'basic_auth_password', 'username', 'password'].forEach(_ => {
+  ['url', 'client_type', 'max_disk_usage_size_gb', 'basic_auth_username', 'basic_auth_password', 'username', 'password', 'max_share_ratio'].forEach(_ => {
     newData[_] = req.body[_];
   });
   await boxConfig.update(newData);
@@ -88,7 +88,6 @@ router.post('/edit-box', async function (req, res) {
       url: _.url,
       max_size_mb: _.max_size_mb,
       min_size_mb: _.min_size_mb,
-      max_share_ratio: _.max_share_ratio,
     });
   });
 
@@ -108,7 +107,6 @@ router.post('/edit-box', async function (req, res) {
         url: _.url,
         max_size_mb: _.max_size_mb,
         min_size_mb: _.min_size_mb,
-        max_share_ratio: _.max_share_ratio,
       });
     }
   });

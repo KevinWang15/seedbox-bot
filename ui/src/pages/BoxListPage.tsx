@@ -18,6 +18,7 @@ import IconActionDelete from 'material-ui/svg-icons/action/delete';
 import swal from 'sweetalert2/dist/sweetalert2.all.min.js';
 import clone from 'clone';
 import "./BoxListPage.scss";
+import {isNumber} from "util";
 
 interface rssConfig {
     id: number;
@@ -25,13 +26,13 @@ interface rssConfig {
     url: string;
     max_size_mb?: number;
     min_size_mb?: number;
-    max_share_ratio?: number;
 }
 
 interface boxConfig {
     id: number;
     url: string;
     max_disk_usage_size_gb: number;
+    max_share_ratio: number;
     client_type: ClientType;
     basic_auth_username: string;
     basic_auth_password: string;
@@ -160,6 +161,7 @@ class BoxListPage extends React.Component<{}, state> {
                                 <TableHeaderColumn>类型</TableHeaderColumn>
                                 <TableHeaderColumn>磁盘配额</TableHeaderColumn>
                                 <TableHeaderColumn>RSS数量</TableHeaderColumn>
+                                <TableHeaderColumn>最大分享率</TableHeaderColumn>
                                 <TableHeaderColumn>操作</TableHeaderColumn>
                             </TableRow>
                         </TableHeader>
@@ -183,6 +185,12 @@ class BoxListPage extends React.Component<{}, state> {
                                     </TableRowColumn>
                                     <TableRowColumn>
                                         {item.rss_feeds.length}
+                                    </TableRowColumn>
+                                    <TableRowColumn>
+                                        {!!item.max_share_ratio ?
+                                            <span>{item.max_share_ratio}</span>
+                                            : <span>无限</span>
+                                        }
                                     </TableRowColumn>
                                     <TableRowColumn>
                                         <div>
@@ -272,6 +280,31 @@ class BoxListPage extends React.Component<{}, state> {
                                     max_disk_usage_size_gb: +value
                                 }
                             })}
+                        />
+                        <TextField
+                            style={{flex: 1}}
+                            fullWidth={true}
+                            floatingLabelText="最大分享率"
+                            floatingLabelFixed={true}
+                            hintText="上传为总体积多少倍后删种，留空为不限制"
+                            value={this.state.currentEditing.max_share_ratio || ""}
+                            onChange={(_, value) => {
+                                if (/^[0-9]+\.?[0-9]*$/.test(value)) {
+                                    this.setState({
+                                        currentEditing: {
+                                            ...this.state.currentEditing,
+                                            max_share_ratio: value as any
+                                        }
+                                    })
+                                } else {
+                                    this.setState({
+                                        currentEditing: {
+                                            ...this.state.currentEditing,
+                                            max_share_ratio: null
+                                        }
+                                    })
+                                }
+                            }}
                         />
                     </div>
                 </Paper>
@@ -440,26 +473,6 @@ class BoxListPage extends React.Component<{}, state> {
                                         />
                                         MB
                                     </TableRowColumn>
-                                    {/*<TableRowColumn>*/}
-                                    {/*<TextField*/}
-                                    {/*fullWidth*/}
-                                    {/*hintText="留空为不限"*/}
-                                    {/*value={item.max_share_ratio || ""}*/}
-                                    {/*onChange={(_, value) => {*/}
-                                    {/*let rss_feeds = [...this.state.currentEditing.rss_feeds];*/}
-                                    {/*rss_feeds[index] = {*/}
-                                    {/*...rss_feeds[index],*/}
-                                    {/*max_share_ratio: +value || 0*/}
-                                    {/*};*/}
-                                    {/*this.setState({*/}
-                                    {/*currentEditing: {*/}
-                                    {/*...this.state.currentEditing,*/}
-                                    {/*rss_feeds*/}
-                                    {/*}*/}
-                                    {/*})*/}
-                                    {/*}}*/}
-                                    {/*/>*/}
-                                    {/*</TableRowColumn>*/}
                                     <TableRowColumn>
                                         <div>
                                             <RaisedButton secondary
