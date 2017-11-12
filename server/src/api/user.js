@@ -40,6 +40,7 @@ router.post('/box-list', async function (req, res) {
           url: _.url,
           max_size_mb: _.max_size_mb,
           min_size_mb: _.min_size_mb,
+          filter: _.filter,
         })),
       }
     })),
@@ -88,6 +89,7 @@ router.post('/edit-box', async function (req, res) {
       url: _.url,
       max_size_mb: _.max_size_mb,
       min_size_mb: _.min_size_mb,
+      filter: _.filter,
     });
   });
 
@@ -107,6 +109,7 @@ router.post('/edit-box', async function (req, res) {
         url: _.url,
         max_size_mb: _.max_size_mb,
         min_size_mb: _.min_size_mb,
+        filter: _.filter,
       });
     }
   });

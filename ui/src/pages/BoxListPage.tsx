@@ -24,6 +24,7 @@ import {isNumber} from "util";
 interface rssConfig {
     id: number;
     name: string;
+    filter: string;
     url: string;
     max_size_mb?: number;
     min_size_mb?: number;
@@ -45,7 +46,7 @@ interface boxConfig {
 interface state {
     list: Array<boxConfig>;
     currentEditing: boxConfig;
-    rssEditing: rssConfig;
+    rssEditingId: number;
 }
 class BoxListPage extends React.Component<{}, state> {
     constructor() {
@@ -53,7 +54,7 @@ class BoxListPage extends React.Component<{}, state> {
         this.state = {
             list: [],
             currentEditing: null,
-            rssEditing: null
+            rssEditingId: -1
         }
     }
 
@@ -224,7 +225,7 @@ class BoxListPage extends React.Component<{}, state> {
 
             {!!this.state.currentEditing &&
             <div className="div-edit">
-                {this.state.rssEditing && <div className="rss-editing-modal">
+                {this.state.rssEditingId >= 0 && <div className="rss-editing-modal">
                     <Paper className="modal-body" style={{width: 800, height: 500}}>
                         <h1>
                             高级配置
@@ -237,20 +238,26 @@ class BoxListPage extends React.Component<{}, state> {
                                     floatingLabelText="标题正则表达式过滤器 (JavaScript标准)"
                                     floatingLabelFixed={true}
                                     hintText="请输入正则表达式，只有种子标题满足本正则表达式才会下载"
-                                    value={this.state.currentEditing.url || ""}
-                                    onChange={(_, value) => this.setState({
-                                        currentEditing: {
-                                            ...this.state.currentEditing,
-                                            url: value
-                                        }
-                                    })}
+                                    value={this.state.currentEditing.rss_feeds[this.state.rssEditingId].filter}
+                                    onChange={(_, value) => {
+                                        let rss_feeds = [...this.state.currentEditing.rss_feeds];
+                                        rss_feeds[this.state.rssEditingId] = {
+                                            ...rss_feeds[this.state.rssEditingId],
+                                            filter: value
+                                        };
+                                        this.setState({
+                                            currentEditing: {
+                                                ...this.state.currentEditing,
+                                                rss_feeds
+                                            }
+                                        })
+                                    }}
                                 />
                                 <RaisedButton primary
                                               className="test-btn"
                                               label="测试"
                                               onClick={() => {
                                                   this.setState({
-                                                      rssEditing: null
                                                   })
                                               }}
                                 >
@@ -263,7 +270,7 @@ class BoxListPage extends React.Component<{}, state> {
                                       label="保存"
                                       onClick={() => {
                                           this.setState({
-                                              rssEditing: null
+                                              rssEditingId: -1
                                           })
                                       }}
                         >
@@ -534,9 +541,8 @@ class BoxListPage extends React.Component<{}, state> {
                                                           icon={<IconMore/>}
                                                           style={buttonStyle}
                                                           onClick={() => {
-                                                              let item = this.state.currentEditing.rss_feeds[index];
                                                               this.setState({
-                                                                  rssEditing: item
+                                                                  rssEditingId: index
                                                               })
                                                           }}
                                             >
@@ -574,6 +580,7 @@ class BoxListPage extends React.Component<{}, state> {
                             id: 0,
                             name: "",
                             url: "",
+                            filter: "",
                             max_size_mb: null,
                             min_size_mb: 0
                         });
