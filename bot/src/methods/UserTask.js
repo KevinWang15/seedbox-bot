@@ -110,7 +110,7 @@ class UserTask {
                     if (
                       (!currentRssFeed.max_size_mb || (currentRssFeed.max_size_mb * 1024 * 1024 > torrentData.length)) &&
                       (!currentRssFeed.min_size_mb || (currentRssFeed.min_size_mb * 1024 * 1024 < torrentData.length)) &&
-                      (!currentRssFeed.filter || rssFeedTorrents[i].title.match(new RegExp(currentRssFeed.filter, 'i')))
+                      (!currentRssFeed.filter || matchFilter(currentRssFeed.filter, rssFeedTorrents[i].title))
                     ) {
                       // 种子文件合适，正在添加
                       await rssFeedTorrent.update({
@@ -173,6 +173,21 @@ class UserTask {
       rssFeed.rssFeedTorrents = rssFeedTorrents.filter(_ => _.rss_feed_id === rssFeed.id);
     });
     return boxConfigs;
+  }
+}
+
+function matchFilter(filter, title) {
+  if (!filter) return true;
+  let invertResult = false;
+  if (filter.match(/^exclude:\s*/)) {
+    filter = filter.replace(/^exclude:\s*/, '');
+    invertResult = true;
+  }
+  let regexp = new RegExp(filter, 'i');
+  if (invertResult) {
+    return !title.match(regexp);
+  } else {
+    return title.match(regexp);
   }
 }
 

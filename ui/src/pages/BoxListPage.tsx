@@ -275,9 +275,8 @@ class BoxListPage extends React.Component<{}, state> {
                                                           return;
                                                       }
                                                       let successful = [], failed = [];
-                                                      let regexp = new RegExp(this.state.currentEditing.rss_feeds[this.state.rssEditingIndex].filter, 'i');
                                                       list.forEach(item => {
-                                                          if (item.title.match(regexp)) {
+                                                          if (matchFilter(this.state.currentEditing.rss_feeds[this.state.rssEditingIndex].filter, item.title)) {
                                                               successful.push(item);
                                                           } else {
                                                               failed.push(item);
@@ -293,6 +292,10 @@ class BoxListPage extends React.Component<{}, state> {
                                               }}
                                 >
                                 </RaisedButton>
+
+                                <div style={{fontSize: 10, color: "#AAA"}}>
+                                    也可以以exclude:开头，跟正则表达式，表示排除满足本正则表达式的，下载其余的
+                                </div>
                             </div>
 
                         </div>
@@ -631,6 +634,21 @@ class BoxListPage extends React.Component<{}, state> {
                 {/*{JSON.stringify(this.state.currentEditing)}*/}
             </div>}
         </div>);
+    }
+}
+
+function matchFilter(filter, title) {
+    if (!filter) return true;
+    let invertResult = false;
+    if (filter.match(/^exclude:\s*/)) {
+        filter = filter.replace(/^exclude:\s*/, '');
+        invertResult = true;
+    }
+    let regexp = new RegExp(filter, 'i');
+    if (invertResult) {
+        return !title.match(regexp);
+    } else {
+        return title.match(regexp);
     }
 }
 
