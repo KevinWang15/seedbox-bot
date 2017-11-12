@@ -421,43 +421,44 @@ class BoxListPage extends React.Component<{}, state> {
                                                    }}
                                         />
                                         至
-                                        <TextField style={{width: 80, marginLeft: 10, marginRight: 10}}
-                                                   value={item.max_size_mb || ""}
-                                                   onChange={(_, value) => {
-                                                       let rss_feeds = [...this.state.currentEditing.rss_feeds];
-                                                       rss_feeds[index] = {
-                                                           ...rss_feeds[index],
-                                                           max_size_mb: +value || 0
-                                                       };
-                                                       this.setState({
-                                                           currentEditing: {
-                                                               ...this.state.currentEditing,
-                                                               rss_feeds
-                                                           }
-                                                       })
-                                                   }}
+                                        <TextField
+                                            style={{width: 80, marginLeft: 10, marginRight: 10}}
+                                            value={item.max_size_mb || ""}
+                                            onChange={(_, value) => {
+                                                let rss_feeds = [...this.state.currentEditing.rss_feeds];
+                                                rss_feeds[index] = {
+                                                    ...rss_feeds[index],
+                                                    max_size_mb: +value || 0
+                                                };
+                                                this.setState({
+                                                    currentEditing: {
+                                                        ...this.state.currentEditing,
+                                                        rss_feeds
+                                                    }
+                                                })
+                                            }}
                                         />
                                         MB
                                     </TableRowColumn>
                                     {/*<TableRowColumn>*/}
-                                        {/*<TextField*/}
-                                            {/*fullWidth*/}
-                                            {/*hintText="留空为不限"*/}
-                                            {/*value={item.max_share_ratio || ""}*/}
-                                            {/*onChange={(_, value) => {*/}
-                                                {/*let rss_feeds = [...this.state.currentEditing.rss_feeds];*/}
-                                                {/*rss_feeds[index] = {*/}
-                                                    {/*...rss_feeds[index],*/}
-                                                    {/*max_share_ratio: +value || 0*/}
-                                                {/*};*/}
-                                                {/*this.setState({*/}
-                                                    {/*currentEditing: {*/}
-                                                        {/*...this.state.currentEditing,*/}
-                                                        {/*rss_feeds*/}
-                                                    {/*}*/}
-                                                {/*})*/}
-                                            {/*}}*/}
-                                        {/*/>*/}
+                                    {/*<TextField*/}
+                                    {/*fullWidth*/}
+                                    {/*hintText="留空为不限"*/}
+                                    {/*value={item.max_share_ratio || ""}*/}
+                                    {/*onChange={(_, value) => {*/}
+                                    {/*let rss_feeds = [...this.state.currentEditing.rss_feeds];*/}
+                                    {/*rss_feeds[index] = {*/}
+                                    {/*...rss_feeds[index],*/}
+                                    {/*max_share_ratio: +value || 0*/}
+                                    {/*};*/}
+                                    {/*this.setState({*/}
+                                    {/*currentEditing: {*/}
+                                    {/*...this.state.currentEditing,*/}
+                                    {/*rss_feeds*/}
+                                    {/*}*/}
+                                    {/*})*/}
+                                    {/*}}*/}
+                                    {/*/>*/}
                                     {/*</TableRowColumn>*/}
                                     <TableRowColumn>
                                         <div>
