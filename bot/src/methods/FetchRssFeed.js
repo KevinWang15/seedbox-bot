@@ -5,18 +5,18 @@ async function FetchRssFeed(rssFeed) {
   return new Promise(async (resolve, reject) => {
     let feedparser = new FeedParser({});
     try {
-      let httpRequest = (await httpRequest({
+      let request = (await httpRequest({
           url: rssFeed.url,
           method: "GET",
         })
       );
 
-      if (httpRequest.error || httpRequest.response.statusCode !== 200) {
-        reject(httpRequest.error);
+      if (request.error || request.response.statusCode !== 200) {
+        reject(request.error);
         return;
       }
 
-      let rss = httpRequest.body;
+      let rss = request.body;
 
       feedparser.on('error', function (error) {
         reject(error);
