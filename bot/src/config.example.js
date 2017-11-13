@@ -26,6 +26,7 @@ const userTask = {
 const system = {
   newUserScanInterval: 60,
   newTorrentsTTL: 180,
+  retryFailedTorrentsAfter: 60,
 };
 
 exports.userTask = userTask;

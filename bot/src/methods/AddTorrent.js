@@ -1,6 +1,7 @@
 import { FreeUpSpace } from "./FreeUpSpace";
 import { CheckIfHasSpace } from "./CheckIfHasSpace";
 import { status as RssFeedTorrentStatus } from "../models/RssFeedTorrent";
+import { system as systemConfig } from './../config';
 
 //TODO: loginQb 加锁
 //TODO: safe_add 流程，也需要加锁
@@ -8,6 +9,19 @@ import { status as RssFeedTorrentStatus } from "../models/RssFeedTorrent";
 
 async function AddTorrent(client, rssFeedTorrent, torrentData, isSecondTry = false) {
   console.log("AddTorrent");
+
+  function retryFailedTorrent() {
+    if (systemConfig.retryFailedTorrentsAfter) {
+      setTimeout(async () => {
+        try {
+          await rssFeedTorrent.destroy();
+        } catch (ex) {
+          console.log("ERR-retryFailedTorrent: " + ex.toString());
+        }
+      }, systemConfig.retryFailedTorrentsAfter * 1000);
+    }
+  }
+
   let spaceData = await CheckIfHasSpace(client, torrentData.length / 1024 / 1024 / 1024);
   // console.log("> Space data:", spaceData);
   if (spaceData.hasSpace) {
@@ -24,6 +38,7 @@ async function AddTorrent(client, rssFeedTorrent, torrentData, isSecondTry = fal
         status: RssFeedTorrentStatus.ADD_FAILED,
         file_size_kb: torrentData.length / 1024,
       });
+      retryFailedTorrent();
     }
     return true;
   } else {
@@ -33,6 +48,7 @@ async function AddTorrent(client, rssFeedTorrent, torrentData, isSecondTry = fal
         status: RssFeedTorrentStatus.ADD_FAILED,
         file_size_kb: torrentData.length / 1024,
       });
+      retryFailedTorrent();
       return false;
     } else {
       console.log("> Not enough space, calling FreeUpSpace");
@@ -46,6 +62,7 @@ async function AddTorrent(client, rssFeedTorrent, torrentData, isSecondTry = fal
           status: RssFeedTorrentStatus.ADD_FAILED,
           file_size_kb: torrentData.length / 1024,
         });
+        retryFailedTorrent();
         return false;
       }
     }
