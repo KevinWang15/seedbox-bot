@@ -81,7 +81,7 @@ class UserTask {
             let allRssFeeds = (await Promise.all(boxConfig.rssFeeds.map((_) => {
               return FetchRssFeed(_).catch(rssFeedFetchError => {
                 //如果有任何一个Fetch失败，则记录错误并返回null，以免影响别的RSS
-                this.logException(rssFeedFetchError.toString() + "\n\n\n" + rssFeedFetchError.stack, "rssFeedFetchError", allRssFeeds[j].id);
+                this.logException(rssFeedFetchError.toString() + "\n\n\n" + rssFeedFetchError.stack, "rssFeedFetchError", 0);
                 return Promise.resolve(null);
               });
             })));
