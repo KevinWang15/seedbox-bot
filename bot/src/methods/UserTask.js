@@ -134,6 +134,13 @@ class UserTask {
                     }
                   } catch (feedTorrentError) {
                     this.logException(feedTorrentError.toString() + "\n\n\n" + feedTorrentError.stack, "feedTorrentError", rssFeedTorrents[i].id);
+                    try {
+                      await RssFeedTorrent.destroy({
+                        where: { id: rssFeedTorrents[i].id },
+                      });
+                    } catch (ex) {
+                      console.log("ERR: " + ex.toString());
+                    }
                   }
                 }
               } catch (rssFeedError) {
