@@ -105,7 +105,7 @@ class TransmissionClient {
       await this.login();
     }
     let result = await httpRequest({ ...params, jar: this.cookieJar });
-    if (result.response.statusCode === 409) {
+    if (result.response && result.response.statusCode === 409) {
       // 409 Conflict, 需要设置Session-Id
       console.log("got 409, setting X-Transmission-Session-Id to " + result.response.headers['x-transmission-session-id']);
       this.XTransmissionSessionId = result.response.headers['x-transmission-session-id'];
@@ -114,12 +114,12 @@ class TransmissionClient {
           "X-Transmission-Session-Id": this.XTransmissionSessionId,
         },
       });
-    } else if (result.response.statusCode === 403 || result.response.statusCode === 401) {
+    } else if (result.response && (result.response.statusCode === 403 || result.response.statusCode === 401)) {
       //需要重新登入
       console.log("got 403, retry..");
       await this.login();
       let result = await httpRequest({ ...params, jar: this.cookieJar });
-      if (result.response.statusCode === 403 || result.response.statusCode === 401) {
+      if (result.response && (result.response.statusCode === 403 || result.response.statusCode === 401)) {
         throw new Error("Still 403 after retry");
       } else {
         return result;

@@ -12,15 +12,12 @@ class qBittorrentClient {
   }
 
   async login() {
-    //TODO: 在调用处，返回false时做相应处理
-    //TODO: cookie过期时间？
     let cookieJar = request.jar();
 
     if (!this.boxConfig.username || !this.boxConfig.password) {
       this.cookieJar = cookieJar;
       return true;
     }
-    console.log("Posting LoginClient Request", urlJoin(this.boxConfig.url, '/login'));
     let result = await httpRequest({
       jar: cookieJar,
       url: urlJoin(this.boxConfig.url, '/login'),
@@ -31,8 +28,6 @@ class qBittorrentClient {
       },
       method: "POST",
     });
-    console.log("LoginClient Request Result:", result.errors, result.body, result.response ? result.response.statusCode : null);
-
     if (result.errors || result.response.statusCode !== 200) {
       return false;
     }
@@ -96,12 +91,12 @@ class qBittorrentClient {
       await this.login();
     }
     let result = await httpRequest({ ...params, jar: this.cookieJar });
-    if (result.response.statusCode === 403 || result.response.statusCode === 401) {
+    if (result.response && (result.response.statusCode === 403 || result.response.statusCode === 401)) {
       //需要重新登入
       console.log("got 403, retry..");
       await this.login();
       let result = await httpRequest({ ...params, jar: this.cookieJar });
-      if (result.response.statusCode === 403 || result.response.statusCode === 401) {
+      if (result.response && (result.response.statusCode === 403 || result.response.statusCode === 401)) {
         throw new Error("Still 403 after retry");
       } else {
         return result;
