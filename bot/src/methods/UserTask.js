@@ -78,12 +78,19 @@ class UserTask {
             }
 
             // 从远处fetch rss feed
-            let allRssFeeds = (await Promise.all(boxConfig.rssFeeds.map(FetchRssFeed)));
+            let allRssFeeds = (await Promise.all(boxConfig.rssFeeds.map((_) => {
+              return FetchRssFeed(_).catch(rssFeedFetchError => {
+                //如果有任何一个Fetch失败，则记录错误并返回null，以免影响别的RSS
+                this.logException(rssFeedFetchError.toString() + "\n\n\n" + rssFeedFetchError.stack, "rssFeedFetchError", allRssFeeds[j].id);
+                return Promise.resolve(null);
+              });
+            })));
             for (let j = 0; j < allRssFeeds.length; j++) {
               try {
                 // 每一个rss源设置一个循环
                 let existingUrls = boxConfig.rssFeeds[j].rssFeedTorrents.map(_ => _.url);
                 let currentRssFeed = allRssFeeds[j];
+                if (!currentRssFeed) continue; // 如果发生了throw，会返回null
                 let currentRssFeedTorrentUrls = currentRssFeed.torrents.map(_ => _.url);
                 let rssFeedTorrents = currentRssFeed.torrents.filter(_ => existingUrls.indexOf(_.url) < 0);
                 let expiredUrls = existingUrls.filter(_ => currentRssFeedTorrentUrls.indexOf(_) < 0);
