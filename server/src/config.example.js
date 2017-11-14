@@ -1,5 +1,5 @@
 const sqlite = {
-  path: '/absolute/path/to/database.sqlite',
+  path: '../database.sqlite',
 };
 
 const server = {
