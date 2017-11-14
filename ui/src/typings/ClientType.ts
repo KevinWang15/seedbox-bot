@@ -1,14 +1,18 @@
 enum ClientType{
     qBittorrent,
     Transmission,
-    // ruTorrent
+    ruTorrent,
+    Deluge,
+    uTorrent,
 }
 
 function getClientTypeName(clientType) {
     return [
         "qBittorrent",
         "Transmission",
-        // "ruTorrent"
+        "ruTorrent",
+        "Deluge",
+        "uTorrent",
     ][clientType];
 }
 
@@ -16,7 +20,9 @@ function getClientTypeIcon(clientType) {
     return [
         "/icons/qbittorrent.ico",
         "/icons/transmission.ico",
-        // "ruTorrent"
+        "/icons/rutorrent.png",
+        "/icons/deluge.png",
+        "/icons/utorrent.png",
     ][clientType];
 }
 

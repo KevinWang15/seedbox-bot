@@ -4,6 +4,8 @@ const ClientTypes = {
   qBittorrent: 0,
   Transmission: 1,
   ruTorrent: 2,
+  Deluge: 3,
+  uTorrent: 4,
 };
 
 function createClient(boxConfig) {
