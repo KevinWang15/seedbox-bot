@@ -11,10 +11,10 @@ async function FreeUpSpace(client, filesList, spaceToFreeUp) {
   }
 
   function isTorrentExempt(item) {
-    if (item.dlspeed)
+    if (item.dlspeed && ((item.added_on + systemConfig.downloadingTorrentsProtectionPeriod) > ((+new Date()) / 1000)))
       return true;
 
-    if ((item.added_on + systemConfig.newTorrentsTTL) > (+new Date()) / 1000)
+    if ((item.added_on + systemConfig.newTorrentsProtectionPeriod) > (+new Date()) / 1000)
       return true;
 
     if (client.boxConfig.autodel_exempt_label && item.category === client.boxConfig.autodel_exempt_label)

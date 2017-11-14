@@ -25,7 +25,8 @@ const userTask = {
 
 const system = {
   newUserScanInterval: 60,
-  newTorrentsTTL: 180,
+  newTorrentsProtectionPeriod: 180,
+  downloadingTorrentsProtectionPeriod: 60 * 60 * 24,
   retryFailedTorrentsAfter: 60,
 };
 
