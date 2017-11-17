@@ -7,10 +7,10 @@ returns Array<TaskInstance>
 [{
     hash: _.hash,   // 字符串
     size: _.size,   // bytes
-    upspeed: _.rateUpload,   //bytes/s
-    upall: _.uploadedEver,
-    dlspeed: _.rateDownload,   //bytes/s
-    added_on: _.addedDate,
+    upspeed: _.rateUpload,   // bytes/s
+    upall: _.uploadedEver,   // bytes
+    dlspeed: _.rateDownload,   // bytes/s
+    added_on: _.addedDate,   // timestamp/1000 (seconds since Unix epoch)
     category: _.category  // 字符串
 }]
 ```
@@ -93,5 +93,5 @@ returns Object
     seedTime: 0,
     added_on: 1510885503,
     category: '',
-    upall: '0' }
+    upall: 0 }
 ```

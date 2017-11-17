@@ -68,7 +68,7 @@ class ruTorrentClient {
           seedTime: parseTime(raw_data[key][raw_data[key].length - 2]),
           added_on: +(raw_data[key][raw_data[key].length - 1].replace(/\s/g, '')),
           category: raw_data[key][ARRAY_INDEX.tag],
-          upall: raw_data[key][ARRAY_INDEX.up_total],
+          upall: +raw_data[key][ARRAY_INDEX.up_total],
         });
       }
     } catch (e) {
