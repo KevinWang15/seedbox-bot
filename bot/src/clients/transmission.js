@@ -42,7 +42,7 @@ class TransmissionClient {
     if (body.result === 'success') {
       return body.arguments.torrents.map(_ => ({
         id: _.id,
-        hashString: _.hashString,
+        hash: _.hashString,
         size: _.totalSize,
         upspeed: _.rateUpload,
         upall: _.uploadedEver,
