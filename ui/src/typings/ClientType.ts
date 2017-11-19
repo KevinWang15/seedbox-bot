@@ -3,7 +3,7 @@ enum ClientType{
     Transmission,
     ruTorrent,
     Deluge,
-    uTorrent,
+    // uTorrent,
 }
 
 function getClientTypeName(clientType) {
@@ -12,7 +12,7 @@ function getClientTypeName(clientType) {
         "Transmission",
         "ruTorrent",
         "Deluge",
-        "uTorrent",
+        // "uTorrent",
     ][clientType];
 }
 
@@ -22,7 +22,7 @@ function getClientTypeIcon(clientType) {
         "/icons/transmission.ico",
         "/icons/rutorrent.png",
         "/icons/deluge.png",
-        "/icons/utorrent.png",
+        // "/icons/utorrent.png",
     ][clientType];
 }
 

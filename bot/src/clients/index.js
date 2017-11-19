@@ -1,6 +1,7 @@
 import qBittorrentClient from "./qBittorrent";
 import TransmissionClient from "./transmission";
 import ruTorrentClient from "./rutorrent";
+import DelugeClient from "./deluge";
 const ClientTypes = {
   qBittorrent: 0,
   Transmission: 1,
@@ -20,9 +21,9 @@ function createClient(boxConfig) {
     case ClientTypes.ruTorrent:
       return new ruTorrentClient(boxConfig);
       break;
-    // case ClientTypes.ruTorrent:
-    //   return new ruTorrent(boxConfig);
-    //   break;
+    case ClientTypes.Deluge:
+      return new DelugeClient(boxConfig);
+      break;
     default:
       return new qBittorrentClient(boxConfig);
       break;
