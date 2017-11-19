@@ -1,20 +1,32 @@
 import { httpRequest } from "../components/Http";
 import request from "request";
+import urlJoin from "url-join";
 
 class uTorrentClient {
   cookieJar = null;
   boxConfig = null;
+  boxUrl = "";
   token = "";
+
+  normalizeBoxUrl(url) {
+    let match = /(.+?\/\/[^\/]+\/gui\/?)/im.exec(url);
+    if (match !== null) {
+      return match[1] + (match[1].endsWith('/') ? "" : "/");
+    } else {
+      return urlJoin(url, "gui/");
+    }
+  }
 
   constructor(boxConfig) {
     this.boxConfig = boxConfig;
+    this.boxUrl = this.normalizeBoxUrl(this.boxConfig.url);
   }
 
   async login() {
     let cookieJar = request.jar();
     let result = await httpRequest({
       jar: cookieJar,
-      url: this.urlJoin(this.boxConfig.url, '/gui/token.html'),
+      url: this.urlJoin(this.boxUrl, '/token.html'),
       headers: {
         "Authorization": this.getAuthorizationHeader(),
       },
@@ -46,7 +58,7 @@ class uTorrentClient {
 
     let result = await this.requestWithRetry({
       jar: this.cookieJar,
-      url: this.urlJoin(this.boxConfig.url, `gui/?token=${this.token}&list=1`),
+      url: this.urlJoin(this.boxUrl, `/?token=${this.token}&list=1`),
       headers: {
         "Authorization": this.getAuthorizationHeader(),
       },
@@ -80,7 +92,7 @@ class uTorrentClient {
     }
     return await this.requestWithRetry({
       jar: this.cookieJar,
-      url: this.urlJoin(this.boxConfig.url, `gui/?token=${this.token}&action=add-url&s=${encodeURIComponent(url)}`),
+      url: this.urlJoin(this.boxUrl, `/?token=${this.token}&action=add-url&s=${encodeURIComponent(url)}`),
       headers: {
         "Authorization": this.getAuthorizationHeader(),
       },
@@ -95,7 +107,7 @@ class uTorrentClient {
     for (let i = 0; i < torrentsToDelete.length; i++) {
       let r = await this.requestWithRetry({
         jar: this.cookieJar,
-        url: this.urlJoin(this.boxConfig.url, `gui/?token=${this.token}&action=removedatatorrent&hash=${torrentsToDelete[i].hash}`),
+        url: this.urlJoin(this.boxUrl, `/?token=${this.token}&action=removedatatorrent&hash=${torrentsToDelete[i].hash}`),
         headers: {
           "Authorization": this.getAuthorizationHeader(),
         },

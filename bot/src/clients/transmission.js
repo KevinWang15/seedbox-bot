@@ -6,10 +6,21 @@ import sleep from 'sleep-promise';
 class TransmissionClient {
   cookieJar = null;
   boxConfig = null;
+  boxUrl = "";
   XTransmissionSessionId = "";
+
+  normalizeBoxUrl(url) {
+    let match = /(.+?\/\/[^\/]+\/transmission\/?)/im.exec(url);
+    if (match !== null) {
+      return match[1] + (match[1].endsWith('/') ? "" : "/");
+    } else {
+      return urlJoin(url, "transmission/");
+    }
+  }
 
   constructor(boxConfig) {
     this.boxConfig = boxConfig;
+    this.boxUrl = this.normalizeBoxUrl(this.boxConfig.url);
   }
 
   async login() {
@@ -23,7 +34,7 @@ class TransmissionClient {
   async getTorrentsList() {
     let result = await this.requestWithRetry({
       jar: this.cookieJar,
-      url: urlJoin(this.boxConfig.url, '/transmission/rpc'),
+      url: urlJoin(this.boxUrl, '/rpc'),
       body: JSON.stringify({
         "method": "torrent-get",
         "arguments": { "fields": ["id", "hashString", "totalSize", "addedDate", "rateDownload", "rateUpload", "uploadedEver"] },
@@ -58,7 +69,7 @@ class TransmissionClient {
   async addTorrent(url) {
     return await this.requestWithRetry({
       jar: this.cookieJar,
-      url: urlJoin(this.boxConfig.url, '/transmission/rpc'),
+      url: urlJoin(this.boxUrl, '/rpc'),
       body: JSON.stringify({
         "method": "torrent-add",
         "arguments": {
@@ -78,7 +89,7 @@ class TransmissionClient {
   async deleteTorrents(torrentsToDelete) {
     let result = await this.requestWithRetry({
       jar: this.cookieJar,
-      url: urlJoin(this.boxConfig.url, '/transmission/rpc'),
+      url: urlJoin(this.boxUrl, '/rpc'),
       body: JSON.stringify({
         "method": "torrent-remove",
         "arguments": { "ids": torrentsToDelete.map(_ => _.id), "delete-local-data": true },
