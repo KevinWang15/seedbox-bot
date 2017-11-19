@@ -2,6 +2,7 @@ import qBittorrentClient from "./qBittorrent";
 import TransmissionClient from "./transmission";
 import ruTorrentClient from "./rutorrent";
 import DelugeClient from "./deluge";
+import uTorrentClient from "./utorrent";
 const ClientTypes = {
   qBittorrent: 0,
   Transmission: 1,
@@ -24,8 +25,11 @@ function createClient(boxConfig) {
     case ClientTypes.Deluge:
       return new DelugeClient(boxConfig);
       break;
+    case ClientTypes.uTorrent:
+      return new uTorrentClient(boxConfig);
+      break;
     default:
-      return new qBittorrentClient(boxConfig);
+      throw new Error("Invalid client type");
       break;
   }
 }
