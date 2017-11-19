@@ -14,7 +14,7 @@ class qBittorrentClient {
   async login() {
     let cookieJar = request.jar();
 
-    if (!this.boxConfig.username || !this.boxConfig.password) {
+    if (!this.boxConfig.username) {
       this.cookieJar = cookieJar;
       return true;
     }
