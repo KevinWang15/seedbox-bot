@@ -6,7 +6,12 @@ import {
     editBox,
     getRssTorrentsList
 } from "../services/ApiService";
-import {ClientType, getClientTypeIcon, getClientTypeName} from "../typings/ClientType";
+import {
+    ClientType,
+    getClientTypeIcon,
+    getClientTypeName,
+    getClientTypeUrlSample
+} from "../typings/ClientType";
 import {
     Table,
     TableBody,
@@ -86,16 +91,13 @@ class BoxListPage extends React.Component<{}, state> {
                 rej();
                 return;
             }
-            if (!/^https?:\/\/[^\/]+\/?$/m.test(this.state.currentEditing.url)) {
+            if (!/^https?:\/\/.+?$/m.test(this.state.currentEditing.url)) {
                 swal({
-                    title: '客户端地址看起来无效',
-                    text: "请输入有效的URL，且一般情况下，客户端地址不能带路径（如 http://example.com:9091/transmission/web/ 是错误的，而 http://example.com:9091/ 才是正确的）。确定要继续吗？",
-                    type: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: '继续',
-                    cancelButtonText: '取消',
+                    title: '客户端地址无效',
+                    text: "客户端地址必须以http(s)://开头",
+                    type: 'error',
                 }).then(() => {
-                    res();
+                    rej();
                 }).catch(rej);
                 return;
             }
@@ -314,20 +316,6 @@ class BoxListPage extends React.Component<{}, state> {
                 <Paper className="sub-field">
                     <h1>基本配置</h1>
 
-                    <TextField
-                        fullWidth={true}
-                        floatingLabelText="WebUI网址"
-                        floatingLabelFixed={true}
-                        hintText="请输入盒子WebUI网址，如： http://example.com:9091/"
-                        value={this.state.currentEditing.url || ""}
-                        onChange={(_, value) => this.setState({
-                            currentEditing: {
-                                ...this.state.currentEditing,
-                                url: value
-                            }
-                        })}
-                    />
-
                     <div style={{display: "flex"}}>
                         <SelectField
                             style={{flex: 1}}
@@ -397,6 +385,20 @@ class BoxListPage extends React.Component<{}, state> {
                             }}
                         />
                     </div>
+
+                    <TextField
+                        fullWidth={true}
+                        floatingLabelText={getClientTypeName(this.state.currentEditing.client_type) + "的WebUI网址，例" + getClientTypeUrlSample(this.state.currentEditing.client_type) }
+                        floatingLabelFixed={true}
+                        hintText={getClientTypeUrlSample(this.state.currentEditing.client_type)}
+                        value={this.state.currentEditing.url || ""}
+                        onChange={(_, value) => this.setState({
+                            currentEditing: {
+                                ...this.state.currentEditing,
+                                url: value
+                            }
+                        })}
+                    />
                 </Paper>
 
                 <div style={{display: 'flex'}}>
