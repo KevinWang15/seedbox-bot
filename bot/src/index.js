@@ -3,10 +3,10 @@ import "babel-polyfill";
 import { sequelize } from "./databaseConnection";
 import "./models";
 import { ScanAndAddNewUsers } from "./methods/ScanAndAddNewUsers";
-import { system as systemConfig } from './config';
 import { Exception } from "./models/Exception";
 import { CheckIfHasSpace } from "./methods/FreeUpSpace";
 import { readCoreSettings } from "./utils/coreSettings";
+let coreSettings = readCoreSettings();
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
@@ -23,7 +23,6 @@ if (cluster.isMaster) {
 if (cluster.isWorker) {
   sequelize.sync().then(() => {
 
-    let coreSettings = readCoreSettings();
     setInterval(() => {
       let coreSettings2 = readCoreSettings();
       if (coreSettings2.$version !== coreSettings.$version) {
@@ -34,7 +33,7 @@ if (cluster.isWorker) {
 
     // 每一分钟扫描一下users表，看是否有新的用户加入
     ScanAndAddNewUsers();
-    setInterval(ScanAndAddNewUsers, (systemConfig.newUserScanInterval || 60) * 1000);
+    setInterval(ScanAndAddNewUsers, (coreSettings.newUserScanInterval || 60) * 1000);
   });
 }
 

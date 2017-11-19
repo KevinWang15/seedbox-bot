@@ -1,14 +1,16 @@
 /**
  * 需要可以设置retry、设置PHP代理服务器、放入有concurrency限制的request队列
  **/
-import { http as httpConfig, proxy as proxyConfig } from "../config";
+import { http as httpConfig } from "../config";
 import request from "request";
 import Queue from 'promise-queue';
+import { readCoreSettings } from "../utils/coreSettings";
+let coreSettings = readCoreSettings();
 
 let proxiedRequest;
 
-if (proxyConfig.enabled) {
-  const proxyUrl = "http://" + (proxyConfig.username ? (proxyConfig.username + ":" + proxyConfig.password + "@" ) : "") + proxyConfig.host + ":" + proxyConfig.port;
+if (coreSettings.proxyEnabled) {
+  const proxyUrl = "http://" + (coreSettings.proxyUsername ? (coreSettings.proxyUsername + ":" + coreSettings.proxyPassword + "@" ) : "") + coreSettings.proxyHost + ":" + coreSettings.proxyPort;
   proxiedRequest = request.defaults({ 'proxy': proxyUrl });
 } else {
   proxiedRequest = request.defaults({});

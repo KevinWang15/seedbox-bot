@@ -1,4 +1,3 @@
-import { userTask as userTaskConfig } from '../config';
 import { BoxConfig } from "../models/BoxConfig";
 import { Exception } from "../models/Exception";
 import { RssFeed } from "../models/RssFeed";
@@ -10,6 +9,8 @@ import { AddTorrent } from "./AddTorrent";
 import { createClient } from "../clients/index";
 import { CheckIfHasSpace } from "./CheckIfHasSpace";
 import { FreeUpSpace } from "./FreeUpSpace";
+import { readCoreSettings } from "../utils/coreSettings";
+let coreSettings = readCoreSettings();
 
 const Op = Sequelize.Op;
 class UserTask {
@@ -24,7 +25,7 @@ class UserTask {
   }
 
   start() {
-    this.interval_id = setInterval(this.run, (userTaskConfig.interval || 120) * 1000);
+    this.interval_id = setInterval(this.run, (coreSettings.userTaskInterval || 120) * 1000);
     this.run();
   }
 

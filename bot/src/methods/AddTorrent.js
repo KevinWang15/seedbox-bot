@@ -1,7 +1,8 @@
 import { FreeUpSpace } from "./FreeUpSpace";
 import { CheckIfHasSpace } from "./CheckIfHasSpace";
 import { status as RssFeedTorrentStatus } from "../models/RssFeedTorrent";
-import { system as systemConfig } from './../config';
+import { readCoreSettings } from "../utils/coreSettings";
+let coreSettings = readCoreSettings();
 
 //TODO: loginQb 加锁
 //TODO: safe_add 流程，也需要加锁
@@ -11,14 +12,14 @@ async function AddTorrent(client, rssFeedTorrent, torrentData, isSecondTry = fal
   console.log("AddTorrent");
 
   function retryFailedTorrent() {
-    if (systemConfig.retryFailedTorrentsAfter) {
+    if (coreSettings.retryFailedTorrentsAfter) {
       setTimeout(async () => {
         try {
           await rssFeedTorrent.destroy();
         } catch (ex) {
           console.log("ERR-retryFailedTorrent: " + ex.toString());
         }
-      }, systemConfig.retryFailedTorrentsAfter * 1000);
+      }, coreSettings.retryFailedTorrentsAfter * 1000);
     }
   }
 

@@ -1,4 +1,5 @@
-import { system as systemConfig } from "../config";
+import { readCoreSettings } from "../utils/coreSettings";
+let coreSettings = readCoreSettings();
 
 //TODO: 移动到单独文件里
 
@@ -11,10 +12,10 @@ async function FreeUpSpace(client, filesList, spaceToFreeUp) {
   }
 
   function isTorrentExempt(item) {
-    if (item.dlspeed && ((item.added_on + systemConfig.downloadingTorrentsProtectionPeriod) > ((+new Date()) / 1000)))
+    if (item.dlspeed && ((item.added_on + coreSettings.downloadingTorrentsProtectionPeriod) > ((+new Date()) / 1000)))
       return true;
 
-    if ((item.added_on + systemConfig.newTorrentsProtectionPeriod) > (+new Date()) / 1000)
+    if ((item.added_on + coreSettings.newTorrentsProtectionPeriod) > (+new Date()) / 1000)
       return true;
 
     if (client.boxConfig.autodel_exempt_label && item.category === client.boxConfig.autodel_exempt_label)
