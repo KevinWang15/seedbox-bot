@@ -55,10 +55,24 @@ interface boxConfig {
     rss_feeds: rssConfig[];
 }
 
+interface coreSettings {
+    proxyEnabled: boolean,
+    proxyHost: string,
+    proxyPort: number,
+    proxyUsername: string,
+    proxyPassword: string,
+    userTaskInterval: number,
+    newUserScanInterval: number,
+    newTorrentsProtectionPeriod: number,
+    downloadingTorrentsProtectionPeriod: number,
+    retryFailedTorrentsAfter: number,
+}
+
 interface state {
     list: Array<boxConfig>;
     currentEditing: boxConfig;
     rssEditingIndex: number;
+    coreSettings: coreSettings;
 }
 class BoxListPage extends React.Component<{}, state> {
     constructor() {
@@ -66,7 +80,8 @@ class BoxListPage extends React.Component<{}, state> {
         this.state = {
             list: [],
             currentEditing: null,
-            rssEditingIndex: -1
+            rssEditingIndex: -1,
+            coreSettings: null
         }
     }
 
@@ -129,6 +144,10 @@ class BoxListPage extends React.Component<{}, state> {
             this.setState({currentEditing: null});
         }).catch(() => {
         });
+    }
+
+    editCore() {
+        this.setState({coreSettings: null});
     }
 
     createBox() {
@@ -229,6 +248,11 @@ class BoxListPage extends React.Component<{}, state> {
                     marginTop: 14
                 }} onClick={() => this.createBox()}
                 />
+                <FlatButton style={{
+                    float: "right", marginTop: 14
+                }}
+                            onClick={() => this.editCore()}
+                            secondary label="编辑内核配置"/>
             </div>
             }
 
