@@ -6,6 +6,7 @@ const installSh = `#!/usr/bin/env bash
 npm install -g forever sequelize-cli
 forever stop seedbox-bot-server
 forever stop seedbox-bot-bot
+chmod -R 777 bot
 cd bot
 mkdir torrents
 chmod -R 777 torrents

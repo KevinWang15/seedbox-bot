@@ -6,6 +6,7 @@ import { ScanAndAddNewUsers } from "./methods/ScanAndAddNewUsers";
 import { system as systemConfig } from './config';
 import { Exception } from "./models/Exception";
 import { CheckIfHasSpace } from "./methods/FreeUpSpace";
+import { readCoreSettings } from "./utils/coreSettings";
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
@@ -21,6 +22,16 @@ if (cluster.isMaster) {
 
 if (cluster.isWorker) {
   sequelize.sync().then(() => {
+
+    let coreSettings = readCoreSettings();
+    setInterval(() => {
+      let coreSettings2 = readCoreSettings();
+      if (coreSettings2.$version !== coreSettings.$version) {
+        console.log("Core Settings changed, restarting..");
+        process.exit();
+      }
+    }, 10000);
+
     // 每一分钟扫描一下users表，看是否有新的用户加入
     ScanAndAddNewUsers();
     setInterval(ScanAndAddNewUsers, (systemConfig.newUserScanInterval || 60) * 1000);
