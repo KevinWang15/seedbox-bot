@@ -436,6 +436,7 @@ class BoxListPage extends React.Component<{}, state> {
 
                     </Paper>
 
+                    {[ClientType.qBittorrent, ClientType.Deluge].indexOf(+this.state.currentEditing.client_type) >= 0 &&
                     <Paper className="sub-field" style={{flex: 1}}>
                         <h1>
                             客户端认证
@@ -443,7 +444,7 @@ class BoxListPage extends React.Component<{}, state> {
                         <h2>
                             如果客户端要求认证（有登入界面，非弹框式），请输入用户名密码，没有请留空
                         </h2>
-                        <TextField
+                        {this.state.currentEditing.client_type != ClientType.Deluge && <TextField
                             floatingLabelText="客户端认证 用户名"
                             floatingLabelFixed={true}
                             hintText="请输入客户端认证用户名"
@@ -454,7 +455,7 @@ class BoxListPage extends React.Component<{}, state> {
                                     username: value
                                 }
                             })}
-                        />
+                        />}
                         <TextField
                             floatingLabelText="客户端认证 密码"
                             floatingLabelFixed={true}
@@ -469,6 +470,7 @@ class BoxListPage extends React.Component<{}, state> {
                             })}
                         />
                     </Paper>
+                    }
                 </div>
 
                 <Paper className="sub-field">
