@@ -31,6 +31,7 @@ router.post('/box-list', async function (req, res) {
         max_disk_usage_size_gb: boxConfig.max_disk_usage_size_gb,
         basic_auth_username: boxConfig.basic_auth_username,
         basic_auth_password: boxConfig.basic_auth_password,
+        autodel_exempt_label: boxConfig.autodel_exempt_label,
         username: boxConfig.username,
         password: boxConfig.password,
         max_share_ratio: boxConfig.max_share_ratio,
@@ -62,7 +63,7 @@ router.post('/edit-box', async function (req, res) {
   }
 
   let newData = {};
-  ['url', 'client_type', 'max_disk_usage_size_gb', 'basic_auth_username', 'basic_auth_password', 'username', 'password', 'max_share_ratio'].forEach(_ => {
+  ['url', 'client_type', 'max_disk_usage_size_gb', 'basic_auth_username', 'basic_auth_password', 'username', 'password', 'max_share_ratio', 'autodel_exempt_label'].forEach(_ => {
     newData[_] = req.body[_];
   });
   await boxConfig.update(newData);

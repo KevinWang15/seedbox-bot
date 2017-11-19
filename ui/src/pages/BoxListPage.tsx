@@ -49,6 +49,7 @@ interface boxConfig {
     client_type: ClientType;
     basic_auth_username: string;
     basic_auth_password: string;
+    autodel_exempt_label: string;
     username: string;
     password: string;
     rss_feeds: rssConfig[];
@@ -385,20 +386,39 @@ class BoxListPage extends React.Component<{}, state> {
                             }}
                         />
                     </div>
-
-                    <TextField
-                        fullWidth={true}
-                        floatingLabelText={getClientTypeName(this.state.currentEditing.client_type) + "的WebUI网址，例" + getClientTypeUrlSample(this.state.currentEditing.client_type) }
-                        floatingLabelFixed={true}
-                        hintText={getClientTypeUrlSample(this.state.currentEditing.client_type)}
-                        value={this.state.currentEditing.url || ""}
-                        onChange={(_, value) => this.setState({
-                            currentEditing: {
-                                ...this.state.currentEditing,
-                                url: value
-                            }
-                        })}
-                    />
+                    <div style={{display: "flex"}}>
+                        <div style={{flex: 2}}>
+                            <TextField
+                                fullWidth={true}
+                                floatingLabelText={getClientTypeName(this.state.currentEditing.client_type) + "的WebUI网址，例" + getClientTypeUrlSample(this.state.currentEditing.client_type) }
+                                floatingLabelFixed={true}
+                                hintText={getClientTypeUrlSample(this.state.currentEditing.client_type)}
+                                value={this.state.currentEditing.url || ""}
+                                onChange={(_, value) => this.setState({
+                                    currentEditing: {
+                                        ...this.state.currentEditing,
+                                        url: value
+                                    }
+                                })}
+                            />
+                        </div>
+                        {[ClientType.qBittorrent, ClientType.ruTorrent, ClientType.Deluge, ClientType.uTorrent].indexOf(+this.state.currentEditing.client_type) >= 0 &&
+                        <div style={{flex: 1}}>
+                            <TextField
+                                fullWidth={true}
+                                floatingLabelText="保种分类"
+                                floatingLabelFixed={true}
+                                hintText="设置一个分类，自动清种脚本永远不删除该分类下的任务"
+                                value={this.state.currentEditing.autodel_exempt_label || ""}
+                                onChange={(_, value) => this.setState({
+                                    currentEditing: {
+                                        ...this.state.currentEditing,
+                                        autodel_exempt_label: value
+                                    }
+                                })}
+                            />
+                        </div>}
+                    </div>
                 </Paper>
 
                 <div style={{display: 'flex'}}>
