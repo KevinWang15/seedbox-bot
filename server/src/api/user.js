@@ -1,3 +1,4 @@
+import fs from "fs";
 import express from 'express';
 import { AuthMiddleware } from "../middleware/auth";
 import { User, BoxConfig, RssFeed, RssFeedTorrent } from "../models/index";
@@ -199,6 +200,21 @@ router.post('/get-rss-torrents-list', async function (req, res) {
       },
     }),
   });
+});
+
+router.post('/get-core-settings', async function (req, res) {
+  res.send(
+    JSON.parse(fs.readFileSync("../bot/core_settings.json")),
+  )
+});
+
+router.post('/save-core-settings', async function (req, res) {
+  if (!req.body.settings || !req.body.settings instanceof Object) {
+    res.send(400, {});
+  }
+  req.body.settings.$version = +new Date();
+  fs.writeFileSync("../bot/core_settings.json", JSON.stringify(req.body.settings, null, 4), { encoding: "UTF8" });
+  res.send({ success: true });
 });
 
 module.exports = router;

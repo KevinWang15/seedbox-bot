@@ -46,4 +46,21 @@ function getRssTorrentsList(rssFeedId) {
     return api('user/get-rss-torrents-list', {rss_feed_id: rssFeedId});
 }
 
-export {api, getBoxList, deleteBox, createBox, editBox, getRssTorrentsList};
+function getCoreSettings() {
+    return api('user/get-core-settings', {});
+}
+
+function saveCoreSettings(settings) {
+    return api('user/save-core-settings', {settings});
+}
+
+export {
+    api,
+    getBoxList,
+    deleteBox,
+    createBox,
+    editBox,
+    getRssTorrentsList,
+    getCoreSettings,
+    saveCoreSettings
+};

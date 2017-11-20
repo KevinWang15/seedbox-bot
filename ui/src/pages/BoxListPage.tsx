@@ -4,7 +4,9 @@ import {
     getBoxList,
     createBox,
     editBox,
-    getRssTorrentsList
+    getRssTorrentsList,
+    getCoreSettings,
+    saveCoreSettings
 } from "../services/ApiService";
 import {
     ClientType,
@@ -21,6 +23,7 @@ import {
     TableRowColumn,
 } from 'material-ui/Table';
 import {
+    Checkbox,
     FlatButton, FloatingActionButton, MenuItem, Paper, RaisedButton, SelectField,
     TextField
 } from "material-ui";
@@ -147,7 +150,27 @@ class BoxListPage extends React.Component<{}, state> {
     }
 
     editCore() {
-        this.setState({coreSettings: null});
+        getCoreSettings().then(settings => {
+            this.setState({coreSettings: settings});
+        });
+    }
+
+    saveCoreSettings() {
+        saveCoreSettings(this.state.coreSettings).then(_ => {
+            if (_.success) {
+                swal({
+                    title: "修改成功",
+                    type: "success"
+                });
+                this.setState({coreSettings: null});
+            }
+        });
+    }
+
+    cancelCoreSettings() {
+        this.setState({
+            coreSettings: null
+        });
     }
 
     createBox() {
@@ -183,7 +206,7 @@ class BoxListPage extends React.Component<{}, state> {
             marginRight: 4
         };
         return (<div style={{padding: 20}} className="box-list-page">
-            {!this.state.currentEditing &&
+            {!this.state.currentEditing && !this.state.coreSettings &&
             <div>
                 <Paper zDepth={1}>
                     <Table>
@@ -255,6 +278,149 @@ class BoxListPage extends React.Component<{}, state> {
                             secondary label="编辑内核配置"/>
             </div>
             }
+
+            {!!this.state.coreSettings && <div>
+                <Paper zDepth={1} className="sub-field">
+
+                    <TextField
+                        fullWidth={true}
+                        floatingLabelText="RSS频率(秒) —— 每隔多少秒进行一次RSS操作"
+                        floatingLabelFixed={true}
+                        value={this.state.coreSettings.userTaskInterval.toString()}
+                        onChange={(_, value) => {
+                            if (+value != value as any) return;
+                            this.setState({
+                                coreSettings: {
+                                    ...this.state.coreSettings,
+                                    userTaskInterval: +value
+                                }
+                            })
+                        }}
+                    />
+                    <TextField
+                        fullWidth={true}
+                        floatingLabelText="新种赦免时间(秒) —— 即使没有上传速度，在多少秒内禁止删除新添加的种子"
+                        floatingLabelFixed={true}
+                        value={this.state.coreSettings.newTorrentsProtectionPeriod.toString()}
+                        onChange={(_, value) => {
+                            if (+value != value as any) return;
+                            this.setState({
+                                coreSettings: {
+                                    ...this.state.coreSettings,
+                                    newTorrentsProtectionPeriod: +value
+                                }
+                            })
+                        }}
+                    />
+                    <TextField
+                        fullWidth={true}
+                        floatingLabelText="下载中种子赦免时间(秒) —— 即使没有上传速度，在多少秒内禁止删除下载中种子"
+                        floatingLabelFixed={true}
+                        value={this.state.coreSettings.downloadingTorrentsProtectionPeriod.toString()}
+                        onChange={(_, value) => {
+                            if (+value != value as any) return;
+                            this.setState({
+                                coreSettings: {
+                                    ...this.state.coreSettings,
+                                    downloadingTorrentsProtectionPeriod: +value
+                                }
+                            })
+                        }}
+                    />
+                    <TextField
+                        fullWidth={true}
+                        floatingLabelText="重试添加失败的种子(秒) —— 如果种子添加失败，在多少秒后重试"
+                        floatingLabelFixed={true}
+                        value={this.state.coreSettings.retryFailedTorrentsAfter.toString()}
+                        onChange={(_, value) => {
+                            if (+value != value as any) return;
+                            this.setState({
+                                coreSettings: {
+                                    ...this.state.coreSettings,
+                                    retryFailedTorrentsAfter: +value
+                                }
+                            })
+                        }}
+                    />
+
+                    <Checkbox
+                        label="使用代理服务器"
+                        style={{marginTop: 16}}
+                        checked={this.state.coreSettings.proxyEnabled}
+                        onCheck={() => this.setState({
+                            coreSettings: {
+                                ...this.state.coreSettings,
+                                proxyEnabled: !this.state.coreSettings.proxyEnabled
+                            }
+                        })}
+                    />
+                    {this.state.coreSettings.proxyEnabled && <div style={{display: 'flex'}}>
+                        <TextField
+                            fullWidth={true}
+                            floatingLabelText="Host (如127.0.0.1，不带http://)"
+                            floatingLabelFixed={true}
+                            value={this.state.coreSettings.proxyHost.toString()}
+                            onChange={(_, value) => this.setState({
+                                coreSettings: {
+                                    ...this.state.coreSettings,
+                                    proxyHost: value
+                                }
+                            })
+                            }
+                        />
+                        <TextField
+                            fullWidth={true}
+                            floatingLabelText="端口"
+                            floatingLabelFixed={true}
+                            value={this.state.coreSettings.proxyPort.toString()}
+                            onChange={(_, value) => {
+                                if (+value != value as any) return;
+                                this.setState({
+                                    coreSettings: {
+                                        ...this.state.coreSettings,
+                                        proxyPort: +value
+                                    }
+                                })
+                            }}
+                        />
+
+                        <TextField
+                            fullWidth={true}
+                            floatingLabelText="用户名 (没有留空)"
+                            floatingLabelFixed={true}
+                            value={this.state.coreSettings.proxyUsername.toString()}
+                            onChange={(_, value) => this.setState({
+                                coreSettings: {
+                                    ...this.state.coreSettings,
+                                    proxyUsername: value
+                                }
+                            })
+                            }
+                        />
+                        <TextField
+                            fullWidth={true}
+                            floatingLabelText="密码 (没有留空)"
+                            floatingLabelFixed={true}
+                            value={this.state.coreSettings.proxyPassword.toString()}
+                            onChange={(_, value) => this.setState({
+                                coreSettings: {
+                                    ...this.state.coreSettings,
+                                    proxyPassword: value
+                                }
+                            })
+                            }
+                        />
+                    </div>}
+                </Paper>
+                <div style={{margin: 10}}>
+                    <RaisedButton primary label="保存" style={{
+                        marginRight: 10
+                    }} onClick={() => this.saveCoreSettings()}
+                    />
+                    <RaisedButton label="取消" style={{}} onClick={() => this.cancelCoreSettings()}
+                    />
+                </div>
+            </div>}
 
             {!!this.state.currentEditing &&
             <div className="div-edit">
