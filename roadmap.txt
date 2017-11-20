@@ -3,10 +3,9 @@ typescript迁移
 node debug sourcemap
 用户日志的记录和显示
 测试concurrency
-config拉到build之外
 http retryCount
-更多BT客户端的兼容 （ruTorrent、deluge、uTorrent等）
 整合models，更好使用sequelize，bot和server共用一套models
-bot的config.js中的内容迁移到WebUI设置面板
 查看种子添加记录/日志
 上传和下载速度的bar chart
+重构前端代码
+重试添加失败的种子是否会造成风暴？
