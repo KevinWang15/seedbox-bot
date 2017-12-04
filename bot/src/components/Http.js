@@ -26,6 +26,7 @@ function httpRequest(arg) {
     return new Promise((queue_res) => {
       let req = proxiedRequest({
         timeout: 30000,
+        gzip: true,
         followAllRedirects: true,
         headers: {
           'User-Agent': 'curl',
