@@ -20,6 +20,23 @@ forever --id "seedbox-bot-server" --workingDir server start server/index.js
 forever --id "seedbox-bot-bot" --workingDir bot start bot/index.js
 echo 安装完成，在端口10120上运行`;
 
+const installWithCnpmSh = `#!/usr/bin/env bash
+sudo -E cnpm install -g forever sequelize-cli
+forever stop seedbox-bot-server
+forever stop seedbox-bot-bot
+cd bot
+mkdir torrents
+chmod -R 777 torrents
+cnpm install --production
+cd ../server
+cnpm install --production
+sequelize db:migrate
+node scripts/create-user.js
+cd ..
+forever --id "seedbox-bot-server" --workingDir server start server/index.js
+forever --id "seedbox-bot-bot" --workingDir bot start bot/index.js
+echo 安装完成，在端口10120上运行`;
+
 let dirsToDelete = ['production-bundle', 'bot/out', 'server/out', 'ui/build'];
 let deletionPromises = [];
 dirsToDelete.forEach(dir => {
@@ -59,6 +76,10 @@ Promise.all(deletionPromises).then(_ => {
   process.chdir('../production-bundle/');
   fs.writeFileSync("install.sh",
     installSh, {
+      encoding: 'utf8',
+    })
+  fs.writeFileSync("install-with-cnpm.sh",
+    installWithCnpmSh, {
       encoding: 'utf8',
     })
 });
