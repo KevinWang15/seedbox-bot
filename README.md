@@ -1,13 +1,20 @@
-# 安装包方法安装
+seedbox-bot ![Status](https://img.shields.io/badge/Status-WIP-green.svg) ![For PT Lovers](https://img.shields.io/badge/For-PT%20Lovers-blue.svg)
+=============================
 
-## 安装包生成方法
-```
-npm run bundle
-```
+Seedbox automation bot, featuring rss and auto deletion. Compatible with multiple WebUIs. Supports multiple user.
+
+自动化的PT盒子管理工具，支持RSS下载和自动删种。支持多种BT客户端的WebUI，支持多用户模式。
+
+![intro](./images/introduction.jpg)
 
 
-## 安装包使用方法
-```
+# Installation / 安装指南
+
+Get the production bundle from https://github.com/KevinWang15/seedbox-bot/releases
+
+请从 https://github.com/KevinWang15/seedbox-bot/releases 获得安装包
+
+```bash
 sudo apt-get update
 curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
 sudo apt-get install -y nodejs
@@ -17,156 +24,23 @@ cd seedbox-bot
 ./install.sh
 ```
 
-## 更新方法
-```
-tar -xzvf production-bundle.tar.gz --directory seedbox-bot --overwrite
-cd seedbox-bot
-./install.sh
-“请输入用户名”的时候按Ctrl+C取消
-```
+# Works on / 兼容
 
-数据库migration：
-```
-npm install -g sequelize-cli
-cd server
-```
+* Any Windows / Linux System with NodeJS support. 所有支持NodeJS的Windows、Linux操作系统
 
-# 传统安装方法
+* [Vultr](https://www.vultr.com/?ref=6886995) $2.5/mo VPS. Vultr 2.5美金一个月的VPS
 
-安装方法都以Ubuntu为例，一步一步来，不要跳步骤或者更换顺序。
+* [Raspberry Pi](./raspberry_pi_guide.md). 树莓派
 
-# 代码获得
-```
-sudo apt-get install git
-```
-上传```botcode.key```到同目录
-```
-chmod 600 botcode.key
-GIT_SSH_COMMAND="ssh -i ./botcode.key" git clone botcode@kevin-bot.kevinwang.cc:/home/botcode/qb-bot
-```
+# Notes / 注意事项
 
+1. Memory consumption of this program is about 200MB, while CPU consumption is negligible. 本程序内存消耗大约200MB，CPU消耗很低可以忽略不计。
+2. Though the program provides multple user support, you should use it with caution, because accessing RSS with different passkeys may result in a ban. (consult PT admins first). 尽管本程序提供多用户支持，请务必小心，因为如果访问RSS时使用了不同的passkey，可能会被判定为小号，请先咨询PT管理员。
 
-# BOT安装
+# English version
 
-## bot 脚本安装方法
+Currently there is only a Chinese version, i18n coming soon!
 
-### apt-get update
-```
-sudo apt-get update
-```
+Please use Google translate for now..
 
-
-### Node.js
-```
-curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
-sudo apt-get install -y nodejs
-```
-
-### 安装mysql
-```
-sudo apt-get install mysql-server -y
-```
-设置root密码并记住
-
-编辑配置文件``` /etc/mysql/mysql.conf.d/mysqld.cnf```
-
-找到
-```
-bind-address            = 127.0.0.1
-```
-修改为
-```
-bind-address            = 0.0.0.0
-```
-**切换到 qb-bot 根目录之后，** 运行
-```
-mysql -u root -p
-```
-输入之前设置的密码登入sql
-```
-GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '<替换成你设置的密码>' WITH GRANT OPTION;
-FLUSH PRIVILEGES;
-
-CREATE DATABASE qbbot CHARACTER SET utf8 COLLATE utf8_general_ci;
-use qbbot;
-source database.sql;
-exit;
-```
-运行
-```
-service mysql restart
-```
-### 运行
-**切换到 qb-bot 根目录之后，** 运行
-```
-chmod -R 777 bot
-npm install -g forever babel-cli
-npm install
-```
-**切换到 qb-bot/bot 目录之后，** 运行
-```
-npm install
-```
-
-复制```src/config.example.js```到```src/config.js```并编辑其内容。
-
-一定需要编辑的是```mysql```中的```password```，设置成数据库的密码
-
-```
-npm run compile
-cd out
-```
-
-先运行 ```node index.js```，如果没有错误，按Ctrl+C
-运行```forever start index.js```以开始bot进程
-
-# 后端安装
-
-## 服务器配置
-**切换到 qb-bot/server 目录之后，** 
-
-复制```src/config.example.js```到```src/config.js```并编辑其内容。
-
-一定需要编辑的是```mysql```中的```password```，设置成数据库的密码
-
-运行
-```
-npm install
-npm run compile
-cd out
-node index.js
-```
-看看有没有错，没错的话Ctrl+C后运行
-```
-forever start index.js
-```
-
-## 用户配置
-使用mysql管理软件（推荐navicat），连接数据库
-
-向```users```表加入用户，其中```password```是bcrypt 10轮后的结果。
-
-https://www.dailycred.com/article/bcrypt-calculator  轮数选择10！
-
-
-# 前端安装
-**切换到 qb-bot/ui 目录之后，** 
-
-复制```src/config.example.js```到```src/config.js```并编辑其内容。
-
-一定需要编辑的是```url```，指向后端地址（默认是IP地址加上```:10120```）
-
-运行
-```
-npm install
-npm run build
-cd build
-npm install http-server -g
-http-server
-```
-这时候，前端会运行在IP地址加上```:8080```，用之前设置好的用户可以登入。
-看看有没有错，没错的话Ctrl+C后运行。
-```
-forever start -c http-server .
-```
-部署完毕。
+If you like this project please star it, PRs are welcome!
