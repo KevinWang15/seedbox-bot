@@ -43,7 +43,6 @@ class UserTask {
     if (this.run_lock)
       return;
     this.run_lock = true;
-    console.log("New user task..");
     try {
       let userBoxes = await this.getUserBoxes();
       let parallelTasks = [];
@@ -128,6 +127,7 @@ class UserTask {
                       await AddTorrent(this.clients[boxConfig.id], rssFeedTorrent, torrentData);
                     } else {
                       // 种子文件太大
+                      console.log("torrent: " + rssFeedTorrents[i].url + " filtered out due to file size limits");
                       await rssFeedTorrent.update({
                         status: RssFeedTorrentStatus.FILTERED_OUT,
                         file_size_kb: torrentData.length / 1024,
