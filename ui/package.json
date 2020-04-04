@@ -35,7 +35,7 @@
     "tslint": "^5.7.0",
     "tslint-loader": "^3.5.3",
     "tslint-react": "^3.2.0",
-    "typescript": "~2.5.3",
+    "typescript": "^2.5.3",
     "url-join": "^2.0.2",
     "url-loader": "0.5.9",
     "webpack": "3.5.1",
@@ -104,5 +104,8 @@
   },
   "eslintConfig": {
     "extends": "react-app"
-  }
+  },
+  "resolutions": {
+  "@types/react": "^16"
+}
 }

@@ -15,6 +15,7 @@ interface props {
 
 class LoginPage extends React.Component<props, state> {
     constructor() {
+        // @ts-ignore
         super();
         this.login = this.login.bind(this);
         this.state = {
@@ -64,3 +65,4 @@ class LoginPage extends React.Component<props, state> {
 }
 
 export default LoginPage;
+

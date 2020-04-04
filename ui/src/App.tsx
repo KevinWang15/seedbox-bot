@@ -19,6 +19,7 @@ let appRoot = {ref: null};
 class App extends React.Component {
 
     constructor() {
+        // @ts-ignore
         super();
         appRoot.ref = this;
     }

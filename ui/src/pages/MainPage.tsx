@@ -10,6 +10,7 @@ interface state {
 
 class MainPage extends React.Component<{}, state> {
     constructor() {
+        // @ts-ignore
         super();
         this.state = {
             currentPage: <BoxListPage/>
@@ -46,3 +47,4 @@ class MainPage extends React.Component<{}, state> {
 }
 
 export default MainPage;
+

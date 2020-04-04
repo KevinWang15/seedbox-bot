@@ -79,6 +79,7 @@ interface state {
 }
 class BoxListPage extends React.Component<{}, state> {
     constructor() {
+        // @ts-ignore
         super();
         this.state = {
             list: [],
@@ -867,3 +868,4 @@ function matchFilter(filter, title) {
 }
 
 export default BoxListPage;
+
