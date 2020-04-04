@@ -40,6 +40,8 @@ async function FetchRssFeed(rssFeed) {
             torrents.push(torrentData);
           }
 
+          console.log("FetchRssFeed successful with " + torrents.length + " torrents");
+
           resolve({
             ...rssFeed.dataValues,
             torrents,
