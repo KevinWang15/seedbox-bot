@@ -9,7 +9,7 @@ enum ClientType{
 
 function getClientTypeName(clientType) {
     return [
-        "qBittorrent",
+        "qBittorrent 4.0/4.1",
         "Transmission",
         "ruTorrent",
         "Deluge",
