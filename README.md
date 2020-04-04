@@ -16,7 +16,7 @@ Get the production bundle from https://github.com/KevinWang15/seedbox-bot/releas
 
 ```bash
 sudo apt-get update
-curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
 sudo apt-get install -y nodejs
 mkdir seedbox-bot
 tar -xzvf production-bundle.tar.gz --directory seedbox-bot --overwrite
