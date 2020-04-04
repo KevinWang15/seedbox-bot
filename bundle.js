@@ -3,6 +3,7 @@ const rimraf = require('rimraf');
 const _exec = require('child_process').execSync;
 
 const installSh = `#!/usr/bin/env bash
+cd "$(dirname "$0")"
 npm install -g forever sequelize-cli
 forever stop seedbox-bot-server
 forever stop seedbox-bot-bot
@@ -21,6 +22,7 @@ forever --id "seedbox-bot-bot" --workingDir bot start bot/index.js
 echo 安装完成，在端口10120上运行`;
 
 const installWithCnpmSh = `#!/usr/bin/env bash
+cd "$(dirname "$0")"
 sudo -E cnpm install -g forever sequelize-cli
 forever stop seedbox-bot-server
 forever stop seedbox-bot-bot
@@ -36,6 +38,14 @@ cd ..
 forever --id "seedbox-bot-server" --workingDir server start server/index.js
 forever --id "seedbox-bot-bot" --workingDir bot start bot/index.js
 echo 安装完成，在端口10120上运行`;
+
+const bootSh = `#!/usr/bin/env bash
+cd "$(dirname "$0")"
+forever stop seedbox-bot-server
+forever stop seedbox-bot-bot
+forever --id "seedbox-bot-server" --workingDir server start server/index.js
+forever --id "seedbox-bot-bot" --workingDir bot start bot/index.js
+`;
 
 let dirsToDelete = ['production-bundle', 'bot/out', 'server/out', 'ui/build'];
 let deletionPromises = [];
@@ -82,6 +92,13 @@ Promise.all(deletionPromises).then(_ => {
     installWithCnpmSh, {
       encoding: 'utf8',
     })
+  fs.writeFileSync("boot.sh",
+    bootSh, {
+      encoding: 'utf8',
+    })
+  fs.chmodSync('install.sh', 0o755);
+  fs.chmodSync('install-with-cnpm.sh', 0o755);
+  fs.chmodSync('boot.sh', 0o755);
 });
 
 function exec(cmd) {
