@@ -4,6 +4,7 @@ enum ClientType{
     ruTorrent,
     Deluge,
     uTorrent,
+    qBittorrent42,
 }
 
 function getClientTypeName(clientType) {
@@ -13,6 +14,7 @@ function getClientTypeName(clientType) {
         "ruTorrent",
         "Deluge",
         "uTorrent",
+        "qBittorrent 4.2+",
     ][clientType];
 }
 
@@ -23,6 +25,7 @@ function getClientTypeIcon(clientType) {
         "/icons/rutorrent.png",
         "/icons/deluge.png",
         "/icons/utorrent.png",
+        "/icons/qbittorrent.ico",
     ][clientType];
 }
 
@@ -33,6 +36,7 @@ function getClientTypeUrlSample(clientType) {
         "http://111.222.111.222/rutorrent/",
         "http://111.222.111.222:8112/",
         "http://111.222.111.222:8080/gui/",
+        "http://111.222.111.222:8080/",
     ][clientType];
 }
 

@@ -593,7 +593,7 @@ class BoxListPage extends React.Component<{}, state> {
                                 })}
                             />
                         </div>
-                        {[ClientType.qBittorrent, ClientType.ruTorrent, ClientType.Deluge, ClientType.uTorrent].indexOf(+this.state.currentEditing.client_type) >= 0 &&
+                        {[ClientType.qBittorrent, ClientType.qBittorrent42, ClientType.ruTorrent, ClientType.Deluge, ClientType.uTorrent].indexOf(+this.state.currentEditing.client_type) >= 0 &&
                         <div style={{flex: 1}}>
                             <TextField
                                 fullWidth={true}
@@ -649,7 +649,7 @@ class BoxListPage extends React.Component<{}, state> {
 
                     </Paper>
 
-                    {[ClientType.qBittorrent, ClientType.Deluge].indexOf(+this.state.currentEditing.client_type) >= 0 &&
+                    {[ClientType.qBittorrent, ClientType.qBittorrent42, ClientType.Deluge].indexOf(+this.state.currentEditing.client_type) >= 0 &&
                     <Paper className="sub-field" style={{flex: 1}}>
                         <h1>
                             客户端认证
