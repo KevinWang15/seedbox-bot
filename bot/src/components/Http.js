@@ -28,6 +28,7 @@ function httpRequest(arg) {
         timeout: 30000,
         gzip: true,
         followAllRedirects: true,
+        insecure: true,
         headers: {
           'User-Agent': 'curl',
         },
