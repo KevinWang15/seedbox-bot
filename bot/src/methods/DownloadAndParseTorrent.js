@@ -33,7 +33,7 @@ function DownloadAndParseTorrent(torrent) {
         } catch (exception) {
           rej(exception);
         } finally {
-          fs.unlink(torrentPath);
+          fs.unlinkSync(torrentPath);
         }
       });
     }).catch(rej);
