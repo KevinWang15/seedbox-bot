@@ -10,6 +10,22 @@ Seedbox automation bot, featuring rss and auto deletion. Compatible with multipl
 
 # Installation / 安装指南
 
+## Docker
+
+```bash
+docker run -p10120:10120 --name seedbox-bot kevinwang15/seedbox-bot:dev
+
+# add a new user
+docker exec -it seedbox-bot /bin/sh -c 'cd /production-bundle/server;scripts/create-user.js'
+
+# view logs 
+docker logs seedbox-bot --follow
+```
+
+
+
+## Install from Source / 从源码安装
+
 Get the production bundle from https://github.com/KevinWang15/seedbox-bot/releases
 
 请从 https://github.com/KevinWang15/seedbox-bot/releases 获得安装包
