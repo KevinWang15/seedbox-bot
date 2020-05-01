@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import inquirer from "inquirer";
 import * as bcrypt from "bcrypt-nodejs";
 import { User } from "../models/index";
