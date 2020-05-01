@@ -13,7 +13,8 @@ Seedbox automation bot, featuring rss and auto deletion. Compatible with multipl
 ## Docker
 
 ```bash
-docker run -p10120:10120 --name seedbox-bot kevinwang15/seedbox-bot:dev
+docker run -p10120:10120 --name seedbox-bot kevinwang15/seedbox-bot:dev #for x86
+docker run -d -p10120:10120 --name seedbox-bot kevinwang15/seedbox-bot:dev-arm #for arm, like raspberry pi
 
 # add a new user
 docker exec -it seedbox-bot /bin/sh -c 'cd /production-bundle/server;scripts/create-user.js'
