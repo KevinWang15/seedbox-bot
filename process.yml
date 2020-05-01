@@ -1,0 +1,4 @@
+- script: server/index.js
+  name: server
+- script: bot/index.js
+  name: bot
