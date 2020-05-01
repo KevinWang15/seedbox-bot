@@ -1,4 +1,6 @@
-- script: server/index.js
+- script: index.js
   name: server
-- script: bot/index.js
+  cwd: /production-bundle/server
+- script: index.js
   name: bot
+  cwd: /production-bundle/bot
