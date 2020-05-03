@@ -1,8 +1,7 @@
-FROM ubuntu:xenial as build-env
-RUN apt update
-RUN apt install -y curl
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
-RUN apt-get install -y nodejs
+FROM alpine:3 as build-env
+
+RUN apk add --upgrade nodejs npm alpine-sdk python
+
 ADD . /build
 RUN npm i -g babel-cli
 WORKDIR /build
@@ -17,17 +16,14 @@ WORKDIR /build
 RUN npm run bundle
 
 FROM alpine:3
-COPY --from=build-env /build/production-bundle /production-bundle
+COPY --from=build-env /build/production-bundle /production
+COPY --from=build-env /build/bot/node_modules /production/bot/node_modules
+COPY --from=build-env /build/server/node_modules /production/server/node_modules
 RUN apk add nodejs npm
-RUN npm install -g pm2 forever sequelize-cli
-WORKDIR /production-bundle
+RUN npm install -g pm2 sequelize-cli
+WORKDIR /production
 RUN mkdir torrents
 RUN chmod -R 777 torrents bot
-WORKDIR /production-bundle/bot
-RUN npm i --production
-WORKDIR /production-bundle/server
-RUN npm i --production
-WORKDIR /production-bundle
-
-ADD ./process.yml /production-bundle
+WORKDIR /production
+ADD ./process.yml /production
 CMD ["pm2-runtime", "process.yml"]

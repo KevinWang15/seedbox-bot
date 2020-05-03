@@ -2,3 +2,4 @@
 database.sqlite
 production-bundle
 node_modules
+**/node_modules

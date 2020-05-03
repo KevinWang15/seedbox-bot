@@ -1,6 +1,6 @@
 - script: index.js
   name: server
-  cwd: /production-bundle/server
+  cwd: /production/server
 - script: index.js
   name: bot
-  cwd: /production-bundle/bot
+  cwd: /production/bot
