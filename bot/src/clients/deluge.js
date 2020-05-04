@@ -2,6 +2,7 @@ import { httpRequest } from "../components/Http";
 import request from "request";
 import urlJoin from "url-join";
 import zlib from "zlib";
+import logger from '../logger'
 
 class DelugeClient {
   cookieJar = null;
@@ -149,7 +150,7 @@ class DelugeClient {
     let result = await httpRequest({ ...params, jar: this.cookieJar, encoding: null });
     if (result.response && (result.response.statusCode === 500)) {
       //需要重新登入
-      console.log("got 500, retry..");
+      logger.warn("got 500, retry..");
       await this.login();
       let result = await httpRequest({ ...params, jar: this.cookieJar, encoding: null });
       if (result.response && (result.response.statusCode === 500)) {

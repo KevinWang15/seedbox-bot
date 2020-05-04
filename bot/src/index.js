@@ -4,6 +4,7 @@ import "./models";
 import {ScanAndAddNewUsers} from "./methods/ScanAndAddNewUsers";
 import {Exception} from "./models/Exception";
 import {readCoreSettings} from "./utils/coreSettings";
+import logger from './logger'
 
 let coreSettings = readCoreSettings();
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
@@ -12,7 +13,7 @@ sequelize.sync().then(() => {
   setInterval(() => {
     let coreSettings2 = readCoreSettings();
     if (coreSettings2.$version !== coreSettings.$version) {
-      console.log("Core Settings changed, restarting..");
+      logger.info('Core Settings changed, restarting..')
       process.exit();
     }
   }, 10000);
@@ -23,7 +24,7 @@ sequelize.sync().then(() => {
 });
 
 process.on('unhandledRejection', (reason, p) => {
-  console.log('Unhandled Rejection at: Promise', p, 'reason:', reason);
+  logger.error('Unhandled Rejection at: Promise', p, 'reason:', reason)
   Exception.create({
     ref_id: 0,
     source: "unhandledRejection",

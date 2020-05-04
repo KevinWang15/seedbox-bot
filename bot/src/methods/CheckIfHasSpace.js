@@ -1,5 +1,7 @@
+import logger from '../logger'
+
 async function CheckIfHasSpace(client, spaceToEnsureGB) {
-  console.log("CheckIfHasSpace");
+  logger.info("CheckIfHasSpace");
 
   let maxAllowedUsage, totalFilesSize; // 单位均为GB
 
@@ -11,7 +13,7 @@ async function CheckIfHasSpace(client, spaceToEnsureGB) {
   try {
     let filesList = await client.getTorrentsList();
     totalFilesSize = filesList.map(_ => _.size).reduce((a, b) => (a + b), 0) / 1024 / 1024 / 1024;
-    console.log("totalFilesSize", totalFilesSize, "spaceToEnsureGB", spaceToEnsureGB, "maxAllowedUsage", maxAllowedUsage);
+    logger.info("totalFilesSize", totalFilesSize, "spaceToEnsureGB", spaceToEnsureGB, "maxAllowedUsage", maxAllowedUsage);
     if (totalFilesSize + spaceToEnsureGB > maxAllowedUsage) {
       let spaceToFreeUp = totalFilesSize + spaceToEnsureGB - maxAllowedUsage;
       return { hasSpace: false, spaceToFreeUp, filesList };
@@ -19,7 +21,7 @@ async function CheckIfHasSpace(client, spaceToEnsureGB) {
       return { hasSpace: true, spaceToFreeUp: 0, filesList };
     }
   } catch (exception) {
-    console.error("/query/torrents failed, box id " + client.boxConfig.id, exception);
+    logger.error("/query/torrents failed, box id " + client.boxConfig.id, exception);
     return { hasSpace: false, spaceToFreeUp: 0, filesList: null };
   }
 }

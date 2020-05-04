@@ -1,6 +1,7 @@
 import { httpRequest } from "../components/Http";
 import request from "request";
 import urlJoin from "url-join";
+import logger from '../logger'
 
 class uTorrentClient {
   cookieJar = null;
@@ -34,7 +35,7 @@ class uTorrentClient {
     let match = />([^<>]+?)<\/div>/im.exec(result.body);
     if (match !== null) {
       this.token = match[1];
-      console.log("this token set to", this.token);
+      logger.info("this token set to", this.token);
     } else {
       throw new Error("Token not found");
     }
@@ -127,7 +128,7 @@ class uTorrentClient {
     let result = await httpRequest({ ...params, jar: this.cookieJar });
     if (result.response && (result.response.statusCode === 401)) {
       //需要重新登入
-      console.log("got 401, retry..");
+      logger.warn("got 401, retry..");
       await this.login();
       let result = await httpRequest({ ...params, jar: this.cookieJar });
       if (result.response && (result.response.statusCode === 401)) {

@@ -2,6 +2,7 @@ import { httpRequest } from "../components/Http";
 import request from "request";
 import urlJoin from "url-join";
 import sleep from 'sleep-promise';
+import logger from '../logger'
 
 class qBittorrentClient {
   cookieJar = null;
@@ -96,7 +97,7 @@ class qBittorrentClient {
     let result = await httpRequest({ ...params, jar: this.cookieJar });
     if (result.response && (result.response.statusCode === 403 || result.response.statusCode === 401)) {
       //需要重新登入
-      console.log("got 403, retry..");
+      logger.warn("got 403, retry..");
       await this.login();
       let result = await httpRequest({ ...params, jar: this.cookieJar });
       if (result.response && (result.response.statusCode === 403 || result.response.statusCode === 401)) {

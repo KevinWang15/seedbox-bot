@@ -10,6 +10,7 @@ import { createClient } from "../clients/index";
 import { CheckIfHasSpace } from "./CheckIfHasSpace";
 import { FreeUpSpace } from "./FreeUpSpace";
 import { readCoreSettings } from "../utils/coreSettings";
+import logger from '../logger'
 let coreSettings = readCoreSettings();
 
 const Op = Sequelize.Op;
@@ -30,7 +31,7 @@ class UserTask {
   }
 
   logException(exception, source, ref_id) {
-    console.warn("#! Exception", exception, source, ref_id);
+    logger.warn('#! Exception', exception, source, ref_id)
     Exception.create({
       ref_id,
       source,
@@ -60,12 +61,12 @@ class UserTask {
               || this.clients[boxConfig.id].boxConfig.max_disk_usage_size_gb !== boxConfig.max_disk_usage_size_gb
               || this.clients[boxConfig.id].boxConfig.autodel_exempt_label !== boxConfig.autodel_exempt_label
             ) {
-              console.log("Creating new client..");
+              logger.info('Creating new client..')
               this.clients[boxConfig.id] = createClient(boxConfig);
             }
 
             if (!boxConfig.rssFeeds.length) {
-              console.log("No rss feeds.. just free up space");
+              logger.info('No rss feeds.. just free up space')
               let spaceData = await CheckIfHasSpace(this.clients[boxConfig.id], 0);
               if (!spaceData.hasSpace) {
                 await FreeUpSpace(this.clients[boxConfig.id], spaceData.filesList, spaceData.spaceToFreeUp);
@@ -127,7 +128,8 @@ class UserTask {
                       await AddTorrent(this.clients[boxConfig.id], rssFeedTorrent, torrentData);
                     } else {
                       // 种子文件太大
-                      console.log("torrent: " + rssFeedTorrents[i].url + " filtered out due to file size limits");
+                      logger.info('torrent: ' + rssFeedTorrents[i].url +
+                        ' filtered out due to file size limits')
                       await rssFeedTorrent.update({
                         status: RssFeedTorrentStatus.FILTERED_OUT,
                         file_size_kb: torrentData.length / 1024,
@@ -140,7 +142,7 @@ class UserTask {
                         where: { id: rssFeedTorrents[i].id },
                       });
                     } catch (ex) {
-                      console.log("ERR: " + ex.toString());
+                      logger.error('ERR: ' + ex.toString())
                     }
                   }
                 }

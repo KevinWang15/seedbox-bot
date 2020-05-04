@@ -2,6 +2,7 @@ import fs from "fs";
 import express from 'express';
 import { AuthMiddleware } from "../middleware/auth";
 import { User, BoxConfig, RssFeed, RssFeedTorrent } from "../models/index";
+import logger from '../logger'
 
 const router = express.Router();
 
@@ -82,7 +83,7 @@ router.post('/edit-box', async function (req, res) {
   let rssFeedsToDelete = oldRssFeeds.filter(_ => newRssFeedIds.indexOf(_.id) < 0);
   let rssFeedsToUpdate = newRssFeeds.filter(_ => oldRssFeedIds.indexOf(_.id) >= 0);
 
-  // console.log("rssFeedsToAdd", rssFeedsToAdd, "rssFeedsToDelete", rssFeedsToDelete, "rssFeedsToUpdate", rssFeedsToUpdate);
+  logger.info('rssFeedsToAdd', rssFeedsToAdd, 'rssFeedsToDelete', rssFeedsToDelete, 'rssFeedsToUpdate', rssFeedsToUpdate);
 
   rssFeedsToAdd.forEach(async (_) => {
     await RssFeed.create({

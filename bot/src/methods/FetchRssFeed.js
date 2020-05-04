@@ -1,5 +1,6 @@
 import { httpRequest } from "../components/Http";
 import FeedParser from 'feedparser';
+import logger from '../logger'
 
 async function FetchRssFeed(rssFeed) {
   return new Promise(async (resolve, reject) => {
@@ -40,7 +41,7 @@ async function FetchRssFeed(rssFeed) {
             torrents.push(torrentData);
           }
 
-          console.log("FetchRssFeed successful with " + torrents.length + " torrents");
+          logger.info("FetchRssFeed successful with " + torrents.length + " torrents");
 
           resolve({
             ...rssFeed.dataValues,
