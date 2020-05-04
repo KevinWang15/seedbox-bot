@@ -100,6 +100,8 @@ Promise.all(deletionPromises).then(_ => {
   fs.chmodSync('install-with-cnpm.sh', 0o755);
   fs.chmodSync('boot.sh', 0o755);
   fs.chmodSync('server/scripts/create-user.js', 0o755);
+  fs.chmodSync('server/scripts/export-config.js', 0o755);
+  fs.chmodSync('server/scripts/import-config.js', 0o755);
 });
 
 function exec(cmd) {

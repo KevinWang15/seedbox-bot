@@ -10,35 +10,23 @@ Seedbox automation bot, featuring rss and auto deletion. Compatible with multipl
 
 # Installation / 安装指南
 
-## Docker
-
 ```bash
-docker run -p10120:10120 --name seedbox-bot kevinwang15/seedbox-bot:dev #for x86
-docker run -d -p10120:10120 --name seedbox-bot kevinwang15/seedbox-bot:dev-arm #for arm, like raspberry pi
+docker run -d -p10120:10120 --name seedbox-bot kevinwang15/seedbox-bot:amd64
+# other architectures are also available (change docker image tag): amd64, arm32v7, arm64v8
+# if you are in china, use registry.cn-hangzhou.aliyuncs.com/kevinwang15/seedbox-bot:[architecture] for better speed
 
 # add a new user
-docker exec -it seedbox-bot /bin/sh -c 'cd /production-bundle/server;scripts/create-user.js'
+docker exec -it seedbox-bot ./server/scripts/create-user.js
 
 # view logs 
 docker logs seedbox-bot --follow
-```
 
+# export configs
+docker exec -it seedbox-bot ./server/scripts/export-config.js
 
+# import configs
+docker exec -it seedbox-bot ./server/scripts/import-config.js
 
-## Install from Source / 从源码安装
-
-Get the production bundle from https://github.com/KevinWang15/seedbox-bot/releases
-
-请从 https://github.com/KevinWang15/seedbox-bot/releases 获得安装包
-
-```bash
-sudo apt-get update
-curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
-sudo apt-get install -y nodejs
-mkdir seedbox-bot
-tar -xzvf production-bundle.tar.gz --directory seedbox-bot --overwrite
-cd seedbox-bot
-./install.sh
 ```
 
 # Works on / 兼容

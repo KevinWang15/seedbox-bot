@@ -1,5 +1,7 @@
+import path from "path";
+
 const sqlite = {
-  path: '../database.sqlite',
+  path: path.join(__dirname, '../database.sqlite'),
 };
 
 const server = {
